@@ -1,5 +1,5 @@
 import { observer } from 'mobx-react-lite'
-import React, { useRef } from 'react'
+import React, { useCallback, useRef, useState } from 'react'
 import styled from 'styled-components'
 
 import { animated, useTransition } from '@react-spring/web'
@@ -9,6 +9,7 @@ import { useClickOutside } from 'hooks/use-click-outside'
 
 import { colors } from 'lib/theme'
 
+import { AutoPrint } from 'components/auto-print/auto-print'
 import { PixelatedButton } from 'components/pixelated/pixelated-components'
 import { useGameStore } from 'screens/game/screen'
 
@@ -29,6 +30,7 @@ export const TextBox: FC<Props> = observer(({ isOpened, afterClose, withCloseCro
     afterClose?.()
   }
 
+  const [isTextBoxEnteringEnds, setIsTextBoxEnteringEnds] = useState(false)
   const transition = useTransition(isOpened, {
     from: { bottom: -20, scale: 0 },
     enter: { bottom: 15, scale: 1 },
@@ -36,10 +38,27 @@ export const TextBox: FC<Props> = observer(({ isOpened, afterClose, withCloseCro
     config: {
       duration: 230,
     },
+    onRest: () => {
+      //Установить значение только в момент окончания анимации появления
+      if (isTextBoxEnteringEnds === false) {
+        setIsTextBoxEnteringEnds(true)
+      }
+    },
   })
 
+  const [isTextBoxAutoPrint, setIsTextBoxAutoPrint] = useState(true)
+
+  const onTextBoxPrintEnds = useCallback(() => {
+    setIsTextBoxAutoPrint(false)
+  }, [])
+
   const containerRef = useRef<HTMLDivElement | null>(null)
-  useClickOutside(containerRef, close)
+  useClickOutside(containerRef, () => {
+    //Игнорировать аутсайд клики после закрытия текстбокса
+    if (!isTextBoxAutoPrint && isOpened) {
+      close()
+    }
+  })
 
   return (
     <>
@@ -47,12 +66,21 @@ export const TextBox: FC<Props> = observer(({ isOpened, afterClose, withCloseCro
         (styles, item) =>
           item && (
             <Container ref={containerRef} style={styles}>
-              {withCloseCross && (
+              <Box>
+                {
+                  <AutoPrint
+                    text={text}
+                    printPrevented={!isTextBoxEnteringEnds}
+                    onPrintEnds={onTextBoxPrintEnds}
+                  />
+                }
+              </Box>
+              {/* Показывать крестик только после того, как текст напечатался */}
+              {withCloseCross && !isTextBoxAutoPrint && (
                 <CloseButton onClick={close}>
                   <CloseCross />
                 </CloseButton>
               )}
-              <Box>{text}</Box>
             </Container>
           ),
       )}
