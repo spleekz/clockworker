@@ -1,0 +1,64 @@
+{
+  "name": "clockworker",
+  "private": true,
+  "version": "0.0.0",
+  "scripts": {
+    "start:web": "vite",
+    "build:web": "tsc && vite build --base=./",
+    "build:desktop": "npm run build:web && tsc -p ./electron/tsconfig.json",
+    "start:desktop": "electron ./dist/electron.js",
+    "package:desktop": "electron-builder build --win -c.extraMetadata.main=dist/electron.js --publish never"
+  },
+  "build": {
+    "productName": "clockworker",
+    "appId": "com.spleekz.clockworker",
+    "win": {
+      "target": "nsis"
+    },
+    "nsis": {
+      "artifactName": "clockworker.setup.${ext}",
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true
+    },
+    "files": [
+      "dist/**/*",
+      "node_modules/**/*",
+      "package.json"
+    ],
+    "directories": {
+      "output": "build"
+    }
+  },
+  "dependencies": {
+    "@react-spring/web": "^9.5.2",
+    "mobx": "^6.6.1",
+    "mobx-react-lite": "^3.4.0",
+    "react": "^18.2.0",
+    "react-bootstrap-icons": "^1.8.4",
+    "react-dom": "^18.2.0",
+    "react-hook-form": "^7.34.0",
+    "styled-components": "^5.3.5"
+  },
+  "devDependencies": {
+    "@trivago/prettier-plugin-sort-imports": "^3.3.0",
+    "@types/react": "^18.0.15",
+    "@types/react-dom": "^18.0.6",
+    "@types/styled-components": "^5.1.25",
+    "@typescript-eslint/eslint-plugin": "^5.31.0",
+    "@typescript-eslint/parser": "^5.31.0",
+    "@vitejs/plugin-react": "^2.0.0",
+    "babel-plugin-styled-components": "^2.0.7",
+    "electron": "^20.0.1",
+    "electron-builder": "^23.1.0",
+    "eslint": "^8.20.0",
+    "eslint-plugin-import": "^2.26.0",
+    "eslint-plugin-mobx": "^0.0.9",
+    "eslint-plugin-prefer-type-alias": "^0.1.0",
+    "eslint-plugin-react": "^7.30.1",
+    "prettier": "^2.7.1",
+    "typescript": "^4.6.4",
+    "vite": "^3.0.0",
+    "vite-plugin-checker": "^0.4.9",
+    "vite-tsconfig-paths": "^3.5.0"
+  }
+}

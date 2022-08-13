@@ -1,0 +1,21 @@
+{
+  "printWidth": 103,
+  "tabWidth": 2,
+  "trailingComma": "all",
+  "singleQuote": true,
+  "jsxSingleQuote": true,
+  "semi": false,
+  "importOrder": [
+    "^(react$)|(styled\\-components$)|(mobx.*)$",
+    "<THIRD_PARTY_MODULES>",
+    "^stores/(.*)$",
+    "^content/(.*)$",
+    "^hooks/(.*)$",
+    "^lib/(.*)$",
+    "^(screens|components)/(.*)$",
+    "^assets/(.*)$",
+    "^[./]"
+  ],
+  "importOrderSeparation": true,
+  "importOrderSortSpecifiers": true
+}

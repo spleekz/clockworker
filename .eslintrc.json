@@ -1,0 +1,31 @@
+{
+  "env": {
+    "browser": true,
+    "es2021": true
+  },
+  "extends": [
+    "eslint:recommended",
+    "plugin:react/recommended",
+    "plugin:@typescript-eslint/recommended",
+    "plugin:prefer-type-alias/recommended"
+  ],
+  "parser": "@typescript-eslint/parser",
+  "parserOptions": {
+    "ecmaFeatures": {
+      "jsx": true
+    },
+    "ecmaVersion": "latest",
+    "sourceType": "module"
+  },
+  "plugins": ["react", "@typescript-eslint", "import", "mobx"],
+  "rules": {
+    "import/no-default-export": "error",
+    "@typescript-eslint/explicit-function-return-type": ["warn", { "allowExpressions": true }],
+    "@typescript-eslint/no-explicit-any": "off",
+    "no-console": ["warn", { "allow": ["warn", "error"] }],
+    "prefer-type-alias/prefer-type-alias": "warn",
+    "@typescript-eslint/no-non-null-assertion": "off",
+    "no-var": "off",
+    "mobx/missing-observer": "warn"
+  }
+}
