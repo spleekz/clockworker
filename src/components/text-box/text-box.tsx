@@ -5,7 +5,7 @@ import styled from 'styled-components'
 import { animated, useTransition } from '@react-spring/web'
 import { EmptyFunction, FC } from 'basic-utility-types'
 
-import { useClickOutside } from 'hooks/use-click-outside'
+import { useWindowClick } from 'hooks/use-window-click'
 
 import { colors } from 'lib/theme'
 
@@ -53,8 +53,8 @@ export const TextBox: FC<Props> = observer(({ isOpened, afterClose, withCloseCro
   }, [])
 
   const containerRef = useRef<HTMLDivElement | null>(null)
-  useClickOutside(containerRef, () => {
-    //Игнорировать аутсайд клики после закрытия текстбокса
+  useWindowClick(() => {
+    //Игнорировать клики после закрытия текстбокса
     if (!isTextBoxAutoPrint && isOpened) {
       close()
     }
