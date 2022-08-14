@@ -72,7 +72,7 @@ export const GameScreen: FC = observer(() => {
         />
         <QuitInMainMenuConfirm isOpened={appStore.isQuitInMainMenuConfirmOpened} />
 
-        {gameStore.player && (
+        {gameStore.script && (
           <TextBox
             isOpened={gameStore.isTextBoxOpened}
             afterClose={gameStore.heroEntering}

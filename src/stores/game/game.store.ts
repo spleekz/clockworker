@@ -44,11 +44,14 @@ export class GameStore {
   }
 
   //!Сценарий
-  get script(): Script {
-    return getParsedScript({
-      playerName: this.player?.name ?? '',
-      marketName: this.market?.name ?? '',
-    })
+  get script(): Script | null {
+    if (this.player && this.market) {
+      return getParsedScript({
+        playerName: this.player.name,
+        marketName: this.market.name,
+      })
+    }
+    return null
   }
 
   //!Канвас
