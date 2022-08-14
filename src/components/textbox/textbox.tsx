@@ -104,17 +104,17 @@ const CloseButton = styled(PixelatedButton).attrs({
   backgroundColor: colors.secondary,
 })`
   position: absolute;
-  top: 14px;
+  top: 15.5px;
   right: 18px;
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 24px;
-  height: 36px;
+  width: 21px;
+  height: 33px;
 `
 const CloseCross = styled.div`
-  width: 24px;
-  height: 24px;
+  width: 17.5px;
+  height: 17.5px;
   background-image: url(${cross});
   background-position: center;
   background-repeat: no-repeat;
