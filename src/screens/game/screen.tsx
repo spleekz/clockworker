@@ -10,7 +10,7 @@ import { useStore } from 'stores/root-store/context'
 import { useKey } from 'hooks/use-key'
 
 import { QuitInMainMenuConfirm } from 'components/game-popups/quit-in-main-menu-confirm'
-import { TextBox } from 'components/text-box/text-box'
+import { Textbox } from 'components/textbox/textbox'
 import { SettingsMenu } from 'screens/main/settings/menu'
 
 import { GameCanvas } from './canvas'
@@ -37,7 +37,7 @@ export const GameScreen: FC = observer(() => {
   useKey({
     key: 'Escape',
     fn: () => {
-      if (!gameStore.isTextBoxOpened) {
+      if (!gameStore.isTextboxOpened) {
         if (appStore.isQuitGameConfirmOpened) {
           appStore.closeQuitGameConfirm()
         } else if (appStore.isQuitInMainMenuConfirmOpened) {
@@ -57,7 +57,7 @@ export const GameScreen: FC = observer(() => {
     if (gameStore.canvasObject.canvas && gameStore.canvasObject.ctx) {
       gameStore.setupGame()
       gameStore.gameLoop()
-      gameStore.openTextBox()
+      gameStore.openTextbox()
     }
   }, [])
 
@@ -73,8 +73,8 @@ export const GameScreen: FC = observer(() => {
         <QuitInMainMenuConfirm isOpened={appStore.isQuitInMainMenuConfirmOpened} />
 
         {gameStore.script && (
-          <TextBox
-            isOpened={gameStore.isTextBoxOpened}
+          <Textbox
+            isOpened={gameStore.isTextboxOpened}
             afterClose={gameStore.heroEntering}
             withCloseCross={true}
             text={gameStore.script.content.welcome}

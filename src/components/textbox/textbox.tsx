@@ -22,15 +22,15 @@ type Props = {
   text: string
 }
 
-export const TextBox: FC<Props> = observer(({ isOpened, afterClose, withCloseCross, text }) => {
+export const Textbox: FC<Props> = observer(({ isOpened, afterClose, withCloseCross, text }) => {
   const gameStore = useGameStore()
 
   const close = (): void => {
-    gameStore.closeTextBox()
+    gameStore.closeTextbox()
     afterClose?.()
   }
 
-  const [isTextBoxEnteringEnds, setIsTextBoxEnteringEnds] = useState(false)
+  const [isTextboxEnteringEnds, setIsTextboxEnteringEnds] = useState(false)
   const transition = useTransition(isOpened, {
     from: { bottom: -20, scale: 0 },
     enter: { bottom: 15, scale: 1 },
@@ -40,22 +40,22 @@ export const TextBox: FC<Props> = observer(({ isOpened, afterClose, withCloseCro
     },
     onRest: () => {
       //Установить значение только в момент окончания анимации появления
-      if (isTextBoxEnteringEnds === false) {
-        setIsTextBoxEnteringEnds(true)
+      if (isTextboxEnteringEnds === false) {
+        setIsTextboxEnteringEnds(true)
       }
     },
   })
 
-  const [isTextBoxAutoPrint, setIsTextBoxAutoPrint] = useState(true)
+  const [isTextboxAutoPrint, setIsTextboxAutoPrint] = useState(true)
 
-  const onTextBoxPrintEnds = useCallback(() => {
-    setIsTextBoxAutoPrint(false)
+  const onTextboxPrintEnds = useCallback(() => {
+    setIsTextboxAutoPrint(false)
   }, [])
 
   const containerRef = useRef<HTMLDivElement | null>(null)
   useWindowClick(() => {
     //Игнорировать клики после закрытия текстбокса
-    if (!isTextBoxAutoPrint && isOpened) {
+    if (!isTextboxAutoPrint && isOpened) {
       close()
     }
   })
@@ -70,13 +70,13 @@ export const TextBox: FC<Props> = observer(({ isOpened, afterClose, withCloseCro
                 {
                   <AutoPrint
                     text={text}
-                    printPrevented={!isTextBoxEnteringEnds}
-                    onPrintEnds={onTextBoxPrintEnds}
+                    printPrevented={!isTextboxEnteringEnds}
+                    onPrintEnds={onTextboxPrintEnds}
                   />
                 }
               </Box>
               {/* Показывать крестик только после того, как текст напечатался */}
-              {withCloseCross && !isTextBoxAutoPrint && (
+              {withCloseCross && !isTextboxAutoPrint && (
                 <CloseButton onClick={close}>
                   <CloseCross />
                 </CloseButton>

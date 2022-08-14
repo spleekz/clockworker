@@ -167,12 +167,12 @@ export class GameStore {
   }
 
   //!Текст бокс
-  isTextBoxOpened = false
-  openTextBox(): void {
-    this.isTextBoxOpened = true
+  isTextboxOpened = false
+  openTextbox(): void {
+    this.isTextboxOpened = true
   }
-  closeTextBox(): void {
-    this.isTextBoxOpened = false
+  closeTextbox(): void {
+    this.isTextboxOpened = false
   }
 
   //!Гейм луп
@@ -190,7 +190,7 @@ export class GameStore {
         //автомува, и когда персонаж находится за пределами карты
         if (
           !this.isGamePaused &&
-          !this.isTextBoxOpened &&
+          !this.isTextboxOpened &&
           !this.player.isAutoMoving &&
           this.player.isAllowedPosition(this.player.position)
         ) {
