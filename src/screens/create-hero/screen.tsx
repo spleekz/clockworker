@@ -70,7 +70,9 @@ export const CreateHeroScreen: FC = observer(() => {
   const marketNameSpecSymbolsText = 'Название магазина содержит недопустимые символы'
 
   const validateNoSpecialSymbols = (value: string): boolean => {
-    return value.split('').every((symbol) => isLetter(symbol) || isNumber(symbol))
+    return value
+      .split('')
+      .every((symbol) => isLetter(symbol) || isNumber(symbol) || symbol === ' ' || symbol === '-')
   }
 
   const startGame: SubmitHandler<CreateHeroForm> = ({ heroName, marketName }) => {
@@ -100,8 +102,8 @@ export const CreateHeroScreen: FC = observer(() => {
                   validate: validateNoSpecialSymbols,
                   onBlur: trimHeroName,
                   minLength: 3,
-                  maxLength: 20,
                 })}
+                maxLength={20}
                 placeholder={'Имя персонажа'}
               />
               {isHeroNameError && (
@@ -120,8 +122,8 @@ export const CreateHeroScreen: FC = observer(() => {
                   validate: validateNoSpecialSymbols,
                   onBlur: trimMarketName,
                   minLength: 2,
-                  maxLength: 20,
                 })}
+                maxLength={20}
                 placeholder={'Название магазина'}
               />
               {isMarketNameError && (
