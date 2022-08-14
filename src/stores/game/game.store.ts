@@ -1,6 +1,6 @@
 import { makeAutoObservable } from 'mobx'
 
-import { Canvas, CanvasObject } from 'game-utility-types'
+import { CanvasObject } from 'game-utility-types'
 
 import { AppStore } from 'stores/app.store'
 import { KeyboardStore } from 'stores/keyboard.store'
@@ -65,8 +65,8 @@ export class GameStore {
   get canvasHeight(): number {
     return screen.height
   }
-  initializeCanvas(canvas: Canvas): void {
-    this.canvasObject.canvas = canvas
+  initializeCanvas(): void {
+    this.canvasObject.canvas = document.createElement('canvas')
     this.canvasObject.canvas.width = this.canvasWidth
     this.canvasObject.canvas.height = this.canvasHeight
 
@@ -120,7 +120,15 @@ export class GameStore {
   }
 
   //!Сетап игры
+  get isGameLoaded(): boolean {
+    if (this.player && this.map) {
+      return this.player.images.allAreLoaded && this.map.images.allAreLoaded
+    }
+    return false
+  }
+
   setupGame(): void {
+    this.initializeCanvas()
     this.createMap({
       width: this.canvasWidth,
       height: this.canvasHeight,

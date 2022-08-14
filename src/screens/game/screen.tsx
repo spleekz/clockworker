@@ -1,5 +1,5 @@
 import { observer } from 'mobx-react-lite'
-import React, { createContext, useContext, useEffect, useState } from 'react'
+import React, { createContext, useContext, useEffect, useRef, useState } from 'react'
 import styled from 'styled-components'
 
 import { FC } from 'basic-utility-types'
@@ -13,7 +13,6 @@ import { QuitInMainMenuConfirm } from 'components/game-popups/quit-in-main-menu-
 import { Textbox } from 'components/textbox/textbox'
 import { SettingsMenu } from 'screens/main/settings/menu'
 
-import { GameCanvas } from './canvas'
 import { PauseMenu } from './pause-menu'
 
 const GameStoreContext = createContext<GameStore | null>(null)
@@ -54,36 +53,43 @@ export const GameScreen: FC = observer(() => {
   })
 
   useEffect(() => {
-    if (gameStore.canvasObject.canvas && gameStore.canvasObject.ctx) {
-      gameStore.setupGame()
-      gameStore.gameLoop()
-      gameStore.openTextbox()
-    }
+    gameStore.setupGame()
+    gameStore.gameLoop()
+    gameStore.openTextbox()
   }, [])
 
+  const containerRef = useRef<HTMLDivElement | null>(null)
+  useEffect(() => {
+    if (gameStore.isGameLoaded && gameStore.canvasObject.canvas && containerRef.current) {
+      containerRef.current.appendChild(gameStore.canvasObject.canvas)
+    }
+  }, [gameStore.isGameLoaded])
+
   return (
-    <GameStoreContext.Provider value={gameStore}>
-      <Container>
-        <PauseMenu isOpened={gameStore.isGamePauseMenuOpened} />
-        <SettingsMenu
-          isOpened={gameStore.isSettingsMenuOpened}
-          onClose={gameStore.closeSettingsMenu}
-          afterClose={gameStore.openGamePauseMenu}
-        />
-        <QuitInMainMenuConfirm isOpened={appStore.isQuitInMainMenuConfirmOpened} />
+    <>
+      {gameStore.isGameLoaded && (
+        <Container ref={containerRef}>
+          <GameStoreContext.Provider value={gameStore}>
+            <PauseMenu isOpened={gameStore.isGamePauseMenuOpened} />
+            <SettingsMenu
+              isOpened={gameStore.isSettingsMenuOpened}
+              onClose={gameStore.closeSettingsMenu}
+              afterClose={gameStore.openGamePauseMenu}
+            />
+            <QuitInMainMenuConfirm isOpened={appStore.isQuitInMainMenuConfirmOpened} />
 
-        {gameStore.script && (
-          <Textbox
-            isOpened={gameStore.isTextboxOpened}
-            afterClose={gameStore.heroEntering}
-            withCloseCross={true}
-            text={gameStore.script.content.welcome}
-          />
-        )}
-
-        <GameCanvas />
-      </Container>
-    </GameStoreContext.Provider>
+            {gameStore.script && (
+              <Textbox
+                isOpened={gameStore.isTextboxOpened}
+                afterClose={gameStore.heroEntering}
+                withCloseCross={true}
+                text={gameStore.script.content.welcome}
+              />
+            )}
+          </GameStoreContext.Provider>
+        </Container>
+      )}
+    </>
   )
 })
 

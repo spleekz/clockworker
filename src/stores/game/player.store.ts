@@ -3,6 +3,7 @@ import { makeAutoObservable } from 'mobx'
 import { NonNullableProperties } from 'basic-utility-types'
 import { CanvasObject, Directions, MovementState, Position } from 'game-utility-types'
 
+import { Images } from 'stores/entities/images'
 import { Sprite } from 'stores/entities/sprite'
 import { KeyboardStore } from 'stores/keyboard.store'
 import { MovementControlValue, SettingsStore } from 'stores/settings.store'
@@ -47,10 +48,15 @@ export class PlayerStore {
     makeAutoObservable(this, {}, { autoBind: true })
   }
 
+  //!Изображения
+  images = new Images({
+    sprite: playerSpriteSrc,
+  })
+
   //!Спрайт
   get sprite(): Sprite {
     return new Sprite({
-      src: playerSpriteSrc,
+      src: this.images.list.sprite.element.src,
       width: 14,
       height: 27,
       firstSkipX: 1,
