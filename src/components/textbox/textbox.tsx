@@ -74,13 +74,13 @@ export const Textbox: FC<Props> = observer(({ isOpened, afterClose, withCloseCro
                     onPrintEnds={onTextboxPrintEnds}
                   />
                 }
+                {/* Показывать крестик только после того, как текст напечатался */}
+                {withCloseCross && !isTextboxAutoPrint && (
+                  <CloseButton onClick={close}>
+                    <CloseCross />
+                  </CloseButton>
+                )}
               </Box>
-              {/* Показывать крестик только после того, как текст напечатался */}
-              {withCloseCross && !isTextboxAutoPrint && (
-                <CloseButton onClick={close}>
-                  <CloseCross />
-                </CloseButton>
-              )}
             </Container>
           ),
       )}
@@ -91,13 +91,13 @@ export const Textbox: FC<Props> = observer(({ isOpened, afterClose, withCloseCro
 const Container = styled(animated.div)`
   position: absolute;
   z-index: 999;
+  width: 100%;
   display: flex;
   justify-content: center;
   bottom: 15px;
   left: 0;
   right: 0;
   margin: 0 auto;
-  max-width: 680px;
 `
 const CloseButton = styled(PixelatedButton).attrs({
   pixelsSize: 'small',
@@ -121,8 +121,9 @@ const CloseCross = styled.div`
   background-size: cover;
 `
 const Box = styled.div`
-  width: 100%;
-  padding: 18px 50px 18px 18px;
+  position: relative;
+  max-width: 680px;
+  padding: 18px 60px 18px 18px;
   font-size: 24px;
   background-color: ${colors.primary};
   border-radius: 16px;
