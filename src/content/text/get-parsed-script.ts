@@ -21,14 +21,16 @@ export const getParsedScript = (config: ParsedScriptConfig): Script => {
     { key: '#', value: marketName },
   ]
 
-  const parsedScript = JSON.parse(JSON.stringify(script))
-  for (var key in parsedScript.content) {
+  const parsedScript: Script = JSON.parse(JSON.stringify(script))
+  Object.keys(parsedScript.content).forEach((parsedScriptKey) => {
     replacers.forEach((replacer) => {
-      parsedScript.content[key as KeyOfScriptContent] = parsedScript.content[key as KeyOfScriptContent]
+      parsedScript.content[parsedScriptKey as KeyOfScriptContent] = parsedScript.content[
+        parsedScriptKey as KeyOfScriptContent
+      ]
         .split(replacer.key)
         .join(replacer.value)
     })
-  }
+  })
 
   return parsedScript
 }
