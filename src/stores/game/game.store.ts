@@ -43,6 +43,26 @@ export class GameStore {
     makeAutoObservable(this, {}, { autoBind: true })
   }
 
+  //!Опенинг
+  //Длительность исчезновения
+  get openingFadeAnimationMs(): number {
+    return 1500
+  }
+  //Длительность статичной картинки
+  get openingDurationMs(): number {
+    return 3500
+  }
+  isOpening = false
+  showOpening(): Promise<void> {
+    return new Promise((resolve) => {
+      this.isOpening = true
+      setTimeout(() => {
+        this.isOpening = false
+        resolve()
+      }, this.openingDurationMs + this.openingFadeAnimationMs)
+    })
+  }
+
   //!Сценарий
   get script(): Script | null {
     if (this.player && this.market) {

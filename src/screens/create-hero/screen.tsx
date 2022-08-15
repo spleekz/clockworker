@@ -1,5 +1,5 @@
 import { observer } from 'mobx-react-lite'
-import React from 'react'
+import React, { useState } from 'react'
 import styled from 'styled-components'
 
 import { FC } from 'basic-utility-types'
@@ -19,6 +19,8 @@ import {
   PixelatedInput,
 } from 'components/pixelated/pixelated-components'
 
+import { AnimationBeforeGameOpening } from './animation-before-game-opening'
+
 type CreateHeroForm = {
   heroName: string
   marketName: string
@@ -27,9 +29,15 @@ type CreateHeroForm = {
 export const CreateHeroScreen: FC = observer(() => {
   const { appStore } = useStore()
 
+  const [isAnimationBeforeGameOpening, setIsAnimationBeforeGameOpening] = useState(false)
+
   useKey({
     key: 'Escape',
-    fn: appStore.toggleQuitInMainMenuConfirm,
+    fn: () => {
+      if (!isAnimationBeforeGameOpening) {
+        appStore.toggleQuitInMainMenuConfirm()
+      }
+    },
   })
 
   const goBack = (): void => {
@@ -80,11 +88,16 @@ export const CreateHeroScreen: FC = observer(() => {
       playerName: heroName.trim(),
       marketName: marketName.trim(),
     })
-    appStore.setScreen('game')
+    setIsAnimationBeforeGameOpening(true)
   }
 
   return (
     <Container>
+      <AnimationBeforeGameOpening
+        isAnimation={isAnimationBeforeGameOpening}
+        onAnimationEnd={() => appStore.setScreen('game')}
+      />
+
       <QuitInMainMenuConfirm
         isOpened={appStore.isQuitInMainMenuConfirmOpened}
         question={'Вернуться в главное меню?'}

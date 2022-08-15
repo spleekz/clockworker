@@ -13,6 +13,7 @@ import { QuitInMainMenuConfirm } from 'components/game-popups/quit-in-main-menu-
 import { Textbox } from 'components/textbox/textbox'
 import { SettingsMenu } from 'screens/main/settings/menu'
 
+import { GameOpening } from './opening'
 import { PauseMenu } from './pause-menu'
 
 const GameStoreContext = createContext<GameStore | null>(null)
@@ -36,17 +37,19 @@ export const GameScreen: FC = observer(() => {
   useKey({
     key: 'Escape',
     fn: () => {
-      if (!gameStore.isTextboxOpened) {
-        if (appStore.isQuitGameConfirmOpened) {
-          appStore.closeQuitGameConfirm()
-        } else if (appStore.isQuitInMainMenuConfirmOpened) {
-          appStore.closeQuitInMainMenuConfirm()
-        } else if (gameStore.isSettingsMenuOpened) {
-          gameStore.closeSettingsMenu()
-          gameStore.openGamePauseMenu()
-        } else {
-          gameStore.toggleGamePause()
-          gameStore.toggleGamePauseMenu()
+      if (!gameStore.isOpening) {
+        if (!gameStore.isTextboxOpened) {
+          if (appStore.isQuitGameConfirmOpened) {
+            appStore.closeQuitGameConfirm()
+          } else if (appStore.isQuitInMainMenuConfirmOpened) {
+            appStore.closeQuitInMainMenuConfirm()
+          } else if (gameStore.isSettingsMenuOpened) {
+            gameStore.closeSettingsMenu()
+            gameStore.openGamePauseMenu()
+          } else {
+            gameStore.toggleGamePause()
+            gameStore.toggleGamePauseMenu()
+          }
         }
       }
     },
@@ -54,8 +57,10 @@ export const GameScreen: FC = observer(() => {
 
   useEffect(() => {
     gameStore.setupGame()
-    gameStore.gameLoop()
-    gameStore.openTextbox()
+    gameStore.showOpening().then(() => {
+      gameStore.gameLoop()
+      gameStore.openTextbox()
+    })
   }, [])
 
   const containerRef = useRef<HTMLDivElement | null>(null)
@@ -66,30 +71,29 @@ export const GameScreen: FC = observer(() => {
   }, [gameStore.isGameLoaded])
 
   return (
-    <>
+    <GameStoreContext.Provider value={gameStore}>
+      <GameOpening isOpened={gameStore.isOpening} />
       {gameStore.isGameLoaded && (
         <Container ref={containerRef}>
-          <GameStoreContext.Provider value={gameStore}>
-            <PauseMenu isOpened={gameStore.isGamePauseMenuOpened} />
-            <SettingsMenu
-              isOpened={gameStore.isSettingsMenuOpened}
-              onClose={gameStore.closeSettingsMenu}
-              afterClose={gameStore.openGamePauseMenu}
-            />
-            <QuitInMainMenuConfirm isOpened={appStore.isQuitInMainMenuConfirmOpened} />
+          <PauseMenu isOpened={gameStore.isGamePauseMenuOpened} />
+          <SettingsMenu
+            isOpened={gameStore.isSettingsMenuOpened}
+            onClose={gameStore.closeSettingsMenu}
+            afterClose={gameStore.openGamePauseMenu}
+          />
+          <QuitInMainMenuConfirm isOpened={appStore.isQuitInMainMenuConfirmOpened} />
 
-            {gameStore.script && (
-              <Textbox
-                isOpened={gameStore.isTextboxOpened}
-                afterClose={gameStore.heroEntering}
-                withCloseCross={true}
-                text={gameStore.script.content.welcome}
-              />
-            )}
-          </GameStoreContext.Provider>
+          {gameStore.script && (
+            <Textbox
+              isOpened={gameStore.isTextboxOpened}
+              afterClose={gameStore.heroEntering}
+              withCloseCross={true}
+              text={gameStore.script.content.welcome}
+            />
+          )}
         </Container>
       )}
-    </>
+    </GameStoreContext.Provider>
   )
 })
 

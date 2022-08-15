@@ -14,11 +14,11 @@ export class AppStore {
   setScreen(screen: AppScreen): void {
     this.screen = screen
   }
+
+  //!Выход из игры
   quitGame(): void {
     window.close()
   }
-
-  //!Выход из игры
   isQuitGameConfirmOpened = false
   openQuitGameConfirm(): void {
     this.isQuitGameConfirmOpened = true
