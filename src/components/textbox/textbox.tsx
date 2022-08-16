@@ -11,7 +11,7 @@ import { colors } from 'lib/theme'
 
 import { AutoPrint } from 'components/auto-print/auto-print'
 import { PixelatedButton } from 'components/pixelated/pixelated-components'
-import { useGameStore } from 'screens/game/screen'
+import { useGamePlayStore } from 'screens/game/play/screen'
 
 import cross from 'assets/icons/cross.png'
 
@@ -23,10 +23,10 @@ type Props = {
 }
 
 export const Textbox: FC<Props> = observer(({ isOpened, afterClose, withCloseCross, text }) => {
-  const gameStore = useGameStore()
+  const gamePlayStore = useGamePlayStore()
 
   const close = (): void => {
-    gameStore.closeTextbox()
+    gamePlayStore.closeTextbox()
     afterClose?.()
   }
 

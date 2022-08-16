@@ -11,7 +11,7 @@ import { colors } from 'lib/theme'
 import { PixelatedButton } from 'components/pixelated/pixelated-components'
 import { Popup } from 'components/popup/popup-template'
 
-import { useGameStore } from './screen'
+import { useGamePlayStore } from './screen'
 
 type Props = {
   isOpened: boolean
@@ -19,16 +19,16 @@ type Props = {
 
 export const PauseMenu: FC<Props> = observer(({ isOpened }) => {
   const { appStore } = useStore()
-  const gameStore = useGameStore()
+  const gamePlayStore = useGamePlayStore()
 
   const openSettings = (): void => {
-    gameStore.closeGamePauseMenu()
-    gameStore.openSettingsMenu()
+    gamePlayStore.closeGamePauseMenu()
+    gamePlayStore.openSettingsMenu()
   }
 
   const resumeGame = (): void => {
-    gameStore.resumeGame()
-    gameStore.closeGamePauseMenu()
+    gamePlayStore.resumeGame()
+    gamePlayStore.closeGamePauseMenu()
   }
 
   return (

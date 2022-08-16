@@ -12,7 +12,7 @@ import playerSpriteSrc from 'content/sprites/heroes/Player.png'
 
 import { areSame } from 'lib/are-same'
 
-import { drawSprite } from '../../lib/draw-sprite'
+import { drawSprite } from '../../../lib/draw-sprite'
 import { MapStore } from './map.store'
 
 type PlayerStoreConfig = {

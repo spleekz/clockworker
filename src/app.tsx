@@ -7,8 +7,7 @@ import { FC } from 'basic-utility-types'
 import { useStore } from 'stores/root-store/context'
 
 import { QuitGameConfirm } from 'components/game-popups/quit-game-confirm'
-import { CreateHeroScreen } from 'screens/create-hero/screen'
-import { GameScreen } from 'screens/game/screen'
+import { Game } from 'screens/game/game'
 import { MainScreen } from 'screens/main/screen'
 
 export const App: FC = observer(() => {
@@ -22,8 +21,7 @@ export const App: FC = observer(() => {
 
       <Container>
         {appStore.screen === 'main' && <MainScreen />}
-        {appStore.screen === 'createHero' && <CreateHeroScreen />}
-        {appStore.screen === 'game' && <GameScreen />}
+        {appStore.screen === 'game' && <Game />}
       </Container>
     </>
   )

@@ -19,7 +19,8 @@ import {
   PixelatedInput,
 } from 'components/pixelated/pixelated-components'
 
-import { AnimationBeforeGameOpening } from './animation-before-game-opening'
+import { useGameStore } from '../game'
+import { TransitionToGameOpening } from './transition-to-game-opening'
 
 type CreateHeroForm = {
   heroName: string
@@ -28,13 +29,15 @@ type CreateHeroForm = {
 
 export const CreateHeroScreen: FC = observer(() => {
   const { appStore } = useStore()
+  const gameStore = useGameStore()
+  const { gameSetupFormStore } = gameStore
 
-  const [isAnimationBeforeGameOpening, setIsAnimationBeforeGameOpening] = useState(false)
+  const [isTransitionToGameOpening, setIsTransitionToGameOpening] = useState(false)
 
   useKey({
     key: 'Escape',
     fn: () => {
-      if (!isAnimationBeforeGameOpening) {
+      if (!isTransitionToGameOpening) {
         appStore.toggleQuitInMainMenuConfirm()
       }
     },
@@ -84,18 +87,16 @@ export const CreateHeroScreen: FC = observer(() => {
   }
 
   const startGame: SubmitHandler<CreateHeroForm> = ({ heroName, marketName }) => {
-    appStore.setCustomUserDataForGameStore({
-      playerName: heroName.trim(),
-      marketName: marketName.trim(),
-    })
-    setIsAnimationBeforeGameOpening(true)
+    gameSetupFormStore.setPlayerName(heroName)
+    gameSetupFormStore.setMarketName(marketName)
+    setIsTransitionToGameOpening(true)
   }
 
   return (
     <Container>
-      <AnimationBeforeGameOpening
-        isAnimation={isAnimationBeforeGameOpening}
-        onAnimationEnd={() => appStore.setScreen('game')}
+      <TransitionToGameOpening
+        isTransition={isTransitionToGameOpening}
+        onTransitionEnd={() => gameStore.setScreen('play')}
       />
 
       <QuitInMainMenuConfirm

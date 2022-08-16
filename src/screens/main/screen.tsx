@@ -28,8 +28,8 @@ export const MainScreen: FC = observer(() => {
     },
   })
 
-  const goToCreatingHero = (): void => {
-    appStore.setScreen('createHero')
+  const createNewGame = (): void => {
+    appStore.setScreen('game')
   }
 
   return (
@@ -39,7 +39,7 @@ export const MainScreen: FC = observer(() => {
       <Title>clockworker</Title>
       <Body>
         <MainMenuButtons>
-          <Button onClick={goToCreatingHero}>Новая игра</Button>
+          <Button onClick={createNewGame}>Новая игра</Button>
           <Button onClick={appStore.openSettingsMenu}>Настройки</Button>
         </MainMenuButtons>
       </Body>

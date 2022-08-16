@@ -1,8 +1,6 @@
 import { makeAutoObservable } from 'mobx'
 
-import { CustomUserData } from './game/game.store'
-
-type AppScreen = 'main' | 'createHero' | 'game'
+type AppScreen = 'main' | 'game'
 
 export class AppStore {
   constructor() {
@@ -61,14 +59,5 @@ export class AppStore {
   }
   get isAnyPopupOpened(): boolean {
     return this.openedPopupsCount > 0
-  }
-
-  //!Данные пользователя для стора игры
-  customUserDataForGameStore: CustomUserData | null = null
-  setCustomUserDataForGameStore(customUserData: CustomUserData): void {
-    this.customUserDataForGameStore = customUserData
-  }
-  clearCustomUserDataForGameStore(): void {
-    this.customUserDataForGameStore = null
   }
 }
