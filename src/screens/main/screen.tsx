@@ -12,6 +12,7 @@ import { colors } from 'lib/theme'
 
 import { PixelatedButton } from 'components/pixelated/pixelated-components'
 
+import { MainMenu } from './main-menu'
 import { SettingsMenu } from './settings/menu'
 
 export const MainScreen: FC = observer(() => {
@@ -28,20 +29,13 @@ export const MainScreen: FC = observer(() => {
     },
   })
 
-  const createNewGame = (): void => {
-    appStore.setScreen('game')
-  }
-
   return (
     <Container>
       <SettingsMenu isOpened={appStore.isSettingsMenuOpened} onClose={appStore.closeSettingsMenu} />
 
       <Title>clockworker</Title>
       <Body>
-        <MainMenuButtons>
-          <Button onClick={createNewGame}>Новая игра</Button>
-          <Button onClick={appStore.openSettingsMenu}>Настройки</Button>
-        </MainMenuButtons>
+        <MainMenu />
       </Body>
       <QuitGameButton onClick={appStore.openQuitGameConfirm}>Выйти из игры</QuitGameButton>
     </Container>
@@ -67,22 +61,10 @@ const Body = styled.div`
   flex-direction: column;
   justify-content: center;
 `
-const MainMenuButtons = styled.menu`
-  display: flex;
-  flex-direction: column;
-`
-const Button = styled(PixelatedButton).attrs({
+const QuitGameButton = styled(PixelatedButton).attrs({
   pixelsSize: 'medium',
   backgroundColor: colors.primary,
 })`
-  font-size: 32px;
-  padding: 22px 5px;
-  margin-top: 20px;
-  &:first-child {
-    margin-top: 0;
-  }
-`
-const QuitGameButton = styled(Button)`
   position: absolute;
   bottom: 15px;
   right: 25px;
