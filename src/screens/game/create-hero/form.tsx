@@ -15,8 +15,10 @@ import {
 } from 'components/pixelated/pixelated-components'
 
 import { useGameStore } from '../game'
+import { FieldErrorMessages } from './errors/field-error-messages'
+import { getFormErrors } from './errors/get-errors'
 
-type CreateHeroForm = {
+export type CreateHeroForm = {
   heroName: string
   marketName: string
 }
@@ -25,13 +27,9 @@ export const CreateHeroForm: FC = observer(() => {
   const gameStore = useGameStore()
   const { gameSetupFormStore } = gameStore
 
-  const {
-    register,
-    handleSubmit,
-    getValues,
-    setValue,
-    formState: { errors },
-  } = useForm<CreateHeroForm>()
+  const { register, handleSubmit, getValues, setValue, formState } = useForm<CreateHeroForm>()
+
+  const errors = getFormErrors(formState.errors)
 
   const trimHeroName = (): void => {
     const { heroName } = getValues()
@@ -41,22 +39,6 @@ export const CreateHeroForm: FC = observer(() => {
     const { marketName } = getValues()
     setValue('marketName', marketName.trim())
   }
-
-  const isHeroNameEmpty = errors.heroName?.type === 'required'
-  const heroNameEmptyText = 'Вы не указали имя своего персонажа'
-  const isHeroNameShort = errors.heroName?.type === 'minLength'
-  const heroNameShortText = 'Слишком короткое имя для персонажа'
-  const isHeroNameError = Boolean(errors.heroName)
-  const isHeroNameSpecSymbols = errors.heroName?.type === 'validate'
-  const heroNameSpecSymbolsText = 'Имя персонажа содержит недопустимые символы'
-
-  const isMarketNameEmpty = errors.marketName?.type === 'required'
-  const marketNameEmptyText = 'Вы не указали название магазина'
-  const isMarketNameShort = errors.marketName?.type === 'minLength'
-  const marketNameShortText = 'Название магазина слишком короткое'
-  const isMarketNameError = Boolean(errors.marketName)
-  const isMarketNameSpecSymbols = errors.marketName?.type === 'validate'
-  const marketNameSpecSymbolsText = 'Название магазина содержит недопустимые символы'
 
   const validateNoSpecialSymbols = (value: string): boolean => {
     return value
@@ -84,14 +66,12 @@ export const CreateHeroForm: FC = observer(() => {
             maxLength={20}
             placeholder={'Имя персонажа'}
           />
-          {isHeroNameError && (
+          {errors.heroName.isError && (
             <ExclamationMarkContainer>
               <ExclamationMark>!</ExclamationMark>
             </ExclamationMarkContainer>
           )}
-          {isHeroNameEmpty && <FormErrorText>{heroNameEmptyText}</FormErrorText>}
-          {isHeroNameShort && <FormErrorText>{heroNameShortText}</FormErrorText>}
-          {isHeroNameSpecSymbols && <FormErrorText>{heroNameSpecSymbolsText}</FormErrorText>}
+          <FieldErrorMessages errors={errors.heroName} />
         </InputContainer>
         <InputContainer>
           <Input
@@ -104,14 +84,12 @@ export const CreateHeroForm: FC = observer(() => {
             maxLength={20}
             placeholder={'Название магазина'}
           />
-          {isMarketNameError && (
+          {errors.marketName.isError && (
             <ExclamationMarkContainer>
               <ExclamationMark>!</ExclamationMark>
             </ExclamationMarkContainer>
           )}
-          {isMarketNameEmpty && <FormErrorText>{marketNameEmptyText}</FormErrorText>}
-          {isMarketNameShort && <FormErrorText>{marketNameShortText}</FormErrorText>}
-          {isMarketNameSpecSymbols && <FormErrorText>{marketNameSpecSymbolsText}</FormErrorText>}
+          <FieldErrorMessages errors={errors.marketName} />
         </InputContainer>
         <StartGameButtonContainer>
           <StartGameButton type='submit'>Начать игру</StartGameButton>
@@ -164,16 +142,6 @@ const ExclamationMarkContainer = styled(PixelatedDiv).attrs({
 const ExclamationMark = styled.div`
   position: absolute;
   left: 10px;
-`
-const FormErrorText = styled.div`
-  position: absolute;
-  top: 50px;
-  width: 100%;
-  margin-left: auto;
-  margin-right: auto;
-  margin-top: 6px;
-  color: ${colors.error};
-  text-align: center;
 `
 const StartGameButtonContainer = styled.div`
   position: absolute;
