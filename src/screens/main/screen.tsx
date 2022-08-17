@@ -6,28 +6,18 @@ import { FC } from 'basic-utility-types'
 
 import { useStore } from 'stores/root-store/context'
 
-import { useKey } from 'hooks/use-key'
-
 import { colors } from 'lib/theme'
 
 import { PixelatedButton } from 'components/pixelated/pixelated-components'
 
+import { handleMainScreenEsc } from './handle-esc'
 import { MainMenu } from './main-menu'
 import { SettingsMenu } from './settings/menu'
 
 export const MainScreen: FC = observer(() => {
   const { appStore } = useStore()
 
-  useKey({
-    key: 'Escape',
-    fn: () => {
-      if (appStore.isSettingsMenuOpened) {
-        appStore.closeSettingsMenu()
-      } else {
-        appStore.toggleQuitGameConfirm()
-      }
-    },
-  })
+  handleMainScreenEsc()
 
   return (
     <Container>

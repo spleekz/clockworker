@@ -6,13 +6,12 @@ import { FC } from 'basic-utility-types'
 import { GamePlayStore } from 'stores/game/play/game-play.store'
 import { useStore } from 'stores/root-store/context'
 
-import { useKey } from 'hooks/use-key'
-
 import { QuitInMainMenuConfirm } from 'components/game-popups/quit-in-main-menu-confirm'
 import { SettingsMenu } from 'screens/main/settings/menu'
 
 import { useGameStore } from '../game'
 import { GameOpening } from '../opening'
+import { handleGamePlayScreenEsc } from './handle-esc'
 import { PauseMenu } from './pause-menu'
 import { PlayCanvas } from './play-canvas'
 
@@ -30,26 +29,7 @@ export const GamePlayScreen: FC = observer(() => {
   const gameStore = useGameStore()
   const [gamePlayStore] = useState(gameStore.createGamePlayStore)
 
-  useKey({
-    key: 'Escape',
-    fn: () => {
-      if (!gameStore.opening.isOpening) {
-        if (!gamePlayStore.isTextboxOpened) {
-          if (appStore.isQuitGameConfirmOpened) {
-            appStore.closeQuitGameConfirm()
-          } else if (appStore.isQuitInMainMenuConfirmOpened) {
-            appStore.closeQuitInMainMenuConfirm()
-          } else if (gamePlayStore.isSettingsMenuOpened) {
-            gamePlayStore.closeSettingsMenu()
-            gamePlayStore.openGamePauseMenu()
-          } else {
-            gamePlayStore.toggleGamePause()
-            gamePlayStore.toggleGamePauseMenu()
-          }
-        }
-      }
-    },
-  })
+  handleGamePlayScreenEsc({ gamePlayStore })
 
   return (
     <GamePlayStoreContext.Provider value={gamePlayStore}>

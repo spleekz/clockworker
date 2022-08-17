@@ -6,28 +6,18 @@ import { FC } from 'basic-utility-types'
 
 import { useStore } from 'stores/root-store/context'
 
-import { useKey } from 'hooks/use-key'
-
 import { colors } from 'lib/theme'
 
 import { QuitInMainMenuConfirm } from 'components/game-popups/quit-in-main-menu-confirm'
 import { PixelatedButton } from 'components/pixelated/pixelated-components'
 
-import { useGameStore } from '../game'
 import { CreateHeroForm } from './form'
+import { handleCreateHeroScreenEsc } from './handle-esc'
 
 export const CreateHeroScreen: FC = observer(() => {
   const { appStore } = useStore()
-  const gameStore = useGameStore()
 
-  useKey({
-    key: 'Escape',
-    fn: () => {
-      if (!gameStore.opening.isOpening) {
-        appStore.toggleQuitInMainMenuConfirm()
-      }
-    },
-  })
+  handleCreateHeroScreenEsc()
 
   const goBack = (): void => {
     appStore.setScreen('main')
