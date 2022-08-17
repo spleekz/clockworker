@@ -1,7 +1,7 @@
 import { makeAutoObservable } from 'mobx'
 
 import { NonNullableProperties } from 'basic-utility-types'
-import { CanvasObject, Directions, MovementState, Position } from 'game-utility-types'
+import { CanvasObject, Directions, MovementLoopState, Position } from 'game-utility-types'
 
 import { Images } from 'stores/entities/images'
 import { Sprite } from 'stores/entities/sprite'
@@ -76,7 +76,7 @@ export class PlayerStore {
       skipY: this.sprite.skipY,
       scale: this.sprite.scale,
       direction: this.currentDirection,
-      state: this.movementState,
+      state: this.movementLoopState,
       position: this.position,
     })
   }
@@ -174,35 +174,28 @@ export class PlayerStore {
     //Чтобы при смене напрвления сразу была анимация шага
     if (this.isMoving && this.currentDirection !== direction) {
       this.setMovementFramesCount(0)
-      this.setMovementStateIndex(1)
+      this.setMovementLoopIndex(1)
     }
     this.currentDirection = direction
   }
   //^@Позиция
 
   //@Анимация движения
-  get stepSize(): number {
-    return 3.3
-  }
-  get framesPerStep(): number {
-    return 9
-  }
-
   //!Цикл ходьбы
-  movementLoop: Array<MovementState> = [0, 1, 2, 3]
-  movementStateIndex = 0
-  setMovementStateIndex(index: MovementState): void {
-    this.movementStateIndex = index
+  movementLoop: Array<MovementLoopState> = [0, 1, 2, 3]
+  movementLoopIndex = 0
+  setMovementLoopIndex(index: MovementLoopState): void {
+    this.movementLoopIndex = index
   }
-  increaseMovementStateIndex(): void {
-    if (this.movementStateIndex === this.movementLoop.length - 1) {
-      this.setMovementStateIndex(0)
+  increaseMovementLoopIndex(): void {
+    if (this.movementLoopIndex === this.movementLoop.length - 1) {
+      this.setMovementLoopIndex(0)
     } else {
-      this.movementStateIndex += 1
+      this.movementLoopIndex += 1
     }
   }
-  get movementState(): MovementState {
-    return this.movementLoop[this.movementStateIndex]
+  get movementLoopState(): MovementLoopState {
+    return this.movementLoop[this.movementLoopIndex]
   }
 
   //!Счётчик кадров
@@ -220,7 +213,7 @@ export class PlayerStore {
   setIsMoving(value: boolean): void {
     if (this.isMoving === false && value === true) {
       //Чтобы при начале движения сразу была анимация шага
-      this.setMovementStateIndex(1)
+      this.setMovementLoopIndex(1)
     }
     this.isMoving = value
   }
@@ -278,6 +271,13 @@ export class PlayerStore {
   }
 
   //!Движение
+  get stepSize(): number {
+    return 3.3
+  }
+  get framesPerStep(): number {
+    return 9
+  }
+
   move(config?: MoveConfig): void {
     const { stepSize = this.stepSize, framesPerStep = this.framesPerStep } = config ?? {}
 
@@ -309,14 +309,14 @@ export class PlayerStore {
     this.increaseMovementFramesCount()
     if (this.movementFramesCount >= framesPerStep) {
       this.setMovementFramesCount(0)
-      this.increaseMovementStateIndex()
+      this.increaseMovementLoopIndex()
     }
   }
 
   //!Остановка
   stop(): void {
     this.setMovementFramesCount(0)
-    this.setMovementStateIndex(0)
+    this.setMovementLoopIndex(0)
     this.setIsMoving(false)
   }
 
