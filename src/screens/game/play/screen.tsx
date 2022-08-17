@@ -63,6 +63,7 @@ export const GamePlayScreen: FC = observer(() => {
   const containerRef = useRef<HTMLDivElement | null>(null)
   useEffect(() => {
     if (gamePlayStore.isGameLoaded && gamePlayStore.canvasObject.canvas && containerRef.current) {
+      //"рендер" канваса, созданного в сторе
       containerRef.current.appendChild(gamePlayStore.canvasObject.canvas)
     }
   }, [gamePlayStore.isGameLoaded])

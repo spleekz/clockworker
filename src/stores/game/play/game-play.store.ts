@@ -116,6 +116,7 @@ export class GamePlayStore {
 
   //!Сетап игры
   get isGameLoaded(): boolean {
+    //Проверка, что все изображения загрузились
     if (this.player && this.map) {
       return this.player.images.allAreLoaded && this.map.images.allAreLoaded
     }

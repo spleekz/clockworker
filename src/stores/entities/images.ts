@@ -15,6 +15,7 @@ type LoadImageConfig = {
   imageSrc: string
 }
 
+//Нужен для соотношения элемента изображения и статуса его загрузки с его названием
 export class Images {
   constructor(imagesWithSrc: ImagesWithSrc) {
     Object.keys(imagesWithSrc).forEach((key) => {
@@ -29,10 +30,6 @@ export class Images {
 
   list: ImageList = {}
 
-  get allAreLoaded(): boolean {
-    return Object.keys(this.list).every((key) => this.list[key].isLoaded)
-  }
-
   createImage(imageName: keyof ImagesWithSrc): void {
     this.list[imageName] = {
       element: new Image(),
@@ -45,5 +42,9 @@ export class Images {
     })
 
     this.list[imageName].element.src = imageSrc
+  }
+
+  get allAreLoaded(): boolean {
+    return Object.keys(this.list).every((key) => this.list[key].isLoaded)
   }
 }
