@@ -14,16 +14,20 @@ export class GameOpeningStore {
     return 3500
   }
 
-  background = '#000000'
+  get background(): string {
+    return '#000000'
+  }
 
   isOpening = false
   show(): Promise<void> {
+    this.isOpening = true
     return new Promise((resolve) => {
-      this.isOpening = true
       setTimeout(() => {
-        this.isOpening = false
-        resolve()
-      }, this.durationMs + this.transitionMs)
+        setTimeout(() => {
+          this.isOpening = false
+          resolve()
+        }, this.durationMs + this.transitionMs)
+      }, this.transitionMs)
     })
   }
 }

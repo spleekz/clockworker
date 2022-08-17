@@ -1,5 +1,5 @@
 import { observer } from 'mobx-react-lite'
-import React, { useState } from 'react'
+import React from 'react'
 import styled from 'styled-components'
 
 import { FC } from 'basic-utility-types'
@@ -20,7 +20,6 @@ import {
 } from 'components/pixelated/pixelated-components'
 
 import { useGameStore } from '../game'
-import { TransitionToGameOpening } from './transition-to-game-opening'
 
 type CreateHeroForm = {
   heroName: string
@@ -32,12 +31,10 @@ export const CreateHeroScreen: FC = observer(() => {
   const gameStore = useGameStore()
   const { gameSetupFormStore } = gameStore
 
-  const [isTransitionToGameOpening, setIsTransitionToGameOpening] = useState(false)
-
   useKey({
     key: 'Escape',
     fn: () => {
-      if (!isTransitionToGameOpening) {
+      if (!gameStore.opening.isOpening) {
         appStore.toggleQuitInMainMenuConfirm()
       }
     },
@@ -89,16 +86,11 @@ export const CreateHeroScreen: FC = observer(() => {
   const startGame: SubmitHandler<CreateHeroForm> = ({ heroName, marketName }) => {
     gameSetupFormStore.setPlayerName(heroName)
     gameSetupFormStore.setMarketName(marketName)
-    setIsTransitionToGameOpening(true)
+    gameStore.setScreen('play')
   }
 
   return (
     <Container>
-      <TransitionToGameOpening
-        isTransition={isTransitionToGameOpening}
-        onTransitionEnd={() => gameStore.setScreen('play')}
-      />
-
       <QuitInMainMenuConfirm
         isOpened={appStore.isQuitInMainMenuConfirmOpened}
         question={'Вернуться в главное меню?'}
