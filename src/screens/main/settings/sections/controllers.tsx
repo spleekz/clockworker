@@ -10,7 +10,7 @@ import { colors } from 'lib/theme'
 
 import { PixelatedCheckbox } from 'components/checkbox/pixelated-checkbox'
 
-export const ControlsSettingsSection: FC = observer(() => {
+export const ControllersSettingsSection: FC = observer(() => {
   const { settingsStore } = useStore()
 
   return (
@@ -18,21 +18,21 @@ export const ControlsSettingsSection: FC = observer(() => {
       <Title>Управление</Title>
       <Setting>
         <SettingTitle>Движение :</SettingTitle>
-        <MoveSettingVariants>
-          {settingsStore.settings.controls.movementControls.map((variant) => {
+        <MovementControllersVariants>
+          {settingsStore.settings.controllers.movement.controllers.map((variant) => {
             return (
-              <MoveSettingVariant key={variant.id}>
-                <MoveSettingVariantLabel>{variant.label}</MoveSettingVariantLabel>
+              <MovementControllersVariant key={variant.id}>
+                <MovementControllersVariantLabel>{variant.label}</MovementControllersVariantLabel>
                 <PixelatedCheckbox
                   checked={variant.isSelected}
-                  onChange={() => settingsStore.selectMovementControlVariant(variant.id)}
+                  onChange={() => settingsStore.selectMovementControllersVariant(variant.id)}
                   backgroundColor={colors.secondary}
                   checkedBackgroundColor={colors.selected}
                 />
-              </MoveSettingVariant>
+              </MovementControllersVariant>
             )
           })}
-        </MoveSettingVariants>
+        </MovementControllersVariants>
       </Setting>
     </Container>
   )
@@ -53,16 +53,16 @@ const SettingTitle = styled.div`
   top: 10px;
   font-size: 24px;
 `
-const MoveSettingVariants = styled.div`
+const MovementControllersVariants = styled.div`
   flex: 1 0 auto;
   display: flex;
   justify-content: space-around;
 `
-const MoveSettingVariant = styled.div`
+const MovementControllersVariant = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
 `
-const MoveSettingVariantLabel = styled.div`
+const MovementControllersVariantLabel = styled.div`
   margin-bottom: 8px;
 `

@@ -7,16 +7,25 @@ type Setting<T> = {
   isSelected: boolean
 }
 
-export type MovementControlValue = {
+export type MovementControllers = {
   down: string
   right: string
   up: string
   left: string
 }
+export type MovementRegulators = {
+  sprint: string
+}
+export type MovementKeys = {
+  controllers: MovementControllers
+  regulators: MovementRegulators
+}
 
 type Settings = {
-  controls: {
-    movementControls: Array<Setting<MovementControlValue>>
+  controllers: {
+    movement: {
+      controllers: Array<Setting<MovementControllers>>
+    }
   }
 }
 
@@ -26,36 +35,38 @@ export class SettingsStore {
   }
 
   settings: Settings = {
-    controls: {
-      movementControls: [
-        {
-          id: 'wasd',
-          label: 'WASD',
-          value: {
-            down: 'KeyS',
-            right: 'KeyD',
-            up: 'KeyW',
-            left: 'KeyA',
+    controllers: {
+      movement: {
+        controllers: [
+          {
+            id: 'wasd',
+            label: 'WASD',
+            value: {
+              down: 'KeyS',
+              right: 'KeyD',
+              up: 'KeyW',
+              left: 'KeyA',
+            },
+            isSelected: true,
           },
-          isSelected: true,
-        },
-        {
-          id: 'arrows',
-          label: 'Стрелочки',
-          value: {
-            down: 'ArrowDown',
-            right: 'ArrowRight',
-            up: 'ArrowUp',
-            left: 'ArrowLeft',
+          {
+            id: 'arrows',
+            label: 'Стрелочки',
+            value: {
+              down: 'ArrowDown',
+              right: 'ArrowRight',
+              up: 'ArrowUp',
+              left: 'ArrowLeft',
+            },
+            isSelected: false,
           },
-          isSelected: false,
-        },
-      ],
+        ],
+      },
     },
   }
 
-  selectMovementControlVariant(id: string): void {
-    this.settings.controls.movementControls.forEach((variant) => {
+  selectMovementControllersVariant(id: string): void {
+    this.settings.controllers.movement.controllers.forEach((variant) => {
       if (variant.id === id) {
         variant.isSelected = true
       } else {
@@ -63,12 +74,26 @@ export class SettingsStore {
       }
     })
   }
-  get movementControlValue(): MovementControlValue {
-    return this.settings.controls.movementControls.reduce((acc, variant) => {
-      if (variant.isSelected) {
-        acc = variant.value
+
+  get movementControllers(): MovementControllers {
+    return this.settings.controllers.movement.controllers.reduce((acc, controllersVariant) => {
+      if (controllersVariant.isSelected) {
+        acc = controllersVariant.value
       }
       return acc
-    }, {} as MovementControlValue)
+    }, {} as MovementControllers)
+  }
+
+  get movementRegulators(): MovementRegulators {
+    return {
+      sprint: 'ShiftLeft',
+    }
+  }
+
+  get movementKeys(): MovementKeys {
+    return {
+      controllers: this.movementControllers,
+      regulators: this.movementRegulators,
+    }
   }
 }

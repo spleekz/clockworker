@@ -9,7 +9,7 @@ import { colors } from 'lib/theme'
 import { PixelatedButton } from 'components/pixelated/pixelated-components'
 import { Popup } from 'components/popup/popup-template'
 
-import { ControlsSettingsSection } from './sections/controls'
+import { ControllersSettingsSection } from './sections/controllers'
 
 type Props = {
   isOpened: boolean
@@ -33,7 +33,7 @@ export const SettingsMenu: FC<Props> = observer(({ isOpened, onClose, afterClose
     >
       <Container>
         <List>
-          <ControlsSettingsSection />
+          <ControllersSettingsSection />
         </List>
         <OKButtonContainer>
           <OKButton onClick={onClose}>ОК</OKButton>

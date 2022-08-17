@@ -220,11 +220,11 @@ export class GamePlayStore {
   heroEntering(): void {
     setTimeout(() => {
       if (this.player) {
-        this.player.autoMove(
-          this.player.position,
-          { x: 0, y: 0 },
-          { stepSize: 0.45, framesPerStep: 11 },
-        )
+        this.player.autoMove({
+          start: this.player.position,
+          end: { x: 0, y: 0 },
+          state: this.player.movementStates.entering,
+        })
       }
     }, 300)
   }

@@ -6,14 +6,35 @@ import { CanvasObject, Directions, MovementLoopState, Position } from 'game-util
 import { Images } from 'stores/entities/images'
 import { Sprite } from 'stores/entities/sprite'
 import { KeyboardStore } from 'stores/keyboard.store'
-import { MovementControlValue, SettingsStore } from 'stores/settings.store'
+import {
+  MovementControllers,
+  MovementKeys,
+  MovementRegulators,
+  SettingsStore,
+} from 'stores/settings.store'
 
 import playerSpriteSrc from 'content/sprites/heroes/Player.png'
 
 import { areSame } from 'lib/are-same'
+import { last } from 'lib/arrays'
 
 import { drawSprite } from '../../../lib/draw-sprite'
 import { MapStore } from './map.store'
+
+type MovementStateName = 'idle' | 'walk' | 'sprint' | 'entering'
+type MovementState = {
+  stepSize: number
+  framesPerStep: number
+}
+type MovementStates = {
+  [P in MovementStateName]: MovementState
+}
+
+type AutoMoveConfig = {
+  start: Position
+  end: Position
+  state: MovementState
+}
 
 type PlayerStoreConfig = {
   name: string
@@ -22,13 +43,6 @@ type PlayerStoreConfig = {
   canvasObject: NonNullableProperties<CanvasObject>
   keyboard: KeyboardStore
 }
-
-type MoveConfig = {
-  stepSize?: number
-  framesPerStep?: number
-}
-
-type AutoMoveConfig = MoveConfig
 
 export class PlayerStore {
   private settings: SettingsStore
@@ -97,14 +111,14 @@ export class PlayerStore {
     const { x, y } = this.position
 
     if (this.currentDirection === Directions.DOWN) {
-      return { x, y: y + this.stepSize }
+      return { x, y: y + this.currentStepSize }
     } else if (this.currentDirection === Directions.RIGHT) {
-      return { x: x + this.stepSize, y }
+      return { x: x + this.currentStepSize, y }
     } else if (this.currentDirection === Directions.UP) {
-      return { x, y: y - this.stepSize }
+      return { x, y: y - this.currentStepSize }
     } else {
       //left
-      return { x: x - this.stepSize, y }
+      return { x: x - this.currentStepSize, y }
     }
   }
 
@@ -209,53 +223,106 @@ export class PlayerStore {
   //^@Анимация движения
 
   //@Обработка движения
-  isMoving = false
-  setIsMoving(value: boolean): void {
-    if (this.isMoving === false && value === true) {
-      //Чтобы при начале движения сразу была анимация шага
-      this.setMovementLoopIndex(1)
+  //!Состояния движения
+  get movementStates(): MovementStates {
+    return {
+      idle: {
+        stepSize: 0,
+        framesPerStep: 0,
+      },
+      walk: {
+        stepSize: 2.0,
+        framesPerStep: 11,
+      },
+      sprint: {
+        stepSize: 5.0,
+        framesPerStep: 6,
+      },
+      entering: {
+        stepSize: 0.45,
+        framesPerStep: 11,
+      },
     }
-    this.isMoving = value
   }
 
-  //!Клавиши движения
-  get movementKeys(): MovementControlValue {
-    return this.settings.movementControlValue
+  currentMovementStateName: MovementStateName = 'idle'
+  setCurrentMovementState(name: MovementStateName): void {
+    this.currentMovementStateName = name
   }
-  isMovementKey(key: string): boolean {
-    return Object.values(this.movementKeys).some((movementKey) => key === movementKey)
+  get currentMovementState(): MovementState {
+    return this.movementStates[this.currentMovementStateName]
   }
-  get pressedMovementKeys(): Array<string> {
-    return Array.from(this.keyboard.pressedKeys).filter(this.isMovementKey)
+  get currentStepSize(): number {
+    return this.currentMovementState.stepSize
   }
-  get lastPressedMovementKey(): string | null {
-    return this.pressedMovementKeys[this.pressedMovementKeys.length - 1] ?? null
+  get currentFramesPerStep(): number {
+    return this.currentMovementState.framesPerStep
   }
 
-  get isMoveDownKeyPressed(): boolean {
-    return this.lastPressedMovementKey === this.movementKeys.down
+  get isMoving(): boolean {
+    return this.currentMovementStateName !== 'idle'
   }
-  get isMoveRightKeyPressed(): boolean {
-    return this.lastPressedMovementKey === this.movementKeys.right
+
+  //@Клавиши управления
+  get movementKeys(): MovementKeys {
+    return this.settings.movementKeys
   }
-  get isMoveUpKeyPressed(): boolean {
-    return this.lastPressedMovementKey === this.movementKeys.up
+
+  //!Контроллеры
+  get movementControllers(): MovementControllers {
+    return this.movementKeys.controllers
   }
-  get isMoveLeftKeyPressed(): boolean {
-    return this.lastPressedMovementKey === this.movementKeys.left
+  isMovementController(key: string): boolean {
+    return Object.values(this.movementControllers).some((controller) => key === controller)
   }
+
+  get pressedMovementControllers(): Array<string> {
+    return Array.from(this.keyboard.pressedKeys).filter(this.isMovementController)
+  }
+  get lastPressedMovementController(): string | null {
+    return last(this.pressedMovementControllers) ?? null
+  }
+
   get isMovemetKeyPressed(): boolean {
-    return (
-      this.isMoveDownKeyPressed ||
-      this.isMoveRightKeyPressed ||
-      this.isMoveUpKeyPressed ||
-      this.isMoveLeftKeyPressed
-    )
+    return this.pressedMovementControllers.length !== 0
   }
+
+  get isMoveDownControllerPressed(): boolean {
+    return this.lastPressedMovementController === this.movementControllers.down
+  }
+  get isMoveRightControllerPressed(): boolean {
+    return this.lastPressedMovementController === this.movementControllers.right
+  }
+  get isMoveUpControllerPressed(): boolean {
+    return this.lastPressedMovementController === this.movementControllers.up
+  }
+  get isMoveLeftControllerPressed(): boolean {
+    return this.lastPressedMovementController === this.movementControllers.left
+  }
+
+  //!Регуляторы
+  get movementRegulators(): MovementRegulators {
+    return this.movementKeys.regulators
+  }
+  isMovementRegulator(key: string): boolean {
+    return Object.values(this.movementRegulators).some((regulator) => key === regulator)
+  }
+
+  get pressedMovementRegulators(): Array<string> {
+    return this.keyboard.pressedKeysArray.filter(this.isMovementRegulator)
+  }
+  get lastPressedMovementRegulator(): string | null {
+    return last(this.pressedMovementRegulators) ?? null
+  }
+
+  get isSprintKeyPressed(): boolean {
+    return this.lastPressedMovementRegulator === this.movementRegulators.sprint
+  }
+  //^@Клавиши управления
 
   //!Сделать шаг в текущем направлении
   makeStepInCurrentDirection(config?: { stepSize?: number }): void {
-    const { stepSize = this.stepSize } = config ?? {}
+    const { stepSize = this.currentStepSize } = config ?? {}
 
     const { x, y } = this.position
 
@@ -271,19 +338,15 @@ export class PlayerStore {
   }
 
   //!Движение
-  get stepSize(): number {
-    return 3.3
-  }
-  get framesPerStep(): number {
-    return 9
-  }
-
-  move(config?: MoveConfig): void {
-    const { stepSize = this.stepSize, framesPerStep = this.framesPerStep } = config ?? {}
-
-    this.setIsMoving(true)
+  move(state?: MovementState): void {
+    const { stepSize = this.currentStepSize, framesPerStep = this.currentFramesPerStep } = state ?? {}
 
     if (!this.isAutoMoving) {
+      if (this.isSprintKeyPressed) {
+        this.setCurrentMovementState('sprint')
+      } else {
+        this.setCurrentMovementState('walk')
+      }
       //Проверка, если следующим шагом персонаж выходит за границы
       const nextPosition = this.getPositionOnNextStep()
       if (!this.isAllowedPosition(nextPosition)) {
@@ -317,19 +380,19 @@ export class PlayerStore {
   stop(): void {
     this.setMovementFramesCount(0)
     this.setMovementLoopIndex(0)
-    this.setIsMoving(false)
+    this.setCurrentMovementState('idle')
   }
 
   //!Обработка клавиш движения
   handleMovementKeys(): void {
     if (this.isMovemetKeyPressed) {
-      if (this.isMoveDownKeyPressed) {
+      if (this.isMoveDownControllerPressed) {
         this.setCurrentDirection(Directions.DOWN)
-      } else if (this.isMoveRightKeyPressed) {
+      } else if (this.isMoveRightControllerPressed) {
         this.setCurrentDirection(Directions.RIGHT)
-      } else if (this.isMoveUpKeyPressed) {
+      } else if (this.isMoveUpControllerPressed) {
         this.setCurrentDirection(Directions.UP)
-      } else if (this.isMoveLeftKeyPressed) {
+      } else if (this.isMoveLeftControllerPressed) {
         this.setCurrentDirection(Directions.LEFT)
       }
       this.move()
@@ -343,6 +406,7 @@ export class PlayerStore {
   setIsAutoMoving(value: boolean): void {
     this.isAutoMoving = value
   }
+
   isAutoMovePaused = false
   pauseAutoMove(): void {
     this.isAutoMovePaused = true
@@ -351,17 +415,17 @@ export class PlayerStore {
     this.isAutoMovePaused = false
   }
 
-  autoMove(startPosition: Position, endPosition: Position, config?: AutoMoveConfig): Promise<boolean> {
-    const { stepSize = this.stepSize, framesPerStep = this.framesPerStep } = config ?? {}
+  autoMove({ start, end, state }: AutoMoveConfig): Promise<boolean> {
+    const { stepSize, framesPerStep } = state
 
     return new Promise((resolve) => {
-      const startX = startPosition.x
-      const startY = startPosition.y
-      const endX = endPosition.x
-      const endY = endPosition.y
+      const startX = start.x
+      const startY = start.y
+      const endX = end.x
+      const endY = end.y
 
       //Если движение по прямой
-      if ((startX === endX || startY === endY) && !areSame(startPosition, endPosition)) {
+      if ((startX === endX || startY === endY) && !areSame(start, end)) {
         this.setIsAutoMoving(true)
 
         //Перемещаем героя в стартовую позицию
@@ -388,7 +452,7 @@ export class PlayerStore {
 
         //Двигаемся в текущем направлении, пока не дойдём до конечной позиции
         const autoMoveInDirection = (): void => {
-          if (!areSame(this.position, endPosition)) {
+          if (!areSame(this.position, end)) {
             if (!this.isAutoMovePaused) {
               //Остановка на конечной позиции, если следующим шагом уходим дальше
               const setPositionToEndAndStopAutoMoving = (x: number, y: number): void => {
@@ -399,20 +463,20 @@ export class PlayerStore {
               const positionOnNextStep = this.getPositionOnNextStep()
 
               if (this.currentDirection === Directions.DOWN) {
-                if (positionOnNextStep.y > endPosition.y) {
-                  setPositionToEndAndStopAutoMoving(this.position.x, endPosition.y)
+                if (positionOnNextStep.y > end.y) {
+                  setPositionToEndAndStopAutoMoving(this.position.x, end.y)
                 }
               } else if (this.currentDirection === Directions.RIGHT) {
-                if (positionOnNextStep.x > endPosition.x) {
-                  setPositionToEndAndStopAutoMoving(endPosition.x, this.position.y)
+                if (positionOnNextStep.x > end.x) {
+                  setPositionToEndAndStopAutoMoving(end.x, this.position.y)
                 }
               } else if (this.currentDirection === Directions.UP) {
-                if (positionOnNextStep.y < endPosition.y) {
-                  setPositionToEndAndStopAutoMoving(this.position.x, endPosition.y)
+                if (positionOnNextStep.y < end.y) {
+                  setPositionToEndAndStopAutoMoving(this.position.x, end.y)
                 }
               } else if (this.currentDirection === Directions.LEFT) {
-                if (positionOnNextStep.x < endPosition.x) {
-                  setPositionToEndAndStopAutoMoving(endPosition.x, this.position.y)
+                if (positionOnNextStep.x < end.x) {
+                  setPositionToEndAndStopAutoMoving(end.x, this.position.y)
                 }
               }
 
