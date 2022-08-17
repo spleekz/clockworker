@@ -364,13 +364,6 @@ export class PlayerStore {
       if ((startX === endX || startY === endY) && !areSame(startPosition, endPosition)) {
         this.setIsAutoMoving(true)
 
-        var changedCoordinate: keyof Position
-        if (startX === endX) {
-          changedCoordinate = 'y'
-        } else {
-          changedCoordinate = 'x'
-        }
-
         //Перемещаем героя в стартовую позицию
         this.setPosition(startX, startY)
 
@@ -400,32 +393,26 @@ export class PlayerStore {
               //Остановка на конечной позиции, если следующим шагом уходим дальше
               const setPositionToEndAndStopAutoMoving = (x: number, y: number): void => {
                 this.setPosition(x, y)
+                shouldMove = false
               }
 
               const positionOnNextStep = this.getPositionOnNextStep()
-              if (changedCoordinate === 'x') {
-                if (this.currentDirection === Directions.RIGHT) {
-                  if (positionOnNextStep.x > endPosition.x) {
-                    setPositionToEndAndStopAutoMoving(endPosition.x, this.position.y)
-                    shouldMove = false
-                  }
-                } else if (this.currentDirection === Directions.LEFT) {
-                  if (positionOnNextStep.x < endPosition.x) {
-                    setPositionToEndAndStopAutoMoving(endPosition.x, this.position.y)
-                    shouldMove = false
-                  }
+
+              if (this.currentDirection === Directions.DOWN) {
+                if (positionOnNextStep.y > endPosition.y) {
+                  setPositionToEndAndStopAutoMoving(this.position.x, endPosition.y)
                 }
-              } else if (changedCoordinate === 'y') {
-                if (this.currentDirection === Directions.DOWN) {
-                  if (positionOnNextStep.y > endPosition.y) {
-                    setPositionToEndAndStopAutoMoving(this.position.x, endPosition.y)
-                    shouldMove = false
-                  }
-                } else if (this.currentDirection === Directions.UP) {
-                  if (positionOnNextStep.y < endPosition.y) {
-                    setPositionToEndAndStopAutoMoving(this.position.x, endPosition.y)
-                    shouldMove = false
-                  }
+              } else if (this.currentDirection === Directions.RIGHT) {
+                if (positionOnNextStep.x > endPosition.x) {
+                  setPositionToEndAndStopAutoMoving(endPosition.x, this.position.y)
+                }
+              } else if (this.currentDirection === Directions.UP) {
+                if (positionOnNextStep.y < endPosition.y) {
+                  setPositionToEndAndStopAutoMoving(this.position.x, endPosition.y)
+                }
+              } else if (this.currentDirection === Directions.LEFT) {
+                if (positionOnNextStep.x < endPosition.x) {
+                  setPositionToEndAndStopAutoMoving(endPosition.x, this.position.y)
                 }
               }
 
