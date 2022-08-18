@@ -279,8 +279,8 @@ export class PlayerStore {
   get pressedMovementControllers(): Array<string> {
     return Array.from(this.keyboard.pressedKeys).filter(this.isMovementController)
   }
-  get lastPressedMovementController(): string | null {
-    return last(this.pressedMovementControllers) ?? null
+  get lastPressedMovementController(): string {
+    return last(this.pressedMovementControllers)
   }
 
   get isMovemetKeyPressed(): boolean {
@@ -311,8 +311,8 @@ export class PlayerStore {
   get pressedMovementRegulators(): Array<string> {
     return this.keyboard.pressedKeysArray.filter(this.isMovementRegulator)
   }
-  get lastPressedMovementRegulator(): string | null {
-    return last(this.pressedMovementRegulators) ?? null
+  get lastPressedMovementRegulator(): string {
+    return last(this.pressedMovementRegulators)
   }
 
   get isSprintKeyPressed(): boolean {
