@@ -97,6 +97,7 @@ export class PlayerStore {
 
   //@Позиция
   //!Позиция персонажа
+  //Позиция верхнего левого угла спрайта
   position: Position = {
     x: 0,
     y: 0,
