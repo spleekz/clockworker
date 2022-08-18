@@ -16,6 +16,7 @@ export default defineConfig({
         lintCommand: 'eslint "src/"',
       },
       typescript: true,
+      overlay: false,
     }),
     tsconfigPaths(),
   ],
