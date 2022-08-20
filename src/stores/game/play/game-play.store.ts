@@ -10,7 +10,7 @@ import { Script, getParsedScript } from 'content/text/get-parsed-script'
 
 import { MapStore, MapStoreConfig } from './map.store'
 import { MarketStore } from './market.store'
-import { PlayerStore } from './player.store'
+import { PlayerStore } from './player/player.store'
 
 export type DataFromGameSetupForm = {
   playerName: string
@@ -133,7 +133,7 @@ export class GamePlayStore {
     this.createPlayer()
     this.createMarket()
     if (this.player) {
-      this.player.hideInTopMapBorder(0)
+      this.player.movement.hideInTopMapBorder(0)
     }
   }
 
@@ -195,18 +195,18 @@ export class GamePlayStore {
         if (
           !this.isGamePaused &&
           !this.isTextboxOpened &&
-          !this.player.isAutoMoving &&
-          this.player.isAllowedPosition(this.player.position)
+          !this.player.movement.isAutoMoving &&
+          this.player.movement.isAllowedPosition(this.player.movement.position)
         ) {
-          this.player.handleMovementKeys()
+          this.player.movement.handleMovementKeys()
         }
 
         //Во время паузы останавливать автомув
-        if (this.player.isAutoMoving) {
+        if (this.player.movement.isAutoMoving) {
           if (this.isGamePaused) {
-            this.player.pauseAutoMove()
+            this.player.movement.pauseAutoMove()
           } else {
-            this.player.resumeAutoMove()
+            this.player.movement.resumeAutoMove()
           }
         }
 
@@ -220,10 +220,10 @@ export class GamePlayStore {
   heroEntering(): void {
     setTimeout(() => {
       if (this.player) {
-        this.player.autoMove({
-          start: this.player.position,
+        this.player.movement.autoMove({
+          start: this.player.movement.position,
           end: { x: 0, y: 0 },
-          state: this.player.movementStates.entering,
+          state: this.player.movement.movementStates.entering,
         })
       }
     }, 300)

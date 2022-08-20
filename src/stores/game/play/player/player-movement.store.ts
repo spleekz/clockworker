@@ -1,8 +1,6 @@
 import { makeAutoObservable } from 'mobx'
 
-import { NonNullableProperties } from 'basic-utility-types'
 import {
-  CanvasObject,
   ExpandedMovementDirection,
   MovementLoopState,
   Position,
@@ -10,7 +8,6 @@ import {
   ViewDirections,
 } from 'game-utility-types'
 
-import { Images } from 'stores/entities/images'
 import { Sprite } from 'stores/entities/sprite'
 import { KeyboardStore } from 'stores/keyboard.store'
 import {
@@ -20,13 +17,17 @@ import {
   SettingsStore,
 } from 'stores/settings.store'
 
-import playerSpriteSrc from 'content/sprites/heroes/Player.png'
-
 import { areSame } from 'lib/are-same'
 import { last } from 'lib/arrays'
 
-import { drawSprite } from '../../../lib/draw-sprite'
-import { MapStore } from './map.store'
+import { MapStore } from '../map.store'
+
+type PlayerMovementStoreConfig = {
+  keyboard: KeyboardStore
+  map: MapStore
+  settings: SettingsStore
+  sprite: Sprite
+}
 
 type MovementStateName = 'idle' | 'walk' | 'sprint' | 'entering'
 type MovementState = {
@@ -43,63 +44,16 @@ type AutoMoveConfig = {
   state: MovementState
 }
 
-type PlayerStoreConfig = {
-  name: string
-  settings: SettingsStore
-  map: MapStore
-  canvasObject: NonNullableProperties<CanvasObject>
-  keyboard: KeyboardStore
-}
-
-export class PlayerStore {
-  private settings: SettingsStore
-  private map: MapStore
+export class PlayerMovementStore {
   private keyboard: KeyboardStore
+  private map: MapStore
+  private settings: SettingsStore
+  private sprite: Sprite
 
-  name: string
-  canvasObject: NonNullableProperties<CanvasObject>
-  spriteImage: HTMLImageElement
-
-  constructor(config: PlayerStoreConfig) {
+  constructor(config: PlayerMovementStoreConfig) {
     Object.assign(this, config)
 
-    this.spriteImage = new Image()
-    this.spriteImage.src = this.sprite.src
-
     makeAutoObservable(this, {}, { autoBind: true })
-  }
-
-  //!Изображения
-  images = new Images({
-    sprite: playerSpriteSrc,
-  })
-
-  //!Спрайт
-  get sprite(): Sprite {
-    return new Sprite({
-      src: this.images.list.sprite.element.src,
-      width: 14,
-      height: 27,
-      firstSkipX: 1,
-      firstSkipY: 5,
-      skipX: 2,
-      skipY: 5,
-      scale: 2.5,
-    })
-  }
-  drawSprite(): void {
-    drawSprite(this.spriteImage, this.canvasObject.ctx, {
-      width: this.sprite.width,
-      height: this.sprite.height,
-      firstSkipX: this.sprite.firstSkipX,
-      firstSkipY: this.sprite.firstSkipY,
-      skipX: this.sprite.skipX,
-      skipY: this.sprite.skipY,
-      scale: this.sprite.scale,
-      direction: this.viewDirection,
-      state: this.movementLoopState,
-      position: this.position,
-    })
   }
 
   //@Позиция
@@ -116,17 +70,19 @@ export class PlayerStore {
 
   //!Позиция на следующий шаг
   getPositionOnNextStep(config?: { stepSize?: number }): Position {
-    const { stepSize = this.currentStepSize } = config ?? {}
+    const { stepSize = this.currentMovementState.stepSize } = config ?? {}
 
     //Длина шага по диагонали должна быть равна длине шага по прямой
     const diagonalStepSize = Math.sqrt(Math.pow(stepSize, 2) / 2)
 
     const { x, y } = this.position
 
+    //Если герой упирается в границы карты
     const isRestedInDownMapBorder = y === this.maxYCoordinate
     const isRestedInRightMapBorder = x === this.maxXCoordinate
     const isRestedInTopMapBorder = y === 0
     const isRestedInLeftMapBorder = x === 0
+
     if (this.movementDirection === 'down') {
       return { x, y: y + stepSize }
     } else if (this.movementDirection === 'downright') {
@@ -311,12 +267,6 @@ export class PlayerStore {
   get currentMovementState(): MovementState {
     return this.movementStates[this.currentMovementStateName]
   }
-  get currentStepSize(): number {
-    return this.currentMovementState.stepSize
-  }
-  get currentFramesPerStep(): number {
-    return this.currentMovementState.framesPerStep
-  }
 
   get isMoving(): boolean {
     return this.currentMovementStateName !== 'idle'
@@ -389,7 +339,10 @@ export class PlayerStore {
   //!Движение
   //Отвечает за анимацию движения и за перемещение персонажа в валидную позицию
   move(state?: MovementState): void {
-    const { stepSize = this.currentStepSize, framesPerStep = this.currentFramesPerStep } = state ?? {}
+    const {
+      stepSize = this.currentMovementState.stepSize,
+      framesPerStep = this.currentMovementState.framesPerStep,
+    } = state ?? {}
 
     const positionOnNextStep = this.getPositionOnNextStep({ stepSize })
 
