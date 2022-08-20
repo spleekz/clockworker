@@ -1,4 +1,4 @@
-import { Directions, MovementLoopState, Position } from 'game-utility-types'
+import { MovementLoopState, Position, ViewDirections } from 'game-utility-types'
 
 export type DrawImageConfig = {
   width: number
@@ -8,7 +8,7 @@ export type DrawImageConfig = {
   skipX: number
   skipY: number
   scale?: number
-  direction: Directions
+  direction: ViewDirections
   state: MovementLoopState
   position: Position
 }

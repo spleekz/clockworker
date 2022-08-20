@@ -1,7 +1,14 @@
 import { makeAutoObservable } from 'mobx'
 
 import { NonNullableProperties } from 'basic-utility-types'
-import { CanvasObject, Directions, MovementLoopState, Position } from 'game-utility-types'
+import {
+  CanvasObject,
+  ExpandedMovementDirection,
+  MovementLoopState,
+  Position,
+  PrimitiveMovementDirection,
+  ViewDirections,
+} from 'game-utility-types'
 
 import { Images } from 'stores/entities/images'
 import { Sprite } from 'stores/entities/sprite'
@@ -89,7 +96,7 @@ export class PlayerStore {
       skipX: this.sprite.skipX,
       skipY: this.sprite.skipY,
       scale: this.sprite.scale,
-      direction: this.currentDirection,
+      direction: this.viewDirection,
       state: this.movementLoopState,
       position: this.position,
     })
@@ -108,28 +115,57 @@ export class PlayerStore {
   }
 
   //!Позиция на следующий шаг
-  getPositionOnNextStep(): Position {
+  getPositionOnNextStep(config?: { stepSize?: number }): Position {
+    const { stepSize = this.currentStepSize } = config ?? {}
+
+    //Длина шага по диагонали должна быть равна длине шага по прямой
+    const diagonalStepSize = Math.sqrt(Math.pow(stepSize, 2) / 2)
+
     const { x, y } = this.position
 
-    if (this.currentDirection === Directions.DOWN) {
-      return { x, y: y + this.currentStepSize }
-    } else if (this.currentDirection === Directions.RIGHT) {
-      return { x: x + this.currentStepSize, y }
-    } else if (this.currentDirection === Directions.UP) {
-      return { x, y: y - this.currentStepSize }
+    const isRestedInDownMapBorder = y === this.maxYCoordinate
+    const isRestedInRightMapBorder = x === this.maxXCoordinate
+    const isRestedInTopMapBorder = y === 0
+    const isRestedInLeftMapBorder = x === 0
+    if (this.movementDirection === 'down') {
+      return { x, y: y + stepSize }
+    } else if (this.movementDirection === 'downright') {
+      return {
+        x: isRestedInRightMapBorder ? x : x + diagonalStepSize,
+        y: isRestedInDownMapBorder ? y : y + diagonalStepSize,
+      }
+    } else if (this.movementDirection === 'right') {
+      return { x: x + stepSize, y }
+    } else if (this.movementDirection === 'upright') {
+      return {
+        x: isRestedInRightMapBorder ? x : x + diagonalStepSize,
+        y: isRestedInTopMapBorder ? y : y - diagonalStepSize,
+      }
+    } else if (this.movementDirection === 'up') {
+      return { x, y: y - stepSize }
+    } else if (this.movementDirection === 'upleft') {
+      return {
+        x: isRestedInLeftMapBorder ? x : x - diagonalStepSize,
+        y: isRestedInTopMapBorder ? y : y - diagonalStepSize,
+      }
+    } else if (this.movementDirection === 'left') {
+      return { x: x - stepSize, y }
     } else {
-      //left
-      return { x: x - this.currentStepSize, y }
+      //downleft
+      return {
+        x: isRestedInLeftMapBorder ? x : x - diagonalStepSize,
+        y: isRestedInDownMapBorder ? y : y + diagonalStepSize,
+      }
     }
   }
 
   //!Допустимая позиция
   //С учётом размера спрайта
   isOutOfDownMapBorder(position: Position): boolean {
-    return position.y + this.sprite.scaledHeight > this.map.height
+    return position.y > this.maxYCoordinate
   }
   isOutOfRightMapBorder(position: Position): boolean {
-    return position.x + this.sprite.scaledWidth > this.map.width
+    return position.x > this.maxXCoordinate
   }
   isOutOfTopMapBorder(position: Position): boolean {
     return position.y < 0
@@ -182,17 +218,39 @@ export class PlayerStore {
     this.setPosition(-this.sprite.scaledWidth, y ?? this.position.y)
   }
 
-  //!Направление
-  //Направление, куда СМОТРИТ персонаж
-  currentDirection: Directions = Directions.DOWN
-  setCurrentDirection(direction: Directions): void {
-    //Чтобы при смене напрвления сразу была анимация шага
-    if (this.isMoving && this.currentDirection !== direction) {
+  //!Направление взгляда
+  viewDirection: ViewDirections = ViewDirections.DOWN
+  setViewDirection(direction: ViewDirections): void {
+    //Чтобы при смене напрвления взгляда сразу была анимация шага
+    if (this.isMoving && this.viewDirection !== direction) {
       this.setMovementFramesCount(0)
       this.setMovementLoopIndex(1)
     }
-    this.currentDirection = direction
+    this.viewDirection = direction
   }
+
+  //!Направление движения
+  //Существует только в момент движения персонажа
+  movementDirection: ExpandedMovementDirection | null = null
+  setMovementDirection(direction: ExpandedMovementDirection | null): void {
+    this.movementDirection = direction
+    if (!this.movementDirection) {
+      this.stop()
+    }
+  }
+
+  getReversedPrimitiveDirection(direction: PrimitiveMovementDirection): PrimitiveMovementDirection {
+    if (direction === 'down') {
+      return 'up'
+    } else if (direction === 'right') {
+      return 'left'
+    } else if (direction === 'up') {
+      return 'down'
+    } else {
+      return 'right'
+    }
+  }
+
   //^@Позиция
 
   //@Анимация движения
@@ -278,27 +336,34 @@ export class PlayerStore {
   }
 
   get pressedMovementControllers(): Array<string> {
-    return Array.from(this.keyboard.pressedKeys).filter(this.isMovementController)
+    return Array.from(this.keyboard.pressedKeys).reverse().filter(this.isMovementController)
   }
-  get lastPressedMovementController(): string {
-    return last(this.pressedMovementControllers)
+  get pressedMovementDirections(): Array<PrimitiveMovementDirection> {
+    return this.pressedMovementControllers.map((controller) =>
+      controller === this.movementControllers.down
+        ? 'down'
+        : controller === this.movementControllers.right
+        ? 'right'
+        : controller === this.movementControllers.up
+        ? 'up'
+        : 'left',
+    )
   }
 
-  get isMovemetKeyPressed(): boolean {
+  get isMovementControllerPressed(): boolean {
     return this.pressedMovementControllers.length !== 0
   }
-
   get isMoveDownControllerPressed(): boolean {
-    return this.lastPressedMovementController === this.movementControllers.down
+    return this.pressedMovementControllers.includes(this.movementControllers.down)
   }
   get isMoveRightControllerPressed(): boolean {
-    return this.lastPressedMovementController === this.movementControllers.right
+    return this.pressedMovementControllers.includes(this.movementControllers.right)
   }
   get isMoveUpControllerPressed(): boolean {
-    return this.lastPressedMovementController === this.movementControllers.up
+    return this.pressedMovementControllers.includes(this.movementControllers.up)
   }
   get isMoveLeftControllerPressed(): boolean {
-    return this.lastPressedMovementController === this.movementControllers.left
+    return this.pressedMovementControllers.includes(this.movementControllers.left)
   }
 
   //!Регуляторы
@@ -321,26 +386,12 @@ export class PlayerStore {
   }
   //^@Клавиши управления
 
-  //!Сделать шаг в текущем направлении
-  makeStepInCurrentDirection(config?: { stepSize?: number }): void {
-    const { stepSize = this.currentStepSize } = config ?? {}
-
-    const { x, y } = this.position
-
-    if (this.currentDirection === Directions.DOWN) {
-      this.setPosition(x, y + stepSize)
-    } else if (this.currentDirection === Directions.RIGHT) {
-      this.setPosition(x + stepSize, y)
-    } else if (this.currentDirection === Directions.UP) {
-      this.setPosition(x, y - stepSize)
-    } else if (this.currentDirection === Directions.LEFT) {
-      this.setPosition(x - stepSize, y)
-    }
-  }
-
   //!Движение
+  //Отвечает за анимацию движения и за перемещение персонажа в валидную позицию
   move(state?: MovementState): void {
     const { stepSize = this.currentStepSize, framesPerStep = this.currentFramesPerStep } = state ?? {}
+
+    const positionOnNextStep = this.getPositionOnNextStep({ stepSize })
 
     if (!this.isAutoMoving) {
       if (this.isSprintKeyPressed) {
@@ -349,24 +400,23 @@ export class PlayerStore {
         this.setCurrentMovementState('walk')
       }
       //Проверка, если следующим шагом персонаж выходит за границы
-      const nextPosition = this.getPositionOnNextStep()
-      if (!this.isAllowedPosition(nextPosition)) {
-        if (this.isOutOfDownMapBorder(nextPosition)) {
+      if (!this.isAllowedPosition(positionOnNextStep)) {
+        if (this.isOutOfDownMapBorder(positionOnNextStep)) {
           this.setPositionToDownMapBorder()
-        } else if (this.isOutOfRightMapBorder(nextPosition)) {
+        } else if (this.isOutOfRightMapBorder(positionOnNextStep)) {
           this.setPositionToRightMapBorder()
-        } else if (this.isOutOfTopMapBorder(nextPosition)) {
+        } else if (this.isOutOfTopMapBorder(positionOnNextStep)) {
           this.setPositionToTopMapBorder()
-        } else if (this.isOutOfLeftMapBorder(nextPosition)) {
+        } else if (this.isOutOfLeftMapBorder(positionOnNextStep)) {
           this.setPositionToLeftMapBorder()
         }
       } else {
         //Персонаж идёт дальше, только если не выходит за пределы карты
-        this.makeStepInCurrentDirection({ stepSize })
+        this.setPosition(positionOnNextStep.x, positionOnNextStep.y)
       }
     } else {
       //Автомувнутый персонаж может выходить за пределы карты
-      this.makeStepInCurrentDirection({ stepSize })
+      this.setPosition(positionOnNextStep.x, positionOnNextStep.y)
     }
 
     //Обновление счётчика кадров и анимации ходьбы
@@ -386,19 +436,52 @@ export class PlayerStore {
 
   //!Обработка клавиш движения
   handleMovementKeys(): void {
-    if (this.isMovemetKeyPressed) {
-      if (this.isMoveDownControllerPressed) {
-        this.setCurrentDirection(Directions.DOWN)
-      } else if (this.isMoveRightControllerPressed) {
-        this.setCurrentDirection(Directions.RIGHT)
-      } else if (this.isMoveUpControllerPressed) {
-        this.setCurrentDirection(Directions.UP)
-      } else if (this.isMoveLeftControllerPressed) {
-        this.setCurrentDirection(Directions.LEFT)
+    if (this.isMovementControllerPressed) {
+      const getMovementDirection = (): ExpandedMovementDirection | null => {
+        var movementDirection: ExpandedMovementDirection | null = null
+
+        //Убираем направления, компенсирующие друг друга (пример: вверх-вниз)
+        const filteredPressedMovementDirections = this.pressedMovementDirections.filter(
+          (pressedDirection) => {
+            return this.pressedMovementDirections.every(
+              (d) => d !== this.getReversedPrimitiveDirection(pressedDirection),
+            )
+          },
+        )
+
+        //Если длина массива 0, значит, все направления скомпенсировали друг друга - персонаж стоит на месте
+        if (filteredPressedMovementDirections.length) {
+          movementDirection = filteredPressedMovementDirections
+            //Сортируем, чтобы названия направлений получались в едином формате
+            .sort((_, b) => (b === 'down' || b === 'up' ? 1 : -1))
+            .reduce((acc, direction) => {
+              return (acc += direction) as ExpandedMovementDirection
+            }, '' as ExpandedMovementDirection)
+        } else {
+          movementDirection = null
+        }
+
+        return movementDirection
       }
-      this.move()
+
+      const movementDirection = getMovementDirection()
+
+      this.setMovementDirection(movementDirection)
+
+      if (this.movementDirection) {
+        const viewDirection: ViewDirections = this.movementDirection.includes('right')
+          ? ViewDirections.RIGHT
+          : this.movementDirection.includes('left')
+          ? ViewDirections.LEFT
+          : this.movementDirection === 'down'
+          ? ViewDirections.DOWN
+          : ViewDirections.UP
+
+        this.setViewDirection(viewDirection)
+        this.move()
+      }
     } else {
-      this.stop()
+      this.setMovementDirection(null)
     }
   }
 
@@ -416,6 +499,7 @@ export class PlayerStore {
     this.isAutoMovePaused = false
   }
 
+  //Перемещает персонажа из стартовой позиции в конечную
   autoMove({ start, end, state }: AutoMoveConfig): Promise<boolean> {
     const { stepSize, framesPerStep } = state
 
@@ -434,13 +518,13 @@ export class PlayerStore {
 
         //Вычисляем направление движения
         if (endY > startY) {
-          this.setCurrentDirection(Directions.DOWN)
+          this.setViewDirection(ViewDirections.DOWN)
         } else if (endX > startX) {
-          this.setCurrentDirection(Directions.RIGHT)
+          this.setViewDirection(ViewDirections.RIGHT)
         } else if (endY < startY) {
-          this.setCurrentDirection(Directions.UP)
+          this.setViewDirection(ViewDirections.UP)
         } else if (endX < startX) {
-          this.setCurrentDirection(Directions.LEFT)
+          this.setViewDirection(ViewDirections.LEFT)
         }
 
         const stopAutoMoving = (): void => {
@@ -463,19 +547,19 @@ export class PlayerStore {
 
               const positionOnNextStep = this.getPositionOnNextStep()
 
-              if (this.currentDirection === Directions.DOWN) {
+              if (this.viewDirection === ViewDirections.DOWN) {
                 if (positionOnNextStep.y > end.y) {
                   setPositionToEndAndStopAutoMoving(this.position.x, end.y)
                 }
-              } else if (this.currentDirection === Directions.RIGHT) {
+              } else if (this.viewDirection === ViewDirections.RIGHT) {
                 if (positionOnNextStep.x > end.x) {
                   setPositionToEndAndStopAutoMoving(end.x, this.position.y)
                 }
-              } else if (this.currentDirection === Directions.UP) {
+              } else if (this.viewDirection === ViewDirections.UP) {
                 if (positionOnNextStep.y < end.y) {
                   setPositionToEndAndStopAutoMoving(this.position.x, end.y)
                 }
-              } else if (this.currentDirection === Directions.LEFT) {
+              } else if (this.viewDirection === ViewDirections.LEFT) {
                 if (positionOnNextStep.x < end.x) {
                   setPositionToEndAndStopAutoMoving(end.x, this.position.y)
                 }
