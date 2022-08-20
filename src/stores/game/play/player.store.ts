@@ -290,12 +290,12 @@ export class PlayerStore {
         framesPerStep: 0,
       },
       walk: {
-        stepSize: 2.0,
+        stepSize: 1.8,
         framesPerStep: 11,
       },
       sprint: {
-        stepSize: 5.0,
-        framesPerStep: 6,
+        stepSize: 3.4,
+        framesPerStep: 8,
       },
       entering: {
         stepSize: 0.45,
