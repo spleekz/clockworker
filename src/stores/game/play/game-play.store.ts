@@ -11,6 +11,7 @@ import { Script, getParsedScript } from 'content/text/get-parsed-script'
 import { MapStore, MapStoreConfig } from './map.store'
 import { MarketStore } from './market.store'
 import { PlayerStore } from './player/player.store'
+import { Textbox } from './textbox'
 
 export type DataFromGameSetupForm = {
   playerName: string
@@ -41,10 +42,10 @@ export class GamePlayStore {
 
   //!Сценарий
   get script(): Script | null {
-    if (this.player && this.market) {
+    if (this.dataFromGameSetupForm) {
       return getParsedScript({
-        playerName: this.player.name,
-        marketName: this.market.name,
+        playerName: this.dataFromGameSetupForm.playerName,
+        marketName: this.dataFromGameSetupForm.marketName,
       })
     }
     return null
@@ -170,13 +171,23 @@ export class GamePlayStore {
     this.isSettingsMenuOpened = false
   }
 
-  //!Текст бокс
-  isTextboxOpened = false
-  openTextbox(): void {
-    this.isTextboxOpened = true
+  //!Текст боксы
+  currentTextbox: Textbox | null = null
+  setCurrentTextbox(textbox: Textbox | null): void {
+    if (!textbox) {
+      this.currentTextbox?.afterClose()
+    }
+    this.currentTextbox = textbox
   }
-  closeTextbox(): void {
-    this.isTextboxOpened = false
+  get isTextboxOpened(): boolean {
+    return Boolean(this.currentTextbox)
+  }
+
+  get welcomeTextbox(): Textbox {
+    return new Textbox({
+      text: this.script?.content.welcome ?? '',
+      afterClose: this.heroEntering,
+    })
   }
 
   //!Гейм луп
@@ -215,6 +226,11 @@ export class GamePlayStore {
 
       window.requestAnimationFrame(this.gameLoop)
     }
+  }
+
+  startGame(): void {
+    this.gameLoop()
+    this.setCurrentTextbox(this.welcomeTextbox)
   }
 
   heroEntering(): void {

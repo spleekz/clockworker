@@ -16,8 +16,7 @@ export const PlayCanvas: FC = observer(() => {
   useEffect(() => {
     gamePlayStore.setupGame()
     gameStore.opening.show().then(() => {
-      gamePlayStore.gameLoop()
-      gamePlayStore.openTextbox()
+      gamePlayStore.startGame()
     })
   }, [])
 
@@ -31,14 +30,10 @@ export const PlayCanvas: FC = observer(() => {
 
   return (
     <Container ref={containerRef}>
-      {gamePlayStore.script && (
-        <Textbox
-          isOpened={gamePlayStore.isTextboxOpened}
-          afterClose={gamePlayStore.heroEntering}
-          withCloseCross={true}
-          text={gamePlayStore.script.content.welcome}
-        />
-      )}
+      <Textbox
+        isOpened={gamePlayStore.isTextboxOpened}
+        text={gamePlayStore.currentTextbox?.text ?? ''}
+      />
     </Container>
   )
 })

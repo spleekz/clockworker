@@ -3,7 +3,7 @@ import React, { useCallback, useRef, useState } from 'react'
 import styled from 'styled-components'
 
 import { animated, useTransition } from '@react-spring/web'
-import { EmptyFunction, FC } from 'basic-utility-types'
+import { FC } from 'basic-utility-types'
 
 import { useWindowClick } from 'hooks/use-window-click'
 
@@ -16,18 +16,15 @@ import { useGamePlayStore } from 'screens/game/play/screen'
 import cross from 'assets/icons/cross.png'
 
 type Props = {
-  isOpened: boolean
-  afterClose?: EmptyFunction
-  withCloseCross: boolean
   text: string
+  isOpened: boolean
 }
 
-export const Textbox: FC<Props> = observer(({ isOpened, afterClose, withCloseCross, text }) => {
+export const Textbox: FC<Props> = observer(({ isOpened, text }) => {
   const gamePlayStore = useGamePlayStore()
 
   const close = (): void => {
-    gamePlayStore.closeTextbox()
-    afterClose?.()
+    gamePlayStore.setCurrentTextbox(null)
   }
 
   const [isTextboxEnteringEnds, setIsTextboxEnteringEnds] = useState(false)
@@ -75,7 +72,7 @@ export const Textbox: FC<Props> = observer(({ isOpened, afterClose, withCloseCro
                   />
                 }
                 {/* Показывать крестик только после того, как текст напечатался */}
-                {withCloseCross && !isTextboxAutoPrint && (
+                {!isTextboxAutoPrint && (
                   <CloseButton onClick={close}>
                     <CloseCross />
                   </CloseButton>
