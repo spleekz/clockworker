@@ -3,9 +3,9 @@ import { makeAutoObservable } from 'mobx'
 import { KeyboardStore } from 'stores/keyboard.store'
 import { SettingsStore } from 'stores/settings.store'
 
-import { GameSetupForm } from './game-setup-form'
+import { GameSetupForm } from './setup-form'
 import { GameOpening } from './opening'
-import { DataFromGameSetupForm, GamePlayStore } from './play/game-play.store'
+import { DataFromGameSetupForm, GamePlayStore } from './play/store'
 
 type GameScreen = 'createHero' | 'play'
 

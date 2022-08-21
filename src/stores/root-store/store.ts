@@ -1,5 +1,5 @@
 import { AppStore } from 'stores/app.store'
-import { GameStore } from 'stores/game/game.store'
+import { GameStore } from 'stores/game/store'
 import { KeyboardStore } from 'stores/keyboard.store'
 import { SettingsStore } from 'stores/settings.store'
 

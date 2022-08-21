@@ -5,7 +5,7 @@ import styled from 'styled-components'
 import { animated, useTransition } from '@react-spring/web'
 import { FC } from 'basic-utility-types'
 
-import { GameStore } from 'stores/game/game.store'
+import { GameStore } from 'stores/game/store'
 import { useStore } from 'stores/root-store/context'
 
 import { CreateHeroScreen } from './create-hero/screen'

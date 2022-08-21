@@ -12,7 +12,7 @@ import playerSpriteSrc from 'content/sprites/heroes/Player.png'
 
 import { drawSprite } from '../../../../lib/draw-sprite'
 import { Map } from '../map'
-import { PlayerMovement } from './player-movement'
+import { PlayerMovement } from './movement'
 
 type PlayerStoreConfig = {
   name: string

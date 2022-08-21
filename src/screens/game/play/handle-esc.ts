@@ -1,4 +1,4 @@
-import { GamePlayStore } from 'stores/game/play/game-play.store'
+import { GamePlayStore } from 'stores/game/play/store'
 import { useStore } from 'stores/root-store/context'
 
 import { useKey } from 'hooks/use-key'
