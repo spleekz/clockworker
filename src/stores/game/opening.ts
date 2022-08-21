@@ -1,6 +1,6 @@
 import { makeAutoObservable } from 'mobx'
 
-export class GameOpeningStore {
+export class GameOpening {
   constructor() {
     makeAutoObservable(this)
   }

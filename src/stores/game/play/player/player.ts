@@ -11,33 +11,33 @@ import { SettingsStore } from 'stores/settings.store'
 import playerSpriteSrc from 'content/sprites/heroes/Player.png'
 
 import { drawSprite } from '../../../../lib/draw-sprite'
-import { MapStore } from '../map.store'
-import { PlayerMovementStore } from './player-movement.store'
+import { Map } from '../map'
+import { PlayerMovement } from './player-movement'
 
 type PlayerStoreConfig = {
   name: string
   settings: SettingsStore
-  map: MapStore
+  map: Map
   canvasObject: NonNullableProperties<CanvasObject>
   keyboard: KeyboardStore
 }
 
-export class PlayerStore {
+export class Player {
   private settings: SettingsStore
-  private map: MapStore
+  private map: Map
   private keyboard: KeyboardStore
 
   name: string
   canvasObject: NonNullableProperties<CanvasObject>
   spriteImage: HTMLImageElement
 
-  movement: PlayerMovementStore
+  movement: PlayerMovement
 
   constructor(config: PlayerStoreConfig) {
     Object.assign(this, config)
 
     //!Движение
-    this.movement = new PlayerMovementStore({
+    this.movement = new PlayerMovement({
       keyboard: this.keyboard,
       map: this.map,
       settings: this.settings,

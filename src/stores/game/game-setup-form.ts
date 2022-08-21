@@ -1,6 +1,6 @@
 import { makeAutoObservable } from 'mobx'
 
-export class GameSetupFormStore {
+export class GameSetupForm {
   constructor() {
     makeAutoObservable(this, {}, { autoBind: true })
   }

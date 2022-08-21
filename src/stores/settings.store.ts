@@ -21,11 +21,9 @@ export type MovementKeys = {
   regulators: MovementRegulators
 }
 
-type Settings = {
-  controllers: {
-    movement: {
-      controllers: Array<Setting<MovementControllers>>
-    }
+type Controllers = {
+  movement: {
+    controllers: Array<Setting<MovementControllers>>
   }
 }
 
@@ -34,39 +32,37 @@ export class SettingsStore {
     makeAutoObservable(this, {}, { autoBind: true })
   }
 
-  settings: Settings = {
-    controllers: {
-      movement: {
-        controllers: [
-          {
-            id: 'wasd',
-            label: 'WASD',
-            value: {
-              down: 'KeyS',
-              right: 'KeyD',
-              up: 'KeyW',
-              left: 'KeyA',
-            },
-            isSelected: true,
+  controllers: Controllers = {
+    movement: {
+      controllers: [
+        {
+          id: 'wasd',
+          label: 'WASD',
+          value: {
+            down: 'KeyS',
+            right: 'KeyD',
+            up: 'KeyW',
+            left: 'KeyA',
           },
-          {
-            id: 'arrows',
-            label: 'Стрелочки',
-            value: {
-              down: 'ArrowDown',
-              right: 'ArrowRight',
-              up: 'ArrowUp',
-              left: 'ArrowLeft',
-            },
-            isSelected: false,
+          isSelected: true,
+        },
+        {
+          id: 'arrows',
+          label: 'Стрелочки',
+          value: {
+            down: 'ArrowDown',
+            right: 'ArrowRight',
+            up: 'ArrowUp',
+            left: 'ArrowLeft',
           },
-        ],
-      },
+          isSelected: false,
+        },
+      ],
     },
   }
 
   selectMovementControllersVariant(id: string): void {
-    this.settings.controllers.movement.controllers.forEach((variant) => {
+    this.controllers.movement.controllers.forEach((variant) => {
       if (variant.id === id) {
         variant.isSelected = true
       } else {
@@ -76,7 +72,7 @@ export class SettingsStore {
   }
 
   get movementControllers(): MovementControllers {
-    return this.settings.controllers.movement.controllers.reduce((acc, controllersVariant) => {
+    return this.controllers.movement.controllers.reduce((acc, controllersVariant) => {
       if (controllersVariant.isSelected) {
         acc = controllersVariant.value
       }

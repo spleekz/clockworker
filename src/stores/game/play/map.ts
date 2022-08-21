@@ -4,14 +4,14 @@ import { Canvas } from 'game-utility-types'
 
 import { Images } from 'stores/entities/images'
 
-export type MapStoreConfig = {
+export type MapConfig = {
   canvas: Canvas
   width: number
   height: number
   background?: string
 }
 
-export class MapStore {
+export class Map {
   images: Images
 
   canvas: Canvas
@@ -19,7 +19,7 @@ export class MapStore {
   height: number
   background: string | null = null
 
-  constructor(config: MapStoreConfig) {
+  constructor(config: MapConfig) {
     Object.assign(this, {
       ...config,
       background: config.background ?? null,

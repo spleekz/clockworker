@@ -1,13 +1,13 @@
 import { makeAutoObservable } from 'mobx'
 
-type MarketStoreConfig = {
+type MarketConfig = {
   name: string
 }
 
-export class MarketStore {
+export class Market {
   name: string
 
-  constructor(config: MarketStoreConfig) {
+  constructor(config: MarketConfig) {
     Object.assign(this, config)
 
     makeAutoObservable(this, {}, { autoBind: true })

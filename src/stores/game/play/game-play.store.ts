@@ -8,9 +8,9 @@ import { SettingsStore } from 'stores/settings.store'
 import mainMap from 'content/maps/main-map.png'
 import { Script, getParsedScript } from 'content/text/get-parsed-script'
 
-import { MapStore, MapStoreConfig } from './map.store'
-import { MarketStore } from './market.store'
-import { PlayerStore } from './player/player.store'
+import { Map, MapConfig } from './map'
+import { Market } from './market'
+import { Player } from './player/player'
 import { Textbox } from './textbox'
 
 export type DataFromGameSetupForm = {
@@ -72,10 +72,10 @@ export class GamePlayStore {
   }
 
   //!Карта
-  map: MapStore | null = null
-  createMap(config: Omit<MapStoreConfig, 'canvas'>): void {
+  map: Map | null = null
+  createMap(config: Omit<MapConfig, 'canvas'>): void {
     if (this.canvasObject.canvas) {
-      this.map = new MapStore({
+      this.map = new Map({
         canvas: this.canvasObject.canvas,
         ...config,
       })
@@ -90,11 +90,11 @@ export class GamePlayStore {
   }
 
   //!Игрок
-  player: PlayerStore | null = null
+  player: Player | null = null
   createPlayer(): void {
     if (this.canvasObject.canvas && this.canvasObject.ctx && this.map) {
       this.canvasObject.canvas
-      this.player = new PlayerStore({
+      this.player = new Player({
         name: this.dataFromGameSetupForm.playerName,
         settings: this.settings,
         map: this.map,
@@ -108,9 +108,9 @@ export class GamePlayStore {
   }
 
   //!Магазин
-  market: MarketStore | null = null
+  market: Market | null = null
   createMarket(): void {
-    this.market = new MarketStore({
+    this.market = new Market({
       name: this.dataFromGameSetupForm.marketName,
     })
   }

@@ -20,11 +20,11 @@ import {
 import { areSame } from 'lib/are-same'
 import { last } from 'lib/arrays'
 
-import { MapStore } from '../map.store'
+import { Map } from '../map'
 
-type PlayerMovementStoreConfig = {
+type PlayerMovementConfig = {
   keyboard: KeyboardStore
-  map: MapStore
+  map: Map
   settings: SettingsStore
   sprite: Sprite
 }
@@ -44,13 +44,13 @@ type AutoMoveConfig = {
   state: MovementState
 }
 
-export class PlayerMovementStore {
+export class PlayerMovement {
   private keyboard: KeyboardStore
-  private map: MapStore
+  private map: Map
   private settings: SettingsStore
   private sprite: Sprite
 
-  constructor(config: PlayerMovementStoreConfig) {
+  constructor(config: PlayerMovementConfig) {
     Object.assign(this, config)
 
     makeAutoObservable(this, {}, { autoBind: true })

@@ -3,8 +3,8 @@ import { makeAutoObservable } from 'mobx'
 import { KeyboardStore } from 'stores/keyboard.store'
 import { SettingsStore } from 'stores/settings.store'
 
-import { GameSetupFormStore } from './game-setup-form-store'
-import { GameOpeningStore } from './opening.store'
+import { GameSetupForm } from './game-setup-form'
+import { GameOpening } from './opening'
 import { DataFromGameSetupForm, GamePlayStore } from './play/game-play.store'
 
 type GameScreen = 'createHero' | 'play'
@@ -31,10 +31,10 @@ export class GameStore {
   }
 
   //!Опенинг
-  opening = new GameOpeningStore()
+  opening = new GameOpening()
 
   //!GameFormStore
-  gameSetupFormStore = new GameSetupFormStore()
+  gameSetupFormStore = new GameSetupForm()
 
   //!PlayStore
   createGamePlayStore(): GamePlayStore {

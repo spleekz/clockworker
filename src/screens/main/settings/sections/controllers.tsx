@@ -19,7 +19,7 @@ export const ControllersSettingsSection: FC = observer(() => {
       <Setting>
         <SettingTitle>Движение :</SettingTitle>
         <MovementControllersVariants>
-          {settingsStore.settings.controllers.movement.controllers.map((variant) => {
+          {settingsStore.controllers.movement.controllers.map((variant) => {
             return (
               <MovementControllersVariant key={variant.id}>
                 <MovementControllersVariantLabel>{variant.label}</MovementControllersVariantLabel>
