@@ -16,7 +16,7 @@ export class KeyboardStore {
     makeAutoObservable(this, {}, { autoBind: true })
   }
 
-  pressedKeys: Set<string> = new Set()
+  private pressedKeys: Set<string> = new Set()
 
   get pressedKeysArray(): Array<string> {
     return Array.from(this.pressedKeys)

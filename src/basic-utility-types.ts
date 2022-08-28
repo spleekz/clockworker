@@ -14,7 +14,3 @@ export type RequiredBy<Type, Key extends keyof Type> = Omit<Type, Key> &
   Required<{
     [P in Key]: NotUndefinded<Type[Key]>
   }>
-
-export type NonNullableProperties<T> = {
-  [P in keyof T]: NonNullable<T[P]>
-}

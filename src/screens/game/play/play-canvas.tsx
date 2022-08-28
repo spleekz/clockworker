@@ -16,23 +16,23 @@ export const PlayCanvas: FC = observer(() => {
   useEffect(() => {
     gamePlayStore.setupGame()
     gameStore.opening.show().then(() => {
-      gamePlayStore.startGame()
+      gamePlayStore.run()
     })
   }, [])
 
   const containerRef = useRef<HTMLDivElement | null>(null)
   useEffect(() => {
-    if (gamePlayStore.isGameLoaded && gamePlayStore.canvasObject.canvas && containerRef.current) {
+    if (gamePlayStore.isGameLoaded && gamePlayStore.screen.canvas && containerRef.current) {
       //"рендер" канваса, созданного в сторе
-      containerRef.current.appendChild(gamePlayStore.canvasObject.canvas)
+      containerRef.current.appendChild(gamePlayStore.screen.canvas)
     }
   }, [gamePlayStore.isGameLoaded])
 
   return (
     <Container ref={containerRef}>
       <Textbox
-        isOpened={gamePlayStore.isTextboxOpened}
-        text={gamePlayStore.currentTextbox?.text ?? ''}
+        isOpened={gamePlayStore.textboxController.isTextboxOpened}
+        text={gamePlayStore.textboxController.currentTextbox?.text ?? ''}
       />
     </Container>
   )

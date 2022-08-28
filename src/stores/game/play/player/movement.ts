@@ -5,6 +5,7 @@ import {
   MovementLoopState,
   Position,
   PrimitiveMovementDirection,
+  Size,
   ViewDirections,
 } from 'game-utility-types'
 
@@ -20,11 +21,9 @@ import {
 import { areSame } from 'lib/are-same'
 import { last } from 'lib/arrays'
 
-import { Map } from '../map'
-
 type PlayerMovementConfig = {
   keyboard: KeyboardStore
-  map: Map
+  mapSize: Size
   settings: SettingsStore
   sprite: Sprite
 }
@@ -46,7 +45,7 @@ type AutoMoveConfig = {
 
 export class PlayerMovement {
   private keyboard: KeyboardStore
-  private map: Map
+  private mapSize: Size
   private settings: SettingsStore
   private sprite: Sprite
 
@@ -141,10 +140,10 @@ export class PlayerMovement {
 
   //!Установка позиции к краям карты
   get maxXCoordinate(): number {
-    return this.map.width - this.sprite.scaledWidth
+    return this.mapSize.width - this.sprite.scaledWidth
   }
   get maxYCoordinate(): number {
-    return this.map.height - this.sprite.scaledHeight
+    return this.mapSize.height - this.sprite.scaledHeight
   }
 
   setPositionToDownMapBorder(x?: number): void {
@@ -162,10 +161,10 @@ export class PlayerMovement {
 
   //!Прятание героя за границы
   hideInDownMapBorder(x?: number): void {
-    this.setPosition(x ?? this.position.x, this.map.height)
+    this.setPosition(x ?? this.position.x, this.mapSize.height)
   }
   hideInRightMapBorder(y?: number): void {
-    this.setPosition(this.map.width, y ?? this.position.y)
+    this.setPosition(this.mapSize.width, y ?? this.position.y)
   }
   hideInTopMapBorder(x?: number): void {
     this.setPosition(x ?? this.position.x, -this.sprite.scaledHeight)
@@ -190,8 +189,17 @@ export class PlayerMovement {
   movementDirection: ExpandedMovementDirection | null = null
   setMovementDirection(direction: ExpandedMovementDirection | null): void {
     this.movementDirection = direction
-    if (!this.movementDirection) {
-      this.stop()
+
+    //Установка направления взгляда
+    if (this.movementDirection) {
+      const viewDirection: ViewDirections = this.movementDirection.includes('right')
+        ? ViewDirections.RIGHT
+        : this.movementDirection.includes('left')
+        ? ViewDirections.LEFT
+        : this.movementDirection === 'down'
+        ? ViewDirections.DOWN
+        : ViewDirections.UP
+      this.setViewDirection(viewDirection)
     }
   }
 
@@ -228,11 +236,11 @@ export class PlayerMovement {
   }
 
   //!Счётчик кадров
-  movementFramesCount = 0
-  setMovementFramesCount(value: number): void {
+  private movementFramesCount = 0
+  private setMovementFramesCount(value: number): void {
     this.movementFramesCount = value
   }
-  increaseMovementFramesCount(): void {
+  private increaseMovementFramesCount(): void {
     this.movementFramesCount += 1
   }
   //^@Анимация движения
@@ -286,7 +294,7 @@ export class PlayerMovement {
   }
 
   get pressedMovementControllers(): Array<string> {
-    return Array.from(this.keyboard.pressedKeys).reverse().filter(this.isMovementController)
+    return this.keyboard.pressedKeysArray.reverse().filter(this.isMovementController)
   }
   get pressedMovementDirections(): Array<PrimitiveMovementDirection> {
     return this.pressedMovementControllers.map((controller) =>
@@ -338,7 +346,9 @@ export class PlayerMovement {
 
   //!Движение
   //Отвечает за анимацию движения и за перемещение персонажа в валидную позицию
-  move(state?: MovementState): void {
+  move(direction: ExpandedMovementDirection, state?: MovementState): void {
+    this.setMovementDirection(direction)
+
     const {
       stepSize = this.currentMovementState.stepSize,
       framesPerStep = this.currentMovementState.framesPerStep,
@@ -382,6 +392,7 @@ export class PlayerMovement {
 
   //!Остановка
   stop(): void {
+    this.setMovementDirection(null)
     this.setMovementFramesCount(0)
     this.setMovementLoopIndex(0)
     this.setCurrentMovementState('idle')
@@ -422,19 +433,10 @@ export class PlayerMovement {
       this.setMovementDirection(movementDirection)
 
       if (this.movementDirection) {
-        const viewDirection: ViewDirections = this.movementDirection.includes('right')
-          ? ViewDirections.RIGHT
-          : this.movementDirection.includes('left')
-          ? ViewDirections.LEFT
-          : this.movementDirection === 'down'
-          ? ViewDirections.DOWN
-          : ViewDirections.UP
-
-        this.setViewDirection(viewDirection)
-        this.move()
+        this.move(this.movementDirection)
       }
     } else {
-      this.setMovementDirection(null)
+      this.stop()
     }
   }
 
@@ -469,15 +471,16 @@ export class PlayerMovement {
         //Перемещаем героя в стартовую позицию
         this.setPosition(startX, startY)
 
+        var movementDirection: PrimitiveMovementDirection
         //Вычисляем направление движения
         if (endY > startY) {
-          this.setViewDirection(ViewDirections.DOWN)
+          movementDirection = 'down'
         } else if (endX > startX) {
-          this.setViewDirection(ViewDirections.RIGHT)
+          movementDirection = 'right'
         } else if (endY < startY) {
-          this.setViewDirection(ViewDirections.UP)
+          movementDirection = 'up'
         } else if (endX < startX) {
-          this.setViewDirection(ViewDirections.LEFT)
+          movementDirection = 'left'
         }
 
         const stopAutoMoving = (): void => {
@@ -500,26 +503,25 @@ export class PlayerMovement {
 
               const positionOnNextStep = this.getPositionOnNextStep()
 
-              if (this.viewDirection === ViewDirections.DOWN) {
+              if (movementDirection === 'down') {
                 if (positionOnNextStep.y > end.y) {
                   setPositionToEndAndStopAutoMoving(this.position.x, end.y)
                 }
-              } else if (this.viewDirection === ViewDirections.RIGHT) {
+              } else if (movementDirection === 'right') {
                 if (positionOnNextStep.x > end.x) {
                   setPositionToEndAndStopAutoMoving(end.x, this.position.y)
                 }
-              } else if (this.viewDirection === ViewDirections.UP) {
+              } else if (movementDirection === 'up') {
                 if (positionOnNextStep.y < end.y) {
                   setPositionToEndAndStopAutoMoving(this.position.x, end.y)
                 }
-              } else if (this.viewDirection === ViewDirections.LEFT) {
+              } else if (movementDirection === 'left') {
                 if (positionOnNextStep.x < end.x) {
                   setPositionToEndAndStopAutoMoving(end.x, this.position.y)
                 }
               }
-
               if (shouldMove) {
-                this.move({ stepSize, framesPerStep })
+                this.move(movementDirection, { stepSize, framesPerStep })
               }
             }
 

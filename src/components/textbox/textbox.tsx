@@ -24,7 +24,7 @@ export const Textbox: FC<Props> = observer(({ isOpened, text }) => {
   const gamePlayStore = useGamePlayStore()
 
   const close = (): void => {
-    gamePlayStore.setCurrentTextbox(null)
+    gamePlayStore.textboxController.closeCurrentTextbox()
   }
 
   const [isTextboxEnteringEnds, setIsTextboxEnteringEnds] = useState(false)

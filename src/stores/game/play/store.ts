@@ -1,17 +1,18 @@
 import { makeAutoObservable } from 'mobx'
 
-import { CanvasObject } from 'game-utility-types'
-
 import { KeyboardStore } from 'stores/keyboard.store'
 import { SettingsStore } from 'stores/settings.store'
 
-import mainMap from 'content/maps/main-map.png'
-import { Script, getParsedScript } from 'content/text/get-parsed-script'
+import { GameScript, getParsedGameScript } from 'content/text/get-parsed-game-script'
 
-import { Map, MapConfig } from './map'
+import { GameActions } from './game-actions'
 import { Market } from './market'
+import { GameMenuController } from './menu-controller'
+import { GamePauseController } from './pause-controller'
 import { Player } from './player/player'
-import { Textbox } from './textbox'
+import { GameSceneController } from './scenes/controller'
+import { GameScreen } from './screen'
+import { TextboxController } from './textbox/controller'
 
 export type DataFromGameSetupForm = {
   playerName: string
@@ -23,225 +24,121 @@ export type GamePlayStoreConfig = {
   keyboard: KeyboardStore
   dataFromGameSetupForm: DataFromGameSetupForm
 }
-const mapNames = {
-  main: mainMap,
-}
-type MapNames = typeof mapNames
-type MapName = keyof MapNames
 
 export class GamePlayStore {
   private settings: SettingsStore
   private keyboard: KeyboardStore
   dataFromGameSetupForm: DataFromGameSetupForm
 
+  script: GameScript
+  player: Player
+  market: Market
+  actions: GameActions
+  textboxController: TextboxController
+
   constructor(config: GamePlayStoreConfig) {
     Object.assign(this, config)
+
+    //!Сценарий
+    this.script = getParsedGameScript({
+      playerName: this.dataFromGameSetupForm.playerName,
+      marketName: this.dataFromGameSetupForm.marketName,
+    })
+
+    //!Игрок
+    this.player = new Player({
+      name: this.dataFromGameSetupForm.playerName,
+      settings: this.settings,
+      ctx: this.screen.ctx,
+      mapSize: {
+        width: this.sceneController.currentScene.map.width,
+        height: this.sceneController.currentScene.map.height,
+      },
+      keyboard: this.keyboard,
+    })
+
+    //!Магазин
+    this.market = new Market({ name: this.dataFromGameSetupForm.marketName })
+
+    //!Игровые события
+    this.actions = new GameActions({ player: this.player })
+
+    //!Контроллер текстбоксов
+    this.textboxController = new TextboxController({
+      gameActions: this.actions,
+      gameScript: this.script,
+    })
 
     makeAutoObservable(this, {}, { autoBind: true })
   }
 
-  //!Сценарий
-  get script(): Script | null {
-    if (this.dataFromGameSetupForm) {
-      return getParsedScript({
-        playerName: this.dataFromGameSetupForm.playerName,
-        marketName: this.dataFromGameSetupForm.marketName,
-      })
-    }
-    return null
-  }
+  //!Экран
+  screen = new GameScreen({ width: screen.width, height: screen.height })
 
-  //!Канвас
-  canvasObject: CanvasObject = {
-    canvas: null,
-    ctx: null,
-  }
-  get canvasWidth(): number {
-    return screen.width
-  }
-  get canvasHeight(): number {
-    return screen.height
-  }
-  initializeCanvas(): void {
-    this.canvasObject.canvas = document.createElement('canvas')
-    this.canvasObject.canvas.width = this.canvasWidth
-    this.canvasObject.canvas.height = this.canvasHeight
+  //!Контроллер сцен
+  sceneController = new GameSceneController({ screen: this.screen, initialScene: 'market' })
 
-    const ctx = this.canvasObject.canvas.getContext('2d')
-    this.canvasObject.ctx = ctx
-  }
+  //!Контроллер паузы
+  pauseController = new GamePauseController()
 
-  //!Карта
-  map: Map | null = null
-  createMap(config: Omit<MapConfig, 'canvas'>): void {
-    if (this.canvasObject.canvas) {
-      this.map = new Map({
-        canvas: this.canvasObject.canvas,
-        ...config,
-      })
-    }
-  }
-  currentMapName: MapName = 'main'
-  setCurrentMapName(mapName: MapName): void {
-    this.currentMapName = mapName
-  }
-  get currentMapSrc(): string {
-    return mapNames[this.currentMapName]
-  }
-
-  //!Игрок
-  player: Player | null = null
-  createPlayer(): void {
-    if (this.canvasObject.canvas && this.canvasObject.ctx && this.map) {
-      this.canvasObject.canvas
-      this.player = new Player({
-        name: this.dataFromGameSetupForm.playerName,
-        settings: this.settings,
-        map: this.map,
-        canvasObject: {
-          canvas: this.canvasObject.canvas,
-          ctx: this.canvasObject.ctx,
-        },
-        keyboard: this.keyboard,
-      })
-    }
-  }
-
-  //!Магазин
-  market: Market | null = null
-  createMarket(): void {
-    this.market = new Market({
-      name: this.dataFromGameSetupForm.marketName,
-    })
-  }
+  //!Контроллер меню
+  menuController = new GameMenuController()
 
   //!Сетап игры
   get isGameLoaded(): boolean {
     //Проверка, что все изображения загрузились
-    if (this.player && this.map) {
-      return this.player.images.allAreLoaded && this.map.images.allAreLoaded
-    }
-    return false
+    return (
+      this.player.imageContainer.isAllImagesLoaded &&
+      this.sceneController.isAllCurrentSceneImagesLoaded
+    )
   }
-
   setupGame(): void {
-    this.initializeCanvas()
-    this.createMap({
-      width: this.canvasWidth,
-      height: this.canvasHeight,
-      background: this.currentMapSrc,
-    })
-    this.createPlayer()
-    this.createMarket()
-    if (this.player) {
-      this.player.movement.hideInTopMapBorder(0)
+    this.player.movement.hideInTopMapBorder(0)
+  }
+
+  //!Игровые циклы
+  update(): void {
+    this.screen.clear()
+    this.player.update()
+  }
+
+  private gameInPlayLoop(): void {
+    //Пользователь не может управлять героем во время паузы, открытого текстбокса,
+    //автомува, и когда персонаж находится за пределами карты
+    if (
+      !this.textboxController.isTextboxOpened &&
+      !this.player.movement.isAutoMoving &&
+      this.player.movement.isAllowedPosition(this.player.movement.position)
+    ) {
+      this.player.movement.handleMovementKeys()
     }
   }
 
-  //!Контроль паузы
-  isGamePaused = false
-  pauseGame(): void {
-    this.isGamePaused = true
-  }
-  resumeGame(): void {
-    this.isGamePaused = false
-  }
-  toggleGamePause(): void {
-    this.isGamePaused = !this.isGamePaused
-  }
-
-  //!Меню паузы
-  isGamePauseMenuOpened = false
-  openGamePauseMenu(): void {
-    this.isGamePauseMenuOpened = true
-  }
-  closeGamePauseMenu(): void {
-    this.isGamePauseMenuOpened = false
-  }
-  toggleGamePauseMenu(): void {
-    this.isGamePauseMenuOpened = !this.isGamePauseMenuOpened
-  }
-
-  //!Настройки
-  isSettingsMenuOpened = false
-  openSettingsMenu(): void {
-    this.isSettingsMenuOpened = true
-  }
-  closeSettingsMenu(): void {
-    this.isSettingsMenuOpened = false
-  }
-
-  //!Текст боксы
-  currentTextbox: Textbox | null = null
-  setCurrentTextbox(textbox: Textbox | null): void {
-    if (!textbox) {
-      this.currentTextbox?.afterClose()
+  private gameLoop(): void {
+    if (!this.pauseController.isGamePaused) {
+      this.gameInPlayLoop()
     }
-    this.currentTextbox = textbox
-  }
-  get isTextboxOpened(): boolean {
-    return Boolean(this.currentTextbox)
-  }
 
-  get welcomeTextbox(): Textbox {
-    return new Textbox({
-      text: this.script?.content.welcome ?? '',
-      afterClose: this.heroEntering,
-    })
-  }
-
-  //!Гейм луп
-  gameLoop(): void {
-    if (this.canvasObject.canvas && this.canvasObject.ctx) {
-      this.canvasObject.ctx.clearRect(
-        0,
-        0,
-        this.canvasObject.canvas.width,
-        this.canvasObject.canvas.height,
-      )
-
-      if (this.player) {
-        //Пользователь не может управлять героем во время паузы, открытого текстбокса,
-        //автомува, и когда персонаж находится за пределами карты
-        if (
-          !this.isGamePaused &&
-          !this.isTextboxOpened &&
-          !this.player.movement.isAutoMoving &&
-          this.player.movement.isAllowedPosition(this.player.movement.position)
-        ) {
-          this.player.movement.handleMovementKeys()
-        }
-
-        //Во время паузы останавливать автомув
-        if (this.player.movement.isAutoMoving) {
-          if (this.isGamePaused) {
-            this.player.movement.pauseAutoMove()
-          } else {
-            this.player.movement.resumeAutoMove()
-          }
-        }
-
-        this.player.drawSprite()
+    if (this.player.movement.isAutoMoving) {
+      //Во время паузы останавливать автомув и возобновлять его после отжатия паузы
+      if (this.pauseController.isGamePaused) {
+        this.player.movement.pauseAutoMove()
+      } else {
+        this.player.movement.resumeAutoMove()
       }
-
-      window.requestAnimationFrame(this.gameLoop)
     }
+
+    this.update()
   }
 
-  startGame(): void {
+  mainLoop(): void {
     this.gameLoop()
-    this.setCurrentTextbox(this.welcomeTextbox)
+    window.requestAnimationFrame(this.mainLoop)
   }
 
-  heroEntering(): void {
-    setTimeout(() => {
-      if (this.player) {
-        this.player.movement.autoMove({
-          start: this.player.movement.position,
-          end: { x: 0, y: 0 },
-          state: this.player.movement.movementStates.entering,
-        })
-      }
-    }, 300)
+  //!Запуск игры
+  run(): void {
+    this.mainLoop()
+    this.textboxController.setCurrentTextbox('welcome')
   }
 }

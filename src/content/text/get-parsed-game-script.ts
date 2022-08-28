@@ -1,4 +1,4 @@
-import script from './script.json'
+import script from './game-script.json'
 
 type KeyOfScriptContent = keyof typeof script['content']
 
@@ -9,9 +9,9 @@ type ParsedScriptConfig = {
   marketName: string
 }
 
-export type Script = typeof script
+export type GameScript = typeof script
 
-export const getParsedScript = (config: ParsedScriptConfig): Script => {
+export const getParsedGameScript = (config: ParsedScriptConfig): GameScript => {
   const { playerName, marketName } = config
 
   const replacers: Replacers = [
@@ -21,10 +21,10 @@ export const getParsedScript = (config: ParsedScriptConfig): Script => {
     { key: '#', value: marketName },
   ]
 
-  const parsedScript: Script = JSON.parse(JSON.stringify(script))
-  Object.keys(parsedScript.content).forEach((parsedScriptKey) => {
+  const parsedGameScript: GameScript = JSON.parse(JSON.stringify(script))
+  Object.keys(parsedGameScript.content).forEach((parsedScriptKey) => {
     replacers.forEach((replacer) => {
-      parsedScript.content[parsedScriptKey as KeyOfScriptContent] = parsedScript.content[
+      parsedGameScript.content[parsedScriptKey as KeyOfScriptContent] = parsedGameScript.content[
         parsedScriptKey as KeyOfScriptContent
       ]
         .split(replacer.key)
@@ -32,5 +32,5 @@ export const getParsedScript = (config: ParsedScriptConfig): Script => {
     })
   })
 
-  return parsedScript
+  return parsedGameScript
 }
