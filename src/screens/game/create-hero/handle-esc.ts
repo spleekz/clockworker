@@ -11,7 +11,7 @@ export const handleCreateHeroScreenEsc = (): void => {
   useKey({
     key: 'Escape',
     fn: () => {
-      if (!gameStore.opening.isOpening) {
+      if (!gameStore.opening.isOpened) {
         appStore.toggleQuitInMainMenuConfirm()
       }
     },

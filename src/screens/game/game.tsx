@@ -29,7 +29,7 @@ export const Game: FC = observer(() => {
     enter: { opacity: 1 },
     leave: { opacity: 0 },
     config: {
-      duration: gameStore.opening.transitionMs,
+      duration: gameStore.opening.appearanceMs,
     },
   })
 

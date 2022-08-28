@@ -14,10 +14,7 @@ export const PlayCanvas: FC = observer(() => {
   const gamePlayStore = useGamePlayStore()
 
   useEffect(() => {
-    gamePlayStore.setupGame()
-    gameStore.opening.show().then(() => {
-      gamePlayStore.run()
-    })
+    gameStore.startGame()
   }, [])
 
   const containerRef = useRef<HTMLDivElement | null>(null)

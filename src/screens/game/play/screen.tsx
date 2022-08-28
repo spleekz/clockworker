@@ -33,7 +33,7 @@ export const GamePlayScreen: FC = observer(() => {
 
   return (
     <GamePlayStoreContext.Provider value={gamePlayStore}>
-      <GameOpening isOpened={gameStore.opening.isOpening} />
+      <GameOpening isOpened={gameStore.opening.isOpened} />
       <PauseMenu isOpened={gamePlayStore.menuController.isGamePauseMenuOpened} />
       <SettingsMenu
         isOpened={gamePlayStore.menuController.isSettingsMenuOpened}

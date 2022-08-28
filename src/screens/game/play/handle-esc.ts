@@ -16,7 +16,7 @@ export const handleGamePlayScreenEsc = ({ gamePlayStore }: Config): void => {
   useKey({
     key: 'Escape',
     fn: () => {
-      if (!gameStore.opening.isOpening) {
+      if (!gameStore.opening.isOpened) {
         if (!gamePlayStore.textboxController.isTextboxOpened) {
           if (appStore.isQuitGameConfirmOpened) {
             appStore.closeQuitGameConfirm()

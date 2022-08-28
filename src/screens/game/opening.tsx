@@ -19,17 +19,17 @@ export const GameOpening: FC<Props> = observer(({ isOpened }) => {
   const containerStyles = useSpring({
     from: { opacity: 1 },
     to: { opacity: 0 },
-    delay: gameStore.opening.transitionMs + gameStore.opening.durationMs,
+    delay: gameStore.opening.appearanceMs + gameStore.opening.durationMs,
     cancel: !isOpened,
     config: {
-      duration: gameStore.opening.transitionMs,
+      duration: gameStore.opening.disappearanceMs,
     },
   })
 
   const contentStyles = useSpring({
     from: { opacity: 0 },
     to: { opacity: 1 },
-    delay: gameStore.opening.transitionMs + 270,
+    delay: gameStore.opening.appearanceMs + 270,
     cancel: !isOpened,
     config: {
       duration: 1700,
