@@ -2,7 +2,7 @@ import { observer } from 'mobx-react-lite'
 import React, { useEffect, useRef, useState } from 'react'
 import styled from 'styled-components'
 
-import { EmptyFunction, FC } from 'basic-utility-types'
+import { Callback, FC } from 'basic-utility-types'
 import { nanoid } from 'nanoid'
 
 import { useWindowClick } from 'hooks/use-window-click'
@@ -11,7 +11,7 @@ type Props = {
   text: string
   interval?: number
   printPrevented?: boolean
-  onPrintEnds?: EmptyFunction
+  onPrintEnds?: Callback
 }
 
 type TextSymbols = Array<{ id: string; value: string; isVisible: boolean }>

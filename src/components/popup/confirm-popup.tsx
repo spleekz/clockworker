@@ -2,7 +2,7 @@ import { observer } from 'mobx-react-lite'
 import React, { CSSProperties } from 'react'
 import styled from 'styled-components'
 
-import { EmptyFunction, FC, RequiredBy } from 'basic-utility-types'
+import { Callback, FC, RequiredBy } from 'basic-utility-types'
 
 import { PixelatedButton } from 'components/pixelated/pixelated-components'
 
@@ -12,9 +12,9 @@ type ConfirmPopupProps = {
   question: string
   questionStyles?: CSSProperties
   acceptText: string
-  onAccept: EmptyFunction
+  onAccept: Callback
   rejectText: string
-  onReject: EmptyFunction
+  onReject: Callback
   buttonsStyles: RequiredBy<CSSProperties, 'backgroundColor'>
 }
 

@@ -1,10 +1,10 @@
 import { useEffect } from 'react'
 
-import { EmptyFunction } from 'basic-utility-types'
+import { Callback } from 'basic-utility-types'
 
 export const useClickOutside = (
   ref: React.MutableRefObject<HTMLElement | null>,
-  fn: EmptyFunction,
+  fn: Callback,
 ): void => {
   useEffect(() => {
     const element = ref.current

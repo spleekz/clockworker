@@ -2,7 +2,7 @@ import { observer } from 'mobx-react-lite'
 import React from 'react'
 import styled from 'styled-components'
 
-import { EmptyFunction, FC } from 'basic-utility-types'
+import { Callback, FC } from 'basic-utility-types'
 
 import { PixelatedDiv } from 'components/pixelated/pixelated-components'
 
@@ -11,7 +11,7 @@ import checkMark from 'assets/icons/check-mark.png'
 type Props = {
   checked?: boolean
   disabled?: boolean
-  onChange?: EmptyFunction
+  onChange?: Callback
   backgroundColor: string
   checkedBackgroundColor: string
 }

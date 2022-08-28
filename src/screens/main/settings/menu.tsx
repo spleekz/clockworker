@@ -2,7 +2,7 @@ import { observer } from 'mobx-react-lite'
 import React from 'react'
 import styled from 'styled-components'
 
-import { EmptyFunction, FC } from 'basic-utility-types'
+import { Callback, FC } from 'basic-utility-types'
 
 import { colors } from 'lib/theme'
 
@@ -13,8 +13,8 @@ import { ControllersSettingsSection } from './sections/controllers'
 
 type Props = {
   isOpened: boolean
-  onClose: EmptyFunction
-  afterClose?: EmptyFunction
+  onClose: Callback
+  afterClose?: Callback
 }
 
 export const SettingsMenu: FC<Props> = observer(({ isOpened, onClose, afterClose }) => {

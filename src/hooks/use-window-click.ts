@@ -1,8 +1,8 @@
 import { useEffect } from 'react'
 
-import { EmptyFunction } from 'basic-utility-types'
+import { Callback } from 'basic-utility-types'
 
-export const useWindowClick = (fn: EmptyFunction): void => {
+export const useWindowClick = (fn: Callback): void => {
   useEffect(() => {
     window.addEventListener('click', fn)
     return () => window.removeEventListener('click', fn)

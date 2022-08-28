@@ -1,11 +1,11 @@
 import { useEffect } from 'react'
 
-import { EmptyFunction } from 'basic-utility-types'
+import { Callback } from 'basic-utility-types'
 
 type UseKeyConfig = {
   element?: HTMLElement | Window | null
   key: string
-  fn: EmptyFunction
+  fn: Callback
 }
 
 const isWindow = (element: unknown): element is Window => {

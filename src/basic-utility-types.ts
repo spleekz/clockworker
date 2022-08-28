@@ -4,7 +4,7 @@ export type AnyObject = Record<string, any>
 
 export type AnyArray = Array<any>
 
-export type EmptyFunction = () => void
+export type Callback = () => void
 
 export type FC<T = AnyObject> = React.FC<PropsWithChildren<T>>
 

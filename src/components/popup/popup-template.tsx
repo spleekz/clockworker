@@ -2,7 +2,7 @@ import { observer } from 'mobx-react-lite'
 import React, { CSSProperties, useEffect } from 'react'
 import styled from 'styled-components'
 
-import { EmptyFunction, FC, RequiredBy } from 'basic-utility-types'
+import { Callback, FC, RequiredBy } from 'basic-utility-types'
 import { XLg } from 'react-bootstrap-icons'
 
 import { useStore } from 'stores/root-store/context'
@@ -16,8 +16,8 @@ export type PopupTemplateProps = {
   title?: string
   withCloseButton: boolean
   isOpened: boolean
-  fnForClosing?: EmptyFunction
-  afterClose?: EmptyFunction
+  fnForClosing?: Callback
+  afterClose?: Callback
 }
 
 export const Popup: FC<PopupTemplateProps> = observer(
