@@ -14,8 +14,8 @@ export type DrawImageConfig = {
 }
 
 export const drawSprite = (
-  sprite: HTMLImageElement,
   ctx: CanvasRenderingContext2D,
+  sprite: HTMLImageElement,
   config: DrawImageConfig,
 ): void => {
   const {

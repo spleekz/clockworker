@@ -65,7 +65,7 @@ export class Player {
     })
   }
   update(): void {
-    drawSprite(this.imageContainer.list.sprite.imageElement, this.ctx, {
+    drawSprite(this.ctx, this.imageContainer.list.sprite.imageElement, {
       width: this.sprite.width,
       height: this.sprite.height,
       firstSkipX: this.sprite.firstSkipX,
