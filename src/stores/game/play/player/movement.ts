@@ -418,9 +418,7 @@ export class PlayerMovement {
           movementDirection = filteredPressedMovementDirections
             //Сортируем, чтобы названия направлений получались в едином формате
             .sort((_, b) => (b === 'down' || b === 'up' ? 1 : -1))
-            .reduce((acc, direction) => {
-              return (acc += direction) as ExpandedMovementDirection
-            }, '' as ExpandedMovementDirection)
+            .join('') as ExpandedMovementDirection
         } else {
           movementDirection = null
         }
