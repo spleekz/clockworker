@@ -25,7 +25,7 @@ export type CreateHeroForm = {
 
 export const CreateHeroForm: FC = observer(() => {
   const gameStore = useGameStore()
-  const { gameSetupFormStore } = gameStore
+  const { gameSetupForm } = gameStore
 
   const { register, handleSubmit, getValues, setValue, formState } = useForm<CreateHeroForm>()
 
@@ -47,8 +47,8 @@ export const CreateHeroForm: FC = observer(() => {
   }
 
   const startGame: SubmitHandler<CreateHeroForm> = ({ heroName, marketName }) => {
-    gameSetupFormStore.setPlayerName(heroName)
-    gameSetupFormStore.setMarketName(marketName)
+    gameSetupForm.setPlayerName(heroName)
+    gameSetupForm.setMarketName(marketName)
     gameStore.setScreen('play')
   }
 

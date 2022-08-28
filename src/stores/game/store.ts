@@ -40,16 +40,16 @@ export class GameStore {
     background: '#000000',
   })
 
-  //!GameFormStore
-  gameSetupFormStore = new GameSetupForm()
+  //!GameSetupForm
+  gameSetupForm = new GameSetupForm()
 
   //!PlayStore
   playStore: GamePlayStore | null = null
 
   createGamePlayStore(): GamePlayStore {
     const dataFromGameSetupForm: DataFromGameSetupForm = {
-      playerName: this.gameSetupFormStore.playerName,
-      marketName: this.gameSetupFormStore.marketName,
+      playerName: this.gameSetupForm.playerName,
+      marketName: this.gameSetupForm.marketName,
     }
 
     const gamePlayStore = new GamePlayStore({
