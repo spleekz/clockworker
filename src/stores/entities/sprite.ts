@@ -20,7 +20,14 @@ export class Sprite {
   scale: number
 
   constructor(config: SpriteConfig) {
-    Object.assign(this, config)
+    this.src = config.src
+    this.width = config.width
+    this.height = config.height
+    this.firstSkipX = config.firstSkipX
+    this.firstSkipY = config.firstSkipY
+    this.skipX = config.skipX
+    this.skipY = config.skipY
+    this.scale = config.scale
   }
 
   get scaledWidth(): number {

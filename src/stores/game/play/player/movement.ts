@@ -50,7 +50,10 @@ export class PlayerMovement {
   private sprite: Sprite
 
   constructor(config: PlayerMovementConfig) {
-    Object.assign(this, config)
+    this.keyboard = config.keyboard
+    this.mapSize = config.mapSize
+    this.settings = config.settings
+    this.sprite = config.sprite
 
     makeAutoObservable(this, {}, { autoBind: true })
   }

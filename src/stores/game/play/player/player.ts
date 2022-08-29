@@ -21,17 +21,20 @@ type PlayerStoreConfig = {
 }
 
 export class Player {
+  name: string
   private settings: SettingsStore
   private ctx: Ctx
   private mapSize: Size
   private keyboard: KeyboardStore
 
-  name: string
-
   movement: PlayerMovement
 
   constructor(config: PlayerStoreConfig) {
-    Object.assign(this, config)
+    this.name = config.name
+    this.settings = config.settings
+    this.ctx = config.ctx
+    this.mapSize = config.mapSize
+    this.keyboard = config.keyboard
 
     //!Движение
     this.movement = new PlayerMovement({

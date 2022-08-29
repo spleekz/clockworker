@@ -21,7 +21,8 @@ export class GameStore {
   protected keyboard: KeyboardStore
 
   constructor(config: GameStoreConfig) {
-    Object.assign(this, config)
+    this.settings = config.settings
+    this.keyboard = config.keyboard
 
     makeAutoObservable(this, {}, { autoBind: true })
   }

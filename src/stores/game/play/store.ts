@@ -37,7 +37,9 @@ export class GamePlayStore {
   textboxController: TextboxController
 
   constructor(config: GamePlayStoreConfig) {
-    Object.assign(this, config)
+    this.settings = config.settings
+    this.keyboard = config.keyboard
+    this.dataFromGameSetupForm = config.dataFromGameSetupForm
 
     //!Сценарий
     this.script = getParsedGameScript({

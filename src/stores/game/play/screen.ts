@@ -13,7 +13,8 @@ export class GameScreen {
   ctx: Ctx
 
   constructor(config: GameScreenConfig) {
-    Object.assign(this, config)
+    this.width = config.width
+    this.height = config.height
 
     this.initializeCanvasAndCtx()
   }
