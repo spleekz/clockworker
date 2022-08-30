@@ -63,10 +63,7 @@ export class GamePlayStore {
     this.actions = new GameActions({ player: this.player })
 
     //!Контроллер текстбоксов
-    this.textboxController = new TextboxController({
-      gameActions: this.actions,
-      gameScript: this.script,
-    })
+    this.textboxController = new TextboxController({ gameScript: this.script })
 
     makeAutoObservable(this, {}, { autoBind: true })
   }
@@ -141,6 +138,6 @@ export class GamePlayStore {
   //!Запуск игры
   run(): void {
     this.mainLoop()
-    this.textboxController.setCurrentTextbox('welcome')
+    this.textboxController.setCurrentTextbox({ name: 'welcome', onClose: this.actions.playerEntering })
   }
 }
