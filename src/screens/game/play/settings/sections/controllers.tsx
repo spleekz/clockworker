@@ -4,14 +4,14 @@ import styled from 'styled-components'
 
 import { FC } from 'basic-utility-types'
 
-import { useStore } from 'stores/root-store/context'
-
 import { colors } from 'lib/theme'
 
 import { PixelatedCheckbox } from 'components/checkbox/pixelated-checkbox'
+import { useGamePlayStore } from 'screens/game/play/screen'
 
 export const ControllersSettingsSection: FC = observer(() => {
-  const { settingsStore } = useStore()
+  const { settings } = useGamePlayStore()
+  const settingsList = settings.list
 
   return (
     <Container>
@@ -19,13 +19,20 @@ export const ControllersSettingsSection: FC = observer(() => {
       <Setting>
         <SettingTitle>Движение :</SettingTitle>
         <MovementControllersVariants>
-          {settingsStore.controllers.movement.controllers.map((variant) => {
+          {settingsList.controllers.movement.controllers.map((settingVariant) => {
             return (
-              <MovementControllersVariant key={variant.id}>
-                <MovementControllersVariantLabel>{variant.label}</MovementControllersVariantLabel>
+              <MovementControllersVariant key={settingVariant.id}>
+                <MovementControllersVariantLabel>
+                  {settingVariant.label}
+                </MovementControllersVariantLabel>
                 <PixelatedCheckbox
-                  checked={variant.isSelected}
-                  onChange={() => settingsStore.selectMovementControllersVariant(variant.id)}
+                  checked={settingVariant.isSelected}
+                  onChange={() =>
+                    settingsList.selectSettingVariant(
+                      settingsList.controllers.movement.controllers,
+                      settingVariant.id,
+                    )
+                  }
                   backgroundColor={colors.secondary}
                   checkedBackgroundColor={colors.selected}
                 />

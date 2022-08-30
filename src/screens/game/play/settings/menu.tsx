@@ -17,7 +17,7 @@ type Props = {
   afterClose?: Callback
 }
 
-export const SettingsMenu: FC<Props> = observer(({ isOpened, onClose, afterClose }) => {
+export const GameSettingsMenu: FC<Props> = observer(({ isOpened, onClose, afterClose }) => {
   return (
     <Popup
       width={'600px'}

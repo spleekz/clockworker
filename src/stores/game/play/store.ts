@@ -1,7 +1,6 @@
 import { makeAutoObservable } from 'mobx'
 
 import { KeyboardStore } from 'stores/keyboard.store'
-import { SettingsStore } from 'stores/settings.store'
 
 import { GameScript, getParsedGameScript } from 'content/text/get-parsed-game-script'
 
@@ -12,6 +11,7 @@ import { GamePauseController } from './pause-controller'
 import { Player } from './player/player'
 import { GameSceneController } from './scenes/controller'
 import { GameScreen } from './screen'
+import { GameSettings } from './settings/settings'
 import { TextboxController } from './textbox/controller'
 
 export type DataFromGameSetupForm = {
@@ -20,13 +20,11 @@ export type DataFromGameSetupForm = {
 }
 
 export type GamePlayStoreConfig = {
-  settings: SettingsStore
   keyboard: KeyboardStore
   dataFromGameSetupForm: DataFromGameSetupForm
 }
 
 export class GamePlayStore {
-  private settings: SettingsStore
   private keyboard: KeyboardStore
   dataFromGameSetupForm: DataFromGameSetupForm
 
@@ -37,7 +35,6 @@ export class GamePlayStore {
   textboxController: TextboxController
 
   constructor(config: GamePlayStoreConfig) {
-    this.settings = config.settings
     this.keyboard = config.keyboard
     this.dataFromGameSetupForm = config.dataFromGameSetupForm
 
@@ -50,7 +47,7 @@ export class GamePlayStore {
     //!Игрок
     this.player = new Player({
       name: this.dataFromGameSetupForm.playerName,
-      settings: this.settings,
+      settings: this.settings.current,
       ctx: this.screen.ctx,
       mapSize: {
         width: this.sceneController.currentScene.map.width,
@@ -73,6 +70,9 @@ export class GamePlayStore {
 
     makeAutoObservable(this, {}, { autoBind: true })
   }
+
+  //!Настройки
+  settings = new GameSettings()
 
   //!Экран
   screen = new GameScreen({ width: screen.width, height: screen.height })

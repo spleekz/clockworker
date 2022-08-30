@@ -20,7 +20,6 @@ export const MainMenu: FC = observer(() => {
   return (
     <MainMenuButtons>
       <Button onClick={createNewGame}>Новая игра</Button>
-      <Button onClick={appStore.openSettingsMenu}>Настройки</Button>
     </MainMenuButtons>
   )
 })

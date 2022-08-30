@@ -11,20 +11,17 @@ import {
 
 import { Sprite } from 'stores/entities/sprite'
 import { KeyboardStore } from 'stores/keyboard.store'
-import {
-  MovementControllers,
-  MovementKeys,
-  MovementRegulators,
-  SettingsStore,
-} from 'stores/settings.store'
 
 import { areSame } from 'lib/are-same'
 import { last } from 'lib/arrays'
 
+import { CurrentGameSettings, MovementKeys, MovementRegulators } from '../settings/current-settings'
+import { MovementControllers } from '../settings/settings-list'
+
 type PlayerMovementConfig = {
   keyboard: KeyboardStore
   mapSize: Size
-  settings: SettingsStore
+  settings: CurrentGameSettings
   sprite: Sprite
 }
 
@@ -46,7 +43,7 @@ type AutoMoveConfig = {
 export class PlayerMovement {
   private keyboard: KeyboardStore
   private mapSize: Size
-  private settings: SettingsStore
+  private settings: CurrentGameSettings
   private sprite: Sprite
 
   constructor(config: PlayerMovementConfig) {
@@ -285,7 +282,7 @@ export class PlayerMovement {
 
   //@Клавиши управления
   get movementKeys(): MovementKeys {
-    return this.settings.movementKeys
+    return this.settings.movement.keys
   }
 
   //!Контроллеры

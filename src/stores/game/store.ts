@@ -1,27 +1,22 @@
 import { makeAutoObservable } from 'mobx'
 
-import { KeyboardStore } from 'stores/keyboard.store'
-import { SettingsStore } from 'stores/settings.store'
-
 import { delay } from 'lib/async'
 
 import { DataFromGameSetupForm, GamePlayStore } from './play/store'
 import { GameSetupForm } from './setup-form'
 import { TransitionScreen } from './transition-screen'
+import { KeyboardStore } from 'stores/keyboard.store'
 
 type GameScreen = 'createHero' | 'play'
 
 type GameStoreConfig = {
-  settings: SettingsStore
   keyboard: KeyboardStore
 }
 
 export class GameStore {
-  protected settings: SettingsStore
   protected keyboard: KeyboardStore
 
   constructor(config: GameStoreConfig) {
-    this.settings = config.settings
     this.keyboard = config.keyboard
 
     makeAutoObservable(this, {}, { autoBind: true })
@@ -54,7 +49,6 @@ export class GameStore {
     }
 
     const gamePlayStore = new GamePlayStore({
-      settings: this.settings,
       keyboard: this.keyboard,
       dataFromGameSetupForm,
     })

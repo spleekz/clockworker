@@ -12,7 +12,6 @@ import { PixelatedButton } from 'components/pixelated/pixelated-components'
 
 import { handleMainScreenEsc } from './handle-esc'
 import { MainMenu } from './main-menu'
-import { SettingsMenu } from './settings/menu'
 
 export const MainScreen: FC = observer(() => {
   const { appStore } = useStore()
@@ -21,8 +20,6 @@ export const MainScreen: FC = observer(() => {
 
   return (
     <Container>
-      <SettingsMenu isOpened={appStore.isSettingsMenuOpened} onClose={appStore.closeSettingsMenu} />
-
       <Title>clockworker</Title>
       <Body>
         <MainMenu />

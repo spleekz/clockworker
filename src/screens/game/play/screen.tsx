@@ -7,13 +7,13 @@ import { GamePlayStore } from 'stores/game/play/store'
 import { useStore } from 'stores/root-store/context'
 
 import { QuitInMainMenuConfirm } from 'components/game-popups/quit-in-main-menu-confirm'
-import { SettingsMenu } from 'screens/main/settings/menu'
 
 import { useGameStore } from '../game'
 import { GameOpening } from '../opening'
 import { handleGamePlayScreenEsc } from './handle-esc'
 import { PauseMenu } from './pause-menu'
 import { PlayCanvas } from './play-canvas'
+import { GameSettingsMenu } from './settings/menu'
 
 const GamePlayStoreContext = createContext<GamePlayStore | null>(null)
 export const useGamePlayStore = (): GamePlayStore => {
@@ -35,7 +35,7 @@ export const GamePlayScreen: FC = observer(() => {
     <GamePlayStoreContext.Provider value={gamePlayStore}>
       <GameOpening isOpened={gameStore.opening.isOpened} />
       <PauseMenu isOpened={gamePlayStore.menuController.isGamePauseMenuOpened} />
-      <SettingsMenu
+      <GameSettingsMenu
         isOpened={gamePlayStore.menuController.isSettingsMenuOpened}
         onClose={gamePlayStore.menuController.closeCurrentMenu}
         afterClose={() => gamePlayStore.menuController.openMenu('pause')}

@@ -5,16 +5,16 @@ import { Ctx, Size } from 'game-utility-types'
 import { ImageContainer } from 'stores/entities/image-container'
 import { Sprite } from 'stores/entities/sprite'
 import { KeyboardStore } from 'stores/keyboard.store'
-import { SettingsStore } from 'stores/settings.store'
 
 import playerSpriteSrc from 'content/sprites/heroes/Player.png'
 
 import { drawSprite } from '../../../../lib/draw-sprite'
+import { CurrentGameSettings } from '../settings/current-settings'
 import { PlayerMovement } from './movement'
 
 type PlayerStoreConfig = {
   name: string
-  settings: SettingsStore
+  settings: CurrentGameSettings
   ctx: Ctx
   mapSize: Size
   keyboard: KeyboardStore
@@ -22,7 +22,7 @@ type PlayerStoreConfig = {
 
 export class Player {
   name: string
-  private settings: SettingsStore
+  private settings: CurrentGameSettings
   private ctx: Ctx
   private mapSize: Size
   private keyboard: KeyboardStore
@@ -38,9 +38,9 @@ export class Player {
 
     //!Движение
     this.movement = new PlayerMovement({
+      settings: this.settings,
       keyboard: this.keyboard,
       mapSize: this.mapSize,
-      settings: this.settings,
       sprite: this.sprite,
     })
 

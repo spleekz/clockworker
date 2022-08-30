@@ -40,15 +40,6 @@ export class AppStore {
     this.isQuitInMainMenuConfirmOpened = !this.isQuitInMainMenuConfirmOpened
   }
 
-  //!Настройки
-  isSettingsMenuOpened = false
-  openSettingsMenu(): void {
-    this.isSettingsMenuOpened = true
-  }
-  closeSettingsMenu(): void {
-    this.isSettingsMenuOpened = false
-  }
-
   //!Открытые попапы
   openedPopupsCount = 0
   increaseOpenedPopupsCount(): void {

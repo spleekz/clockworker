@@ -8,11 +8,7 @@ export const handleMainScreenEsc = (): void => {
   useKey({
     key: 'Escape',
     fn: () => {
-      if (appStore.isSettingsMenuOpened) {
-        appStore.closeSettingsMenu()
-      } else {
-        appStore.toggleQuitGameConfirm()
-      }
+      appStore.toggleQuitGameConfirm()
     },
   })
 }

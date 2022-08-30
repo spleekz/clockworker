@@ -13,13 +13,6 @@ export type MovementControllers = {
   up: string
   left: string
 }
-export type MovementRegulators = {
-  sprint: string
-}
-export type MovementKeys = {
-  controllers: MovementControllers
-  regulators: MovementRegulators
-}
 
 type Controllers = {
   movement: {
@@ -27,7 +20,7 @@ type Controllers = {
   }
 }
 
-export class SettingsStore {
+export class GameSettingsList {
   constructor() {
     makeAutoObservable(this, {}, { autoBind: true })
   }
@@ -61,35 +54,13 @@ export class SettingsStore {
     },
   }
 
-  selectMovementControllersVariant(id: string): void {
-    this.controllers.movement.controllers.forEach((variant) => {
-      if (variant.id === id) {
+  selectSettingVariant(settingArray: Array<Setting<any>>, variantId: string): void {
+    settingArray.forEach((variant) => {
+      if (variant.id === variantId) {
         variant.isSelected = true
       } else {
         variant.isSelected = false
       }
     })
-  }
-
-  get movementControllers(): MovementControllers {
-    return this.controllers.movement.controllers.reduce((acc, controllersVariant) => {
-      if (controllersVariant.isSelected) {
-        acc = controllersVariant.value
-      }
-      return acc
-    }, {} as MovementControllers)
-  }
-
-  get movementRegulators(): MovementRegulators {
-    return {
-      sprint: 'ShiftLeft',
-    }
-  }
-
-  get movementKeys(): MovementKeys {
-    return {
-      controllers: this.movementControllers,
-      regulators: this.movementRegulators,
-    }
   }
 }
