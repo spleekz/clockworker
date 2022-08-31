@@ -2,18 +2,18 @@ import { makeAutoObservable } from 'mobx'
 
 import { GameSettingsList } from './settings-list'
 
-type MovementControllers = {
+export type MovementControllersKeys = {
   down: string
   right: string
   up: string
   left: string
 }
-export type MovementRegulators = {
+export type MovementRegulatorsKeys = {
   sprint: string
 }
 export type MovementKeys = {
-  controllers: MovementControllers
-  regulators: MovementRegulators
+  controllers: MovementControllersKeys
+  regulators: MovementRegulatorsKeys
 }
 type MovementSettings = { keys: MovementKeys }
 
@@ -39,7 +39,7 @@ export class CurrentGameSettings {
         }
         return acc
       },
-      {} as MovementControllers,
+      {} as MovementControllersKeys,
     )
 
     const regulators = {

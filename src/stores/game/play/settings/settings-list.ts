@@ -1,5 +1,7 @@
 import { makeAutoObservable } from 'mobx'
 
+import { MovementControllersKeys } from './current-settings'
+
 type Setting<T> = {
   id: string
   label: string
@@ -7,16 +9,9 @@ type Setting<T> = {
   isSelected: boolean
 }
 
-export type MovementControllers = {
-  down: string
-  right: string
-  up: string
-  left: string
-}
-
 type Controllers = {
   movement: {
-    controllers: Array<Setting<MovementControllers>>
+    controllers: Array<Setting<MovementControllersKeys>>
   }
 }
 

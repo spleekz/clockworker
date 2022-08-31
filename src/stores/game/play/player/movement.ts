@@ -15,8 +15,12 @@ import { KeyboardStore } from 'stores/keyboard.store'
 import { areSame } from 'lib/are-same'
 import { last } from 'lib/arrays'
 
-import { CurrentGameSettings, MovementKeys, MovementRegulators } from '../settings/current-settings'
-import { MovementControllers } from '../settings/settings-list'
+import {
+  CurrentGameSettings,
+  MovementControllersKeys,
+  MovementKeys,
+  MovementRegulatorsKeys,
+} from '../settings/current-settings'
 
 type PlayerMovementConfig = {
   keyboard: KeyboardStore
@@ -25,13 +29,27 @@ type PlayerMovementConfig = {
   sprite: Sprite
 }
 
-type MovementStateName = 'idle' | 'walk' | 'sprint' | 'entering'
+type MovementStateName = 'idle' | 'walk' | 'entering'
 type MovementState = {
   stepSize: number
   framesPerStep: number
 }
-type MovementStates = {
-  [P in MovementStateName]: MovementState
+type MovementStates = Record<MovementStateName, MovementState>
+
+type MovementRegulatorName = 'sprint'
+type MovementRegulator = {
+  stepSizeMultiplier: number
+  framesPerStepMultiplier: number
+}
+type MovementRegulators = Record<MovementRegulatorName, MovementRegulator>
+
+type MovementConfigNames = {
+  state: MovementStateName
+  regulator: MovementRegulatorName | null
+}
+type MovementConfigValues = {
+  state: MovementState
+  regulator: MovementRegulator | null
 }
 
 type AutoMoveConfig = {
@@ -69,7 +87,7 @@ export class PlayerMovement {
 
   //!Позиция на следующий шаг
   getPositionOnNextStep(config?: { stepSize?: number }): Position {
-    const { stepSize = this.currentMovementState.stepSize } = config ?? {}
+    const { stepSize = this.currentMovementStateWithRegulators.stepSize } = config ?? {}
 
     //Длина шага по диагонали должна быть равна длине шага по прямой
     const diagonalStepSize = Math.sqrt(Math.pow(stepSize, 2) / 2)
@@ -257,27 +275,50 @@ export class PlayerMovement {
         stepSize: 1.8,
         framesPerStep: 11,
       },
-      sprint: {
-        stepSize: 3.4,
-        framesPerStep: 8,
-      },
       entering: {
         stepSize: 0.45,
         framesPerStep: 11,
       },
     }
   }
-
-  currentMovementStateName: MovementStateName = 'idle'
-  setCurrentMovementState(name: MovementStateName): void {
-    this.currentMovementStateName = name
+  get movementRegulators(): MovementRegulators {
+    return { sprint: { stepSizeMultiplier: 1.88, framesPerStepMultiplier: 0.72 } }
   }
-  get currentMovementState(): MovementState {
-    return this.movementStates[this.currentMovementStateName]
+
+  currentMovementConfigNames: MovementConfigNames = {
+    state: 'idle',
+    regulator: null,
+  }
+  setCurrentMovementState(name: MovementStateName): void {
+    this.currentMovementConfigNames.state = name
+  }
+  setCurrentMovementRegulator(name: MovementRegulatorName | null): void {
+    this.currentMovementConfigNames.regulator = name
+  }
+  get currentMovementConfigValues(): MovementConfigValues {
+    return {
+      state: this.movementStates[this.currentMovementConfigNames.state],
+      regulator: this.currentMovementConfigNames.regulator
+        ? this.movementRegulators[this.currentMovementConfigNames.regulator]
+        : null,
+    }
+  }
+
+  get currentMovementStateWithRegulators(): MovementState {
+    const stepSizeMultiplier = this.currentMovementConfigValues.regulator?.stepSizeMultiplier ?? 1
+    const framesPerStepMultiplier =
+      this.currentMovementConfigValues.regulator?.framesPerStepMultiplier ?? 1
+
+    const stepSize = this.currentMovementConfigValues.state.stepSize * stepSizeMultiplier
+    const framesPerStep = Math.round(
+      this.currentMovementConfigValues.state.framesPerStep * framesPerStepMultiplier,
+    )
+
+    return { stepSize, framesPerStep }
   }
 
   get isMoving(): boolean {
-    return this.currentMovementStateName !== 'idle'
+    return this.currentMovementConfigNames.state !== 'idle'
   }
 
   //@Клавиши управления
@@ -286,23 +327,23 @@ export class PlayerMovement {
   }
 
   //!Контроллеры
-  get movementControllers(): MovementControllers {
+  get movementControllersKeys(): MovementControllersKeys {
     return this.movementKeys.controllers
   }
-  isMovementController(key: string): boolean {
-    return Object.values(this.movementControllers).some((controller) => key === controller)
+  isMovementControllerKey(key: string): boolean {
+    return Object.values(this.movementControllersKeys).some((controller) => key === controller)
   }
 
   get pressedMovementControllers(): Array<string> {
-    return this.keyboard.pressedKeysArray.reverse().filter(this.isMovementController)
+    return this.keyboard.pressedKeysArray.reverse().filter(this.isMovementControllerKey)
   }
   get pressedMovementDirections(): Array<PrimitiveMovementDirection> {
     return this.pressedMovementControllers.map((controller) =>
-      controller === this.movementControllers.down
+      controller === this.movementControllersKeys.down
         ? 'down'
-        : controller === this.movementControllers.right
+        : controller === this.movementControllersKeys.right
         ? 'right'
-        : controller === this.movementControllers.up
+        : controller === this.movementControllersKeys.up
         ? 'up'
         : 'left',
     )
@@ -312,35 +353,35 @@ export class PlayerMovement {
     return this.pressedMovementControllers.length !== 0
   }
   get isMoveDownControllerPressed(): boolean {
-    return this.pressedMovementControllers.includes(this.movementControllers.down)
+    return this.pressedMovementControllers.includes(this.movementControllersKeys.down)
   }
   get isMoveRightControllerPressed(): boolean {
-    return this.pressedMovementControllers.includes(this.movementControllers.right)
+    return this.pressedMovementControllers.includes(this.movementControllersKeys.right)
   }
   get isMoveUpControllerPressed(): boolean {
-    return this.pressedMovementControllers.includes(this.movementControllers.up)
+    return this.pressedMovementControllers.includes(this.movementControllersKeys.up)
   }
   get isMoveLeftControllerPressed(): boolean {
-    return this.pressedMovementControllers.includes(this.movementControllers.left)
+    return this.pressedMovementControllers.includes(this.movementControllersKeys.left)
   }
 
   //!Регуляторы
-  get movementRegulators(): MovementRegulators {
+  get movementRegulatorsKeys(): MovementRegulatorsKeys {
     return this.movementKeys.regulators
   }
-  isMovementRegulator(key: string): boolean {
-    return Object.values(this.movementRegulators).some((regulator) => key === regulator)
+  isMovementRegulatorKey(key: string): boolean {
+    return Object.values(this.movementRegulatorsKeys).some((regulator) => key === regulator)
   }
 
   get pressedMovementRegulators(): Array<string> {
-    return this.keyboard.pressedKeysArray.filter(this.isMovementRegulator)
+    return this.keyboard.pressedKeysArray.filter(this.isMovementRegulatorKey)
   }
   get lastPressedMovementRegulator(): string {
     return last(this.pressedMovementRegulators)
   }
 
   get isSprintKeyPressed(): boolean {
-    return this.lastPressedMovementRegulator === this.movementRegulators.sprint
+    return this.lastPressedMovementRegulator === this.movementRegulatorsKeys.sprint
   }
   //^@Клавиши управления
 
@@ -350,18 +391,14 @@ export class PlayerMovement {
     this.setMovementDirection(direction)
 
     const {
-      stepSize = this.currentMovementState.stepSize,
-      framesPerStep = this.currentMovementState.framesPerStep,
+      stepSize = this.currentMovementStateWithRegulators.stepSize,
+      framesPerStep = this.currentMovementStateWithRegulators.framesPerStep,
     } = state ?? {}
 
     const positionOnNextStep = this.getPositionOnNextStep({ stepSize })
 
     if (!this.isAutoMoving) {
-      if (this.isSprintKeyPressed) {
-        this.setCurrentMovementState('sprint')
-      } else {
-        this.setCurrentMovementState('walk')
-      }
+      this.setCurrentMovementRegulator(this.isSprintKeyPressed ? 'sprint' : null)
       //Проверка, если следующим шагом персонаж выходит за границы
       if (!this.isAllowedPosition(positionOnNextStep)) {
         if (this.isOutOfDownMapBorder(positionOnNextStep)) {
@@ -431,6 +468,8 @@ export class PlayerMovement {
       this.setMovementDirection(movementDirection)
 
       if (this.movementDirection) {
+        const movementStateName: MovementStateName = 'walk'
+        this.setCurrentMovementState(movementStateName)
         this.move(this.movementDirection)
       }
     } else {
