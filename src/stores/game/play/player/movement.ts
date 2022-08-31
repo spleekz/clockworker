@@ -194,11 +194,6 @@ export class PlayerMovement {
   //!Направление взгляда
   viewDirection: ViewDirections = ViewDirections.DOWN
   setViewDirection(direction: ViewDirections): void {
-    //Чтобы при смене напрвления взгляда сразу была анимация шага
-    if (this.isMoving && this.viewDirection !== direction) {
-      this.setMovementFramesCount(0)
-      this.setMovementLoopIndex(1)
-    }
     this.viewDirection = direction
   }
 
@@ -206,19 +201,25 @@ export class PlayerMovement {
   //Существует только в момент движения персонажа
   movementDirection: ExpandedMovementDirection | null = null
   setMovementDirection(direction: ExpandedMovementDirection | null): void {
-    this.movementDirection = direction
-
     //Установка направления взгляда
-    if (this.movementDirection) {
-      const viewDirection: ViewDirections = this.movementDirection.includes('right')
+    if (direction) {
+      const newViewDirection: ViewDirections = direction.includes('right')
         ? ViewDirections.RIGHT
-        : this.movementDirection.includes('left')
+        : direction.includes('left')
         ? ViewDirections.LEFT
-        : this.movementDirection === 'down'
+        : direction === 'down'
         ? ViewDirections.DOWN
         : ViewDirections.UP
-      this.setViewDirection(viewDirection)
+
+      //Чтобы при смене напрвления взгляда сразу была анимация шага
+      if (!this.movementDirection || newViewDirection !== this.viewDirection) {
+        this.setMovementFramesCount(0)
+        this.setMovementLoopIndex(1)
+      }
+
+      this.setViewDirection(newViewDirection)
     }
+    this.movementDirection = direction
   }
 
   getReversedPrimitiveDirection(direction: PrimitiveMovementDirection): PrimitiveMovementDirection {
@@ -457,7 +458,7 @@ export class PlayerMovement {
             .sort((_, b) => (b === 'down' || b === 'up' ? 1 : -1))
             .join('') as ExpandedMovementDirection
         } else {
-          movementDirection = null
+          this.stop()
         }
 
         return movementDirection
@@ -465,12 +466,10 @@ export class PlayerMovement {
 
       const movementDirection = getMovementDirection()
 
-      this.setMovementDirection(movementDirection)
-
-      if (this.movementDirection) {
+      if (movementDirection) {
         const movementStateName: MovementStateName = 'walk'
         this.setCurrentMovementState(movementStateName)
-        this.move(this.movementDirection)
+        this.move(movementDirection)
       }
     } else {
       this.stop()
