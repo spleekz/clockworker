@@ -25,7 +25,11 @@ export class AppStore {
     this.isQuitGameConfirmOpened = false
   }
   toggleQuitGameConfirm(): void {
-    this.isQuitGameConfirmOpened = !this.isQuitGameConfirmOpened
+    if (this.isQuitGameConfirmOpened) {
+      this.closeQuitGameConfirm()
+    } else {
+      this.openQuitGameConfirm()
+    }
   }
 
   //!Выход в главное меню
@@ -37,7 +41,11 @@ export class AppStore {
     this.isQuitInMainMenuConfirmOpened = false
   }
   toggleQuitInMainMenuConfirm(): void {
-    this.isQuitInMainMenuConfirmOpened = !this.isQuitInMainMenuConfirmOpened
+    if (this.isQuitInMainMenuConfirmOpened) {
+      this.closeQuitInMainMenuConfirm()
+    } else {
+      this.openQuitInMainMenuConfirm()
+    }
   }
 
   //!Открытые попапы

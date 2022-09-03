@@ -1,4 +1,10 @@
+import { makeAutoObservable } from 'mobx'
+
 export class GamePauseController {
+  constructor() {
+    makeAutoObservable(this, {}, { autoBind: true })
+  }
+
   isGamePaused = false
   pauseGame(): void {
     this.isGamePaused = true
@@ -7,6 +13,10 @@ export class GamePauseController {
     this.isGamePaused = false
   }
   toggleGamePause(): void {
-    this.isGamePaused = !this.isGamePaused
+    if (this.isGamePaused) {
+      this.resumeGame()
+    } else {
+      this.pauseGame()
+    }
   }
 }
