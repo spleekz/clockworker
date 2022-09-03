@@ -31,7 +31,6 @@ export const Textbox: FC<Props> = observer(({ isOpened, text }) => {
   const transition = useTransition(isOpened, {
     from: { bottom: -20, scale: 0 },
     enter: { bottom: 15, scale: 1 },
-    leave: { bottom: -20, scale: 0 },
     config: {
       duration: 230,
     },
