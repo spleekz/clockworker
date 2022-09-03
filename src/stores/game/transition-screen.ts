@@ -1,3 +1,5 @@
+import { makeAutoObservable } from 'mobx'
+
 import { delay } from 'lib/async'
 
 export class TransitionScreen<Duration extends number | null> {
@@ -16,6 +18,8 @@ export class TransitionScreen<Duration extends number | null> {
     this.disappearanceMs = config.disappearanceMs
     this.durationMs = config.durationMs
     this.background = config.background
+
+    makeAutoObservable(this, {}, { autoBind: true })
   }
 
   isOpened = false
