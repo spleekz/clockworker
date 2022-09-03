@@ -53,7 +53,6 @@ export class GamePlayStore {
         width: this.sceneController.currentScene.map.width,
         height: this.sceneController.currentScene.map.height,
       },
-      keyboard: this.keyboard,
     })
 
     //!Магазин
@@ -109,7 +108,7 @@ export class GamePlayStore {
       !this.player.movement.isAutoMoving &&
       this.player.movement.isAllowedPosition(this.player.movement.position)
     ) {
-      this.player.movement.handleMovementKeys()
+      this.player.movement.handleMovementKeys(this.keyboard)
     }
   }
 
@@ -138,6 +137,10 @@ export class GamePlayStore {
   //!Запуск игры
   run(): void {
     this.mainLoop()
-    this.textboxController.setCurrentTextbox({ name: 'welcome', onClose: this.actions.playerEntering })
+    this.textboxController.setCurrentTextbox({
+      name: 'welcome',
+      onClose: () =>
+        this.actions.playerEntering().then(() => this.player.movement.setCurrentMovementType('walk')),
+    })
   }
 }

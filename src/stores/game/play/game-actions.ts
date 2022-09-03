@@ -1,5 +1,7 @@
 import { makeAutoObservable } from 'mobx'
 
+import { delay } from 'lib/async'
+
 import { Player } from './player/player'
 
 type GameActionsConfig = {
@@ -15,13 +17,16 @@ export class GameActions {
     makeAutoObservable(this, {}, { autoBind: true })
   }
 
-  playerEntering(): void {
-    setTimeout(() => {
-      this.player.movement.autoMove({
-        start: this.player.movement.position,
-        end: { x: 0, y: 0 },
-        state: this.player.movement.movementStates.entering,
-      })
-    }, 300)
+  async playerEntering(): Promise<void> {
+    await delay(300)
+    return new Promise((resolve) => {
+      this.player.movement.setCurrentMovementType('entering')
+      this.player.movement
+        .autoMove({
+          start: this.player.movement.position,
+          end: { x: 0, y: 0 },
+        })
+        .then(() => resolve())
+    })
   }
 }

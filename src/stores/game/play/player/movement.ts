@@ -23,18 +23,27 @@ import {
 } from '../settings/current-settings'
 
 type PlayerMovementConfig = {
-  keyboard: KeyboardStore
   mapSize: Size
   settings: CurrentGameSettings
   sprite: Sprite
 }
 
-type MovementStateName = 'idle' | 'walk' | 'entering'
-type MovementState = {
+type MovementConfig = {
   stepSize: number
   framesPerStep: number
 }
-type MovementStates = Record<MovementStateName, MovementState>
+
+type MovementTypeName = 'walk' | 'entering'
+type MovementTypes = Record<MovementTypeName, MovementConfig>
+
+type MovementConfigParametersNames = {
+  type: MovementTypeName
+  regulator: MovementRegulatorName | null
+}
+type MovementConfigParameters = {
+  type: MovementConfig
+  regulator: MovementRegulator | null
+}
 
 type MovementRegulatorName = 'sprint'
 type MovementRegulator = {
@@ -43,29 +52,16 @@ type MovementRegulator = {
 }
 type MovementRegulators = Record<MovementRegulatorName, MovementRegulator>
 
-type MovementConfigNames = {
-  state: MovementStateName
-  regulator: MovementRegulatorName | null
-}
-type MovementConfigValues = {
-  state: MovementState
-  regulator: MovementRegulator | null
-}
+type MoveFunctionConfig = { direction: ExpandedMovementDirection }
 
-type AutoMoveConfig = {
-  start: Position
-  end: Position
-  state: MovementState
-}
+type AutoMoveConfig = { start: Position; end: Position }
 
 export class PlayerMovement {
-  private keyboard: KeyboardStore
   private mapSize: Size
   private settings: CurrentGameSettings
   private sprite: Sprite
 
   constructor(config: PlayerMovementConfig) {
-    this.keyboard = config.keyboard
     this.mapSize = config.mapSize
     this.settings = config.settings
     this.sprite = config.sprite
@@ -86,8 +82,8 @@ export class PlayerMovement {
   }
 
   //!Позиция на следующий шаг
-  getPositionOnNextStep(config?: { stepSize?: number }): Position {
-    const { stepSize = this.currentMovementStateWithRegulators.stepSize } = config ?? {}
+  getPositionOnNextStep(): Position {
+    const { stepSize } = this.currentMovementConfig
 
     //Длина шага по диагонали должна быть равна длине шага по прямой
     const diagonalStepSize = Math.sqrt(Math.pow(stepSize, 2) / 2)
@@ -265,13 +261,10 @@ export class PlayerMovement {
   //^@Анимация движения
 
   //@Обработка движения
-  //!Состояния движения
-  get movementStates(): MovementStates {
+  //!Конфиг движения
+  //если null => герой стоит на месте
+  get movementTypes(): MovementTypes {
     return {
-      idle: {
-        stepSize: 0,
-        framesPerStep: 0,
-      },
       walk: {
         stepSize: 1.8,
         framesPerStep: 11,
@@ -286,43 +279,48 @@ export class PlayerMovement {
     return { sprint: { stepSizeMultiplier: 1.88, framesPerStepMultiplier: 0.72 } }
   }
 
-  currentMovementConfigNames: MovementConfigNames = {
-    state: 'idle',
+  currentMovementConfigParametersNames: MovementConfigParametersNames = {
+    type: 'walk',
     regulator: null,
   }
-  setCurrentMovementState(name: MovementStateName): void {
-    this.currentMovementConfigNames.state = name
+  setCurrentMovementType(typeName: MovementTypeName): void {
+    this.currentMovementConfigParametersNames.type = typeName
   }
-  setCurrentMovementRegulator(name: MovementRegulatorName | null): void {
-    this.currentMovementConfigNames.regulator = name
+  setCurrentMovementRegulator(regulatorName: MovementRegulatorName | null): void {
+    this.currentMovementConfigParametersNames.regulator = regulatorName
   }
-  get currentMovementConfigValues(): MovementConfigValues {
-    return {
-      state: this.movementStates[this.currentMovementConfigNames.state],
-      regulator: this.currentMovementConfigNames.regulator
-        ? this.movementRegulators[this.currentMovementConfigNames.regulator]
-        : null,
-    }
+  get currentMovementConfigParameters(): MovementConfigParameters {
+    const type: MovementConfig = this.movementTypes[this.currentMovementConfigParametersNames.type]
+
+    const regulator: MovementRegulator | null = this.currentMovementConfigParametersNames.regulator
+      ? this.movementRegulators[this.currentMovementConfigParametersNames.regulator]
+      : null
+
+    return { type, regulator }
   }
 
-  get currentMovementStateWithRegulators(): MovementState {
-    const stepSizeMultiplier = this.currentMovementConfigValues.regulator?.stepSizeMultiplier ?? 1
-    const framesPerStepMultiplier =
-      this.currentMovementConfigValues.regulator?.framesPerStepMultiplier ?? 1
+  get currentMovementConfig(): MovementConfig {
+    const { type, regulator } = this.currentMovementConfigParameters
+    const stepSizeMultiplier = regulator ? regulator.stepSizeMultiplier : 1
+    const framesPerStepMultiplier = regulator ? regulator.framesPerStepMultiplier : 1
 
-    const stepSize = this.currentMovementConfigValues.state.stepSize * stepSizeMultiplier
-    const framesPerStep = Math.round(
-      this.currentMovementConfigValues.state.framesPerStep * framesPerStepMultiplier,
-    )
+    const stepSize = type.stepSize * stepSizeMultiplier
+    const framesPerStep = Math.round(type.framesPerStep * framesPerStepMultiplier)
 
     return { stepSize, framesPerStep }
   }
 
-  get isMoving(): boolean {
-    return this.currentMovementConfigNames.state !== 'idle'
+  isMoving = false
+  setIsMoving(value: boolean): void {
+    this.isMoving = value
   }
 
   //@Клавиши управления
+  pressedKeys: Array<string> = []
+  setPressedKeys(keys: Array<string>): void {
+    this.pressedKeys = keys
+  }
+
   get movementKeys(): MovementKeys {
     return this.settings.movement.keys
   }
@@ -336,7 +334,7 @@ export class PlayerMovement {
   }
 
   get pressedMovementControllers(): Array<string> {
-    return this.keyboard.pressedKeysArray.reverse().filter(this.isMovementControllerKey)
+    return this.pressedKeys.slice().reverse().filter(this.isMovementControllerKey)
   }
   get pressedMovementDirections(): Array<PrimitiveMovementDirection> {
     return this.pressedMovementControllers.map((controller) =>
@@ -375,7 +373,7 @@ export class PlayerMovement {
   }
 
   get pressedMovementRegulators(): Array<string> {
-    return this.keyboard.pressedKeysArray.filter(this.isMovementRegulatorKey)
+    return this.pressedKeys.filter(this.isMovementRegulatorKey)
   }
   get lastPressedMovementRegulator(): string {
     return last(this.pressedMovementRegulators)
@@ -388,56 +386,61 @@ export class PlayerMovement {
 
   //!Движение
   //Отвечает за анимацию движения и за перемещение персонажа в валидную позицию
-  move(direction: ExpandedMovementDirection, state?: MovementState): void {
+  move({ direction }: MoveFunctionConfig): void {
     this.setMovementDirection(direction)
 
-    const {
-      stepSize = this.currentMovementStateWithRegulators.stepSize,
-      framesPerStep = this.currentMovementStateWithRegulators.framesPerStep,
-    } = state ?? {}
-
-    const positionOnNextStep = this.getPositionOnNextStep({ stepSize })
-
-    if (!this.isAutoMoving) {
-      this.setCurrentMovementRegulator(this.isSprintKeyPressed ? 'sprint' : null)
-      //Проверка, если следующим шагом персонаж выходит за границы
-      if (!this.isAllowedPosition(positionOnNextStep)) {
-        if (this.isOutOfDownMapBorder(positionOnNextStep)) {
-          this.setPositionToDownMapBorder()
-        } else if (this.isOutOfRightMapBorder(positionOnNextStep)) {
-          this.setPositionToRightMapBorder()
-        } else if (this.isOutOfTopMapBorder(positionOnNextStep)) {
-          this.setPositionToTopMapBorder()
-        } else if (this.isOutOfLeftMapBorder(positionOnNextStep)) {
-          this.setPositionToLeftMapBorder()
-        }
-      } else {
-        //Персонаж идёт дальше, только если не выходит за пределы карты
-        this.setPosition(positionOnNextStep.x, positionOnNextStep.y)
-      }
-    } else {
-      //Автомувнутый персонаж может выходить за пределы карты
-      this.setPosition(positionOnNextStep.x, positionOnNextStep.y)
+    if (this.isSprintKeyPressed) {
+      this.setCurrentMovementRegulator('sprint')
     }
 
-    //Обновление счётчика кадров и анимации ходьбы
-    this.increaseMovementFramesCount()
-    if (this.movementFramesCount >= framesPerStep) {
-      this.setMovementFramesCount(0)
-      this.increaseMovementLoopIndex()
+    if (this.currentMovementConfig) {
+      const { framesPerStep } = this.currentMovementConfig
+
+      const positionOnNextStep = this.getPositionOnNextStep()
+
+      if (!this.isAutoMoving) {
+        this.setCurrentMovementRegulator(this.isSprintKeyPressed ? 'sprint' : null)
+        //Проверка, если следующим шагом персонаж выходит за границы
+        if (!this.isAllowedPosition(positionOnNextStep)) {
+          if (this.isOutOfDownMapBorder(positionOnNextStep)) {
+            this.setPositionToDownMapBorder()
+          } else if (this.isOutOfRightMapBorder(positionOnNextStep)) {
+            this.setPositionToRightMapBorder()
+          } else if (this.isOutOfTopMapBorder(positionOnNextStep)) {
+            this.setPositionToTopMapBorder()
+          } else if (this.isOutOfLeftMapBorder(positionOnNextStep)) {
+            this.setPositionToLeftMapBorder()
+          }
+        } else {
+          //Персонаж идёт дальше, только если не выходит за пределы карты
+          this.setPosition(positionOnNextStep.x, positionOnNextStep.y)
+        }
+      } else {
+        //Автомувнутый персонаж может выходить за пределы карты
+        this.setPosition(positionOnNextStep.x, positionOnNextStep.y)
+      }
+
+      //Обновление счётчика кадров и анимации ходьбы
+      this.increaseMovementFramesCount()
+      if (this.movementFramesCount >= framesPerStep) {
+        this.setMovementFramesCount(0)
+        this.increaseMovementLoopIndex()
+      }
     }
   }
 
   //!Остановка
   stop(): void {
+    this.setIsMoving(false)
     this.setMovementDirection(null)
     this.setMovementFramesCount(0)
     this.setMovementLoopIndex(0)
-    this.setCurrentMovementState('idle')
   }
 
   //!Обработка клавиш движения
-  handleMovementKeys(): void {
+  handleMovementKeys(keyboard: KeyboardStore): void {
+    this.setPressedKeys(keyboard.pressedKeysArray)
+
     if (this.isMovementControllerPressed) {
       const getMovementDirection = (): ExpandedMovementDirection | null => {
         var movementDirection: ExpandedMovementDirection | null = null
@@ -467,16 +470,14 @@ export class PlayerMovement {
       const movementDirection = getMovementDirection()
 
       if (movementDirection) {
-        const movementStateName: MovementStateName = 'walk'
-        this.setCurrentMovementState(movementStateName)
-        this.move(movementDirection)
+        this.move({ direction: movementDirection })
       }
     } else {
       this.stop()
     }
   }
 
-  //!Автомув персонажа
+  //!Автомув
   isAutoMoving = false
   setIsAutoMoving(value: boolean): void {
     this.isAutoMoving = value
@@ -491,9 +492,7 @@ export class PlayerMovement {
   }
 
   //Перемещает персонажа из стартовой позиции в конечную
-  autoMove({ start, end, state }: AutoMoveConfig): Promise<boolean> {
-    const { stepSize, framesPerStep } = state
-
+  autoMove({ start, end }: AutoMoveConfig): Promise<boolean> {
     return new Promise((resolve) => {
       const startX = start.x
       const startY = start.y
@@ -557,7 +556,7 @@ export class PlayerMovement {
                 }
               }
               if (shouldMove) {
-                this.move(movementDirection, { stepSize, framesPerStep })
+                this.move({ direction: movementDirection })
               }
             }
 
