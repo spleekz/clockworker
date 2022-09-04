@@ -1,12 +1,22 @@
 import { makeAutoObservable } from 'mobx'
 
+type ImageContainerOptions = {
+  loadImmediately?: boolean
+}
+
 export class ImageContainer<InitialImageList extends { [imageName: string]: string }> {
   private initialList: InitialImageList
   list: { [P in keyof InitialImageList]: { isLoaded: boolean; imageElement: HTMLImageElement } }
 
-  constructor(initialImageList: InitialImageList) {
+  constructor(initialImageList: InitialImageList, options?: ImageContainerOptions) {
+    const { loadImmediately = false } = options ?? {}
+
     this.initialList = initialImageList
     this.configureImageList()
+
+    if (loadImmediately) {
+      this.loadAll()
+    }
 
     makeAutoObservable(this, {}, { autoBind: true })
   }

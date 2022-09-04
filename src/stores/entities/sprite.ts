@@ -1,32 +1,30 @@
+import { Ctx, Position } from 'game-utility-types'
+
+import { drawImage } from 'lib/draw-image'
+
 type SpriteConfig = {
-  src: string
+  image: HTMLImageElement
   width: number
   height: number
-  firstSkipX: number
-  firstSkipY: number
-  skipX: number
-  skipY: number
+  sourceX?: number
+  sourceY?: number
   scale: number
 }
 
 export class Sprite {
-  src: string
+  image: HTMLImageElement
   width: number
   height: number
-  firstSkipX: number
-  firstSkipY: number
-  skipX: number
-  skipY: number
+  sourceX: number
+  sourceY: number
   scale: number
 
   constructor(config: SpriteConfig) {
-    this.src = config.src
+    this.image = config.image
     this.width = config.width
     this.height = config.height
-    this.firstSkipX = config.firstSkipX
-    this.firstSkipY = config.firstSkipY
-    this.skipX = config.skipX
-    this.skipY = config.skipY
+    this.sourceX = config.sourceX ?? 0
+    this.sourceY = config.sourceY ?? 0
     this.scale = config.scale
   }
 
@@ -35,5 +33,16 @@ export class Sprite {
   }
   get scaledHeight(): number {
     return this.height * this.scale
+  }
+
+  draw(ctx: Ctx, position: Position): void {
+    drawImage(ctx, this.image, {
+      width: this.width,
+      height: this.height,
+      sourceX: this.sourceX,
+      sourceY: this.sourceY,
+      scale: this.scale,
+      position,
+    })
   }
 }

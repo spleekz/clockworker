@@ -1,27 +1,29 @@
 import { makeAutoObservable } from 'mobx'
 
-import { Ctx, Size } from 'game-utility-types'
+import { Size } from 'game-utility-types'
 
 import { ImageContainer } from 'stores/entities/image-container'
 import { Sprite } from 'stores/entities/sprite'
+import { SpriteSheet } from 'stores/entities/sprite-sheet'
 
-import playerSpriteSrc from 'content/sprites/heroes/Player.png'
+import playerSpriteSheetSrc from 'content/sprites/heroes/Player.png'
 
-import { drawSprite } from '../../../../lib/draw-sprite'
+import { GameScreen } from '../screen'
 import { CurrentGameSettings } from '../settings/current-settings'
+import { PlayerAnimation } from './animation'
 import { PlayerMovement } from './movement'
 
 type PlayerStoreConfig = {
   name: string
   settings: CurrentGameSettings
-  ctx: Ctx
+  screen: GameScreen
   mapSize: Size
 }
 
 export class Player {
   name: string
   private settings: CurrentGameSettings
-  private ctx: Ctx
+  private screen: GameScreen
   private mapSize: Size
 
   movement: PlayerMovement
@@ -29,13 +31,15 @@ export class Player {
   constructor(config: PlayerStoreConfig) {
     this.name = config.name
     this.settings = config.settings
-    this.ctx = config.ctx
+    this.screen = config.screen
     this.mapSize = config.mapSize
+
     //!Движение
     this.movement = new PlayerMovement({
       settings: this.settings,
       mapSize: this.mapSize,
-      sprite: this.sprite,
+      sprite: this.currentSprite,
+      animation: this.animation,
     })
 
     this.imageContainer.loadAll()
@@ -44,35 +48,28 @@ export class Player {
   }
 
   //!Изображения
-  imageContainer = new ImageContainer({
-    sprite: playerSpriteSrc,
-  })
+  imageContainer = new ImageContainer({ spriteSheet: playerSpriteSheetSrc }, { loadImmediately: true })
 
-  //!Спрайт
-  get sprite(): Sprite {
-    return new Sprite({
-      src: this.imageContainer.list.sprite.imageElement.src,
-      width: 14,
-      height: 27,
-      firstSkipX: 1,
-      firstSkipY: 5,
-      skipX: 2,
-      skipY: 5,
+  //!Анимация
+  animation = new PlayerAnimation()
+
+  //!Спрайты
+  spriteSheet = new SpriteSheet({
+    image: this.imageContainer.list.spriteSheet.imageElement,
+    spriteWidth: 14,
+    spriteHeight: 27,
+    firstSkipX: 1,
+    firstSkipY: 5,
+    skipX: 2,
+    skipY: 5,
+  })
+  get currentSprite(): Sprite {
+    return this.spriteSheet.getSprite(this.animation.viewDirection, this.animation.movementLoopFrame, {
       scale: 2.5,
     })
   }
+
   update(): void {
-    drawSprite(this.ctx, this.imageContainer.list.sprite.imageElement, {
-      width: this.sprite.width,
-      height: this.sprite.height,
-      firstSkipX: this.sprite.firstSkipX,
-      firstSkipY: this.sprite.firstSkipY,
-      skipX: this.sprite.skipX,
-      skipY: this.sprite.skipY,
-      scale: this.sprite.scale,
-      direction: this.movement.viewDirection,
-      state: this.movement.movementLoopState,
-      position: this.movement.position,
-    })
+    this.screen.drawSprite(this.currentSprite, this.movement.position)
   }
 }

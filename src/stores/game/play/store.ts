@@ -48,7 +48,7 @@ export class GamePlayStore {
     this.player = new Player({
       name: this.dataFromGameSetupForm.playerName,
       settings: this.settings.current,
-      ctx: this.screen.ctx,
+      screen: this.screen,
       mapSize: {
         width: this.sceneController.currentScene.map.width,
         height: this.sceneController.currentScene.map.height,

@@ -2,11 +2,9 @@ import { makeAutoObservable } from 'mobx'
 
 import {
   ExpandedMovementDirection,
-  MovementLoopState,
   Position,
   PrimitiveMovementDirection,
   Size,
-  ViewDirections,
 } from 'game-utility-types'
 
 import { Sprite } from 'stores/entities/sprite'
@@ -21,12 +19,7 @@ import {
   MovementKeys,
   MovementRegulatorsKeys,
 } from '../settings/current-settings'
-
-type PlayerMovementConfig = {
-  mapSize: Size
-  settings: CurrentGameSettings
-  sprite: Sprite
-}
+import { PlayerAnimation, ViewDirections } from './animation'
 
 type MovementConfig = {
   stepSize: number
@@ -56,15 +49,24 @@ type MoveFunctionConfig = { direction: ExpandedMovementDirection }
 
 type AutoMoveConfig = { start: Position; end: Position }
 
+type PlayerMovementConfig = {
+  mapSize: Size
+  settings: CurrentGameSettings
+  sprite: Sprite
+  animation: PlayerAnimation
+}
+
 export class PlayerMovement {
   private mapSize: Size
   private settings: CurrentGameSettings
   private sprite: Sprite
+  private animation: PlayerAnimation
 
   constructor(config: PlayerMovementConfig) {
     this.mapSize = config.mapSize
     this.settings = config.settings
     this.sprite = config.sprite
+    this.animation = config.animation
 
     makeAutoObservable(this, {}, { autoBind: true })
   }
@@ -187,12 +189,6 @@ export class PlayerMovement {
     this.setPosition(-this.sprite.scaledWidth, y ?? this.position.y)
   }
 
-  //!Направление взгляда
-  viewDirection: ViewDirections = ViewDirections.DOWN
-  setViewDirection(direction: ViewDirections): void {
-    this.viewDirection = direction
-  }
-
   //!Направление движения
   //Существует только в момент движения персонажа
   movementDirection: ExpandedMovementDirection | null = null
@@ -208,12 +204,12 @@ export class PlayerMovement {
         : ViewDirections.UP
 
       //Чтобы при смене напрвления взгляда сразу была анимация шага
-      if (!this.movementDirection || newViewDirection !== this.viewDirection) {
-        this.setMovementFramesCount(0)
-        this.setMovementLoopIndex(1)
+      if (!this.movementDirection || newViewDirection !== this.animation.viewDirection) {
+        this.animation.setMovementFramesCount(0)
+        this.animation.setMovementLoopIndex(1)
       }
 
-      this.setViewDirection(newViewDirection)
+      this.animation.setViewDirection(newViewDirection)
     }
     this.movementDirection = direction
   }
@@ -231,34 +227,6 @@ export class PlayerMovement {
   }
 
   //^@Позиция
-
-  //@Анимация движения
-  //!Цикл ходьбы
-  movementLoop: Array<MovementLoopState> = [0, 1, 2, 3]
-  movementLoopIndex = 0
-  setMovementLoopIndex(index: MovementLoopState): void {
-    this.movementLoopIndex = index
-  }
-  increaseMovementLoopIndex(): void {
-    if (this.movementLoopIndex === this.movementLoop.length - 1) {
-      this.setMovementLoopIndex(0)
-    } else {
-      this.movementLoopIndex += 1
-    }
-  }
-  get movementLoopState(): MovementLoopState {
-    return this.movementLoop[this.movementLoopIndex]
-  }
-
-  //!Счётчик кадров
-  private movementFramesCount = 0
-  private setMovementFramesCount(value: number): void {
-    this.movementFramesCount = value
-  }
-  private increaseMovementFramesCount(): void {
-    this.movementFramesCount += 1
-  }
-  //^@Анимация движения
 
   //@Обработка движения
   //!Конфиг движения
@@ -421,10 +389,10 @@ export class PlayerMovement {
       }
 
       //Обновление счётчика кадров и анимации ходьбы
-      this.increaseMovementFramesCount()
-      if (this.movementFramesCount >= framesPerStep) {
-        this.setMovementFramesCount(0)
-        this.increaseMovementLoopIndex()
+      this.animation.increaseMovementFramesCount()
+      if (this.animation.movementFramesCount >= framesPerStep) {
+        this.animation.setMovementFramesCount(0)
+        this.animation.increaseMovementLoopIndex()
       }
     }
   }
@@ -433,8 +401,8 @@ export class PlayerMovement {
   stop(): void {
     this.setIsMoving(false)
     this.setMovementDirection(null)
-    this.setMovementFramesCount(0)
-    this.setMovementLoopIndex(0)
+    this.animation.setMovementFramesCount(0)
+    this.animation.setMovementLoopIndex(0)
   }
 
   //!Обработка клавиш движения

@@ -1,4 +1,6 @@
-import { Canvas, Ctx } from 'game-utility-types'
+import { Canvas, Ctx, Position } from 'game-utility-types'
+
+import { Sprite } from 'stores/entities/sprite'
 
 type GameScreenConfig = {
   width: number
@@ -37,5 +39,9 @@ export class GameScreen {
 
   clear(): void {
     this.ctx.clearRect(0, 0, this.width, this.height)
+  }
+
+  drawSprite(sprite: Sprite, position: Position): void {
+    sprite.draw(this.ctx, position)
   }
 }
