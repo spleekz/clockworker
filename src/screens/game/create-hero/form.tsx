@@ -47,7 +47,7 @@ export const CreateHeroForm: FC = observer(() => {
   }
 
   const startGame: SubmitHandler<CreateHeroForm> = ({ heroName, marketName }) => {
-    gameSetupForm.setPlayerName(heroName)
+    gameSetupForm.setPlayerNickname(heroName)
     gameSetupForm.setMarketName(marketName)
     gameStore.setScreen('play')
   }

@@ -1,6 +1,6 @@
 import { makeAutoObservable } from 'mobx'
 
-type ImageContainerOptions = {
+export type ImageContainerOptions = {
   loadImmediately?: boolean
 }
 

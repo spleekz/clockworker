@@ -1,3 +1,7 @@
+import { makeAutoObservable } from 'mobx'
+
+import { resolvedPromise } from 'lib/async'
+
 import { GameScreen } from '../screen'
 import { createMainGameScene } from './list/market'
 
@@ -11,12 +15,7 @@ export class GameSceneController {
     ReturnType<InstanceType<typeof GameSceneController>['fnsForCreatingUsedScenes'][number]>
   >
 
-  constructor(config: {
-    screen: GameScreen
-    initialScene: ReturnType<
-      InstanceType<typeof GameSceneController>['fnsForCreatingUsedScenes'][number]
-    >['name']
-  }) {
+  constructor(config: { screen: GameScreen }) {
     this.screen = config.screen
 
     this.list = this.fnsForCreatingUsedScenes.reduce((acc, createScene) => {
@@ -25,7 +24,7 @@ export class GameSceneController {
       return acc
     }, {} as Record<ReturnType<InstanceType<typeof GameSceneController>['fnsForCreatingUsedScenes'][number]>['name'], ReturnType<InstanceType<typeof GameSceneController>['fnsForCreatingUsedScenes'][number]>>)
 
-    this.setScene(config.initialScene)
+    makeAutoObservable(this, {}, { autoBind: true })
   }
 
   currentScene: ReturnType<
@@ -36,19 +35,31 @@ export class GameSceneController {
     sceneName: ReturnType<
       InstanceType<typeof GameSceneController>['fnsForCreatingUsedScenes'][number]
     >['name'],
-  ): void {
+  ): Promise<void> {
+    const createAndDrawMap = (): void => {
+      this.currentScene.createMap()
+      this.currentScene.drawMap()
+    }
+
     this.currentScene = this.list[sceneName]
+
     if (!this.isAllCurrentSceneImagesLoaded) {
-      this.loadAllCurrentSceneImages().then(() => this.currentScene.setMap())
+      return this.loadAllCurrentSceneImages().then(() => createAndDrawMap())
     } else {
-      this.currentScene.setMap()
+      createAndDrawMap()
+      return resolvedPromise
     }
   }
 
   loadAllCurrentSceneImages(): Promise<void> {
     return this.currentScene.imageContainer.loadAll()
   }
+
   get isAllCurrentSceneImagesLoaded(): boolean {
     return this.currentScene.imageContainer.isAllImagesLoaded
+  }
+
+  updateCurrentScene(): void {
+    this.currentScene.drawMap()
   }
 }

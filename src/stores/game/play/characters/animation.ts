@@ -9,12 +9,11 @@ export enum ViewDirections {
   LEFT = 3,
 }
 
-export class PlayerAnimation {
+export class CharacterAnimation {
   constructor() {
     makeAutoObservable(this, {}, { autoBind: true })
   }
 
-  //!Анимация ходьбы
   movementLoop: Array<MovementLoopFrame> = [0, 1, 2, 3]
   movementLoopIndex = 0
   setMovementLoopIndex(index: number): void {

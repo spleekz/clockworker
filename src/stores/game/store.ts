@@ -1,11 +1,12 @@
 import { makeAutoObservable } from 'mobx'
 
+import { KeyboardStore } from 'stores/keyboard.store'
+
 import { delay } from 'lib/async'
 
 import { DataFromGameSetupForm, GamePlayStore } from './play/store'
 import { GameSetupForm } from './setup-form'
 import { TransitionScreen } from './transition-screen'
-import { KeyboardStore } from 'stores/keyboard.store'
 
 type GameScreen = 'createHero' | 'play'
 
@@ -44,7 +45,7 @@ export class GameStore {
 
   createGamePlayStore(): GamePlayStore {
     const dataFromGameSetupForm: DataFromGameSetupForm = {
-      playerName: this.gameSetupForm.playerName,
+      playerNickname: this.gameSetupForm.playerNickname,
       marketName: this.gameSetupForm.marketName,
     }
 

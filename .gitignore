@@ -2,10 +2,11 @@ node_modules
 dist
 build
 
-*.mock.*
-
 .vscode/*
 
-*.todo
+*.mock.*
 
 *.psd
+*.tmx
+
+*.todo

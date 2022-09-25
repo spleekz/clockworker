@@ -1,6 +1,6 @@
 import { Sprite } from './sprite'
 
-type SpriteSheetConfig = {
+export type SpriteSheetConfig = {
   image: HTMLImageElement
   spriteWidth: number
   spriteHeight: number

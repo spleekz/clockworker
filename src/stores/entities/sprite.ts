@@ -1,5 +1,6 @@
-import { Ctx, Position } from 'game-utility-types'
+import { Ctx } from 'game-utility-types'
 
+import { XY } from 'lib/coords'
 import { drawImage } from 'lib/draw-image'
 
 type SpriteConfig = {
@@ -35,7 +36,7 @@ export class Sprite {
     return this.height * this.scale
   }
 
-  draw(ctx: Ctx, position: Position): void {
+  draw(ctx: Ctx, position: XY): void {
     drawImage(ctx, this.image, {
       width: this.width,
       height: this.height,

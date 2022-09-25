@@ -5,9 +5,9 @@ export class GameSetupForm {
     makeAutoObservable(this, {}, { autoBind: true })
   }
 
-  playerName = ''
-  setPlayerName(name: string): void {
-    this.playerName = name
+  playerNickname = ''
+  setPlayerNickname(name: string): void {
+    this.playerNickname = name
   }
 
   marketName = ''

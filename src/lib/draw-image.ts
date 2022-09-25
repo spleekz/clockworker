@@ -1,4 +1,4 @@
-import { Position } from 'game-utility-types'
+import { XY } from './coords'
 
 export type DrawImageConfig = {
   width: number
@@ -6,7 +6,7 @@ export type DrawImageConfig = {
   sourceX: number
   sourceY: number
   scale?: number
-  position: Position
+  position: XY
 }
 
 export const drawImage = (

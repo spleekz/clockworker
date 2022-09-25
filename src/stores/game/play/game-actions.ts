@@ -2,7 +2,7 @@ import { makeAutoObservable } from 'mobx'
 
 import { delay } from 'lib/async'
 
-import { Player } from './player/player'
+import { Player } from './characters/player/player'
 
 type GameActionsConfig = {
   player: Player
@@ -23,7 +23,7 @@ export class GameActions {
       this.player.movement.setCurrentMovementType('entering')
       this.player.movement
         .autoMove({
-          start: this.player.movement.position,
+          start: this.player.position,
           end: { x: 0, y: 0 },
         })
         .then(() => resolve())

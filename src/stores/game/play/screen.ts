@@ -1,6 +1,8 @@
-import { Canvas, Ctx, Position } from 'game-utility-types'
+import { Canvas, Ctx } from 'game-utility-types'
 
 import { Sprite } from 'stores/entities/sprite'
+
+import { XY } from 'lib/coords'
 
 type GameScreenConfig = {
   width: number
@@ -30,18 +32,11 @@ export class GameScreen {
     this.ctx = this.canvas.getContext('2d')!
   }
 
-  setBackground(backgroundSrc: string): void {
-    this.canvas.style.backgroundImage = `url(${backgroundSrc})`
-    this.canvas.style.backgroundRepeat = 'no-repeat'
-    this.canvas.style.backgroundPosition = 'center'
-    this.canvas.style.backgroundSize = 'cover'
-  }
-
   clear(): void {
     this.ctx.clearRect(0, 0, this.width, this.height)
   }
 
-  drawSprite(sprite: Sprite, position: Position): void {
+  drawSprite(sprite: Sprite, position: XY): void {
     sprite.draw(this.ctx, position)
   }
 }

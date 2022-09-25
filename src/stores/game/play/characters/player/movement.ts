@@ -1,25 +1,22 @@
 import { makeAutoObservable } from 'mobx'
 
-import {
-  ExpandedMovementDirection,
-  Position,
-  PrimitiveMovementDirection,
-  Size,
-} from 'game-utility-types'
+import { ExpandedMovementDirection, PrimitiveMovementDirection, Size } from 'game-utility-types'
 
 import { Sprite } from 'stores/entities/sprite'
 import { KeyboardStore } from 'stores/keyboard.store'
 
 import { areSame } from 'lib/are-same'
 import { last } from 'lib/arrays'
+import { XY } from 'lib/coords'
 
+import { Position } from '../../../../entities/position'
 import {
   CurrentGameSettings,
   MovementControllersKeys,
   MovementKeys,
   MovementRegulatorsKeys,
-} from '../settings/current-settings'
-import { PlayerAnimation, ViewDirections } from './animation'
+} from '../../settings/current-settings'
+import { CharacterAnimation, ViewDirections } from '../animation'
 
 type MovementConfig = {
   stepSize: number
@@ -47,22 +44,25 @@ type MovementRegulators = Record<MovementRegulatorName, MovementRegulator>
 
 type MoveFunctionConfig = { direction: ExpandedMovementDirection }
 
-type AutoMoveConfig = { start: Position; end: Position }
+type AutoMoveConfig = { start: XY; end: XY }
 
 type PlayerMovementConfig = {
+  position: Position
   mapSize: Size
   settings: CurrentGameSettings
   sprite: Sprite
-  animation: PlayerAnimation
+  animation: CharacterAnimation
 }
 
 export class PlayerMovement {
+  private position: Position
   private mapSize: Size
   private settings: CurrentGameSettings
   private sprite: Sprite
-  private animation: PlayerAnimation
+  private animation: CharacterAnimation
 
   constructor(config: PlayerMovementConfig) {
+    this.position = config.position
     this.mapSize = config.mapSize
     this.settings = config.settings
     this.sprite = config.sprite
@@ -73,18 +73,8 @@ export class PlayerMovement {
 
   //@Позиция
   //!Позиция персонажа
-  //Позиция верхнего левого угла спрайта
-  position: Position = {
-    x: 0,
-    y: 0,
-  }
-  setPosition(x: number, y: number): void {
-    this.position.x = x
-    this.position.y = y
-  }
-
   //!Позиция на следующий шаг
-  getPositionOnNextStep(): Position {
+  getPositionOnNextStep(): XY {
     const { stepSize } = this.currentMovementConfig
 
     //Длина шага по диагонали должна быть равна длине шага по прямой
@@ -132,20 +122,20 @@ export class PlayerMovement {
 
   //!Допустимая позиция
   //С учётом размера спрайта
-  isOutOfDownMapBorder(position: Position): boolean {
+  isOutOfDownMapBorder(position: XY): boolean {
     return position.y > this.maxYCoordinate
   }
-  isOutOfRightMapBorder(position: Position): boolean {
+  isOutOfRightMapBorder(position: XY): boolean {
     return position.x > this.maxXCoordinate
   }
-  isOutOfTopMapBorder(position: Position): boolean {
+  isOutOfTopMapBorder(position: XY): boolean {
     return position.y < 0
   }
-  isOutOfLeftMapBorder(position: Position): boolean {
+  isOutOfLeftMapBorder(position: XY): boolean {
     return position.x < 0
   }
 
-  isAllowedPosition(position: Position): boolean {
+  isAllowedPosition(position: XY): boolean {
     return !(
       this.isOutOfDownMapBorder(position) ||
       this.isOutOfRightMapBorder(position) ||
@@ -163,30 +153,30 @@ export class PlayerMovement {
   }
 
   setPositionToDownMapBorder(x?: number): void {
-    this.setPosition(x ?? this.position.x, this.maxYCoordinate)
+    this.position.setXY(x ?? this.position.x, this.maxYCoordinate)
   }
   setPositionToRightMapBorder(y?: number): void {
-    this.setPosition(this.maxXCoordinate, y ?? this.position.y)
+    this.position.setXY(this.maxXCoordinate, y ?? this.position.y)
   }
   setPositionToTopMapBorder(x?: number): void {
-    this.setPosition(x ?? this.position.x, 0)
+    this.position.setXY(x ?? this.position.x, 0)
   }
   setPositionToLeftMapBorder(y?: number): void {
-    this.setPosition(0, y ?? this.position.y)
+    this.position.setXY(0, y ?? this.position.y)
   }
 
   //!Прятание героя за границы
   hideInDownMapBorder(x?: number): void {
-    this.setPosition(x ?? this.position.x, this.mapSize.height)
+    this.position.setXY(x ?? this.position.x, this.mapSize.height)
   }
   hideInRightMapBorder(y?: number): void {
-    this.setPosition(this.mapSize.width, y ?? this.position.y)
+    this.position.setXY(this.mapSize.width, y ?? this.position.y)
   }
   hideInTopMapBorder(x?: number): void {
-    this.setPosition(x ?? this.position.x, -this.sprite.scaledHeight)
+    this.position.setXY(x ?? this.position.x, -this.sprite.scaledHeight)
   }
   hideInLeftMapBorder(y?: number): void {
-    this.setPosition(-this.sprite.scaledWidth, y ?? this.position.y)
+    this.position.setXY(-this.sprite.scaledWidth, y ?? this.position.y)
   }
 
   //!Направление движения
@@ -381,11 +371,11 @@ export class PlayerMovement {
           }
         } else {
           //Персонаж идёт дальше, только если не выходит за пределы карты
-          this.setPosition(positionOnNextStep.x, positionOnNextStep.y)
+          this.position.setXY(positionOnNextStep.x, positionOnNextStep.y)
         }
       } else {
         //Автомувнутый персонаж может выходить за пределы карты
-        this.setPosition(positionOnNextStep.x, positionOnNextStep.y)
+        this.position.setXY(positionOnNextStep.x, positionOnNextStep.y)
       }
 
       //Обновление счётчика кадров и анимации ходьбы
@@ -472,7 +462,7 @@ export class PlayerMovement {
         this.setIsAutoMoving(true)
 
         //Перемещаем героя в стартовую позицию
-        this.setPosition(startX, startY)
+        this.position.setXY(startX, startY)
 
         var movementDirection: PrimitiveMovementDirection
         //Вычисляем направление движения
@@ -500,7 +490,7 @@ export class PlayerMovement {
             if (!this.isAutoMovePaused) {
               //Остановка на конечной позиции, если следующим шагом уходим дальше
               const setPositionToEndAndStopAutoMoving = (x: number, y: number): void => {
-                this.setPosition(x, y)
+                this.position.setXY(x, y)
                 shouldMove = false
               }
 

@@ -4,18 +4,20 @@ import { KeyboardStore } from 'stores/keyboard.store'
 
 import { GameScript, getParsedGameScript } from 'content/text/get-parsed-game-script'
 
+import { CharacterName, CharactersController } from './characters/controller'
+import { Player } from './characters/player/player'
+import { Collider } from './collider'
 import { GameActions } from './game-actions'
 import { Market } from './market'
 import { GameMenuController } from './menu-controller'
 import { GamePauseController } from './pause-controller'
-import { Player } from './player/player'
 import { GameSceneController } from './scenes/controller'
 import { GameScreen } from './screen'
 import { GameSettings } from './settings/settings'
 import { TextboxController } from './textbox/controller'
 
 export type DataFromGameSetupForm = {
-  playerName: string
+  playerNickname: string
   marketName: string
 }
 
@@ -40,31 +42,54 @@ export class GamePlayStore {
 
     //!Сценарий
     this.script = getParsedGameScript({
-      playerName: this.dataFromGameSetupForm.playerName,
+      playerNickname: this.dataFromGameSetupForm.playerNickname,
       marketName: this.dataFromGameSetupForm.marketName,
-    })
-
-    //!Игрок
-    this.player = new Player({
-      name: this.dataFromGameSetupForm.playerName,
-      settings: this.settings.current,
-      screen: this.screen,
-      mapSize: {
-        width: this.sceneController.currentScene.map.width,
-        height: this.sceneController.currentScene.map.height,
-      },
     })
 
     //!Магазин
     this.market = new Market({ name: this.dataFromGameSetupForm.marketName })
 
-    //!Игровые события
-    this.actions = new GameActions({ player: this.player })
-
     //!Контроллер текстбоксов
     this.textboxController = new TextboxController({ gameScript: this.script })
 
     makeAutoObservable(this, {}, { autoBind: true })
+  }
+
+  //!Создание игрока
+  createPlayer(): void {
+    //Временное решение
+    const getMapSizeParameterValue = (parameterName: 'width' | 'height', value: number): number => {
+      const screenParameterValue = this.screen[parameterName]
+      return value > screenParameterValue ? screenParameterValue : value
+    }
+
+    const playerCharacterConfig = {
+      nickname: this.dataFromGameSetupForm.playerNickname,
+      settings: this.settings.current,
+      screen: this.screen,
+
+      mapSize: {
+        width: getMapSizeParameterValue('width', this.sceneController.currentScene.mapSize.width),
+        height: getMapSizeParameterValue('height', this.sceneController.currentScene.mapSize.height),
+      },
+    }
+
+    this.charactersController.createCharacter('player', playerCharacterConfig)
+
+    this.player = this.charactersController.list['player']
+  }
+
+  //!Контроллер персонажей
+  charactersController = new CharactersController()
+  addActiveCharacter(characterName: CharacterName): void {
+    this.charactersController.addActiveCharacter(characterName)
+    const character = this.charactersController.list[characterName]
+    this.collider.addBody(character)
+  }
+  removeActiveCharacter(characterName: CharacterName): void {
+    const character = this.charactersController.list[characterName]
+    this.collider.removeBody(character.id)
+    this.charactersController.removeActiveCharacter(characterName)
   }
 
   //!Настройки
@@ -74,7 +99,18 @@ export class GamePlayStore {
   screen = new GameScreen({ width: screen.width, height: screen.height })
 
   //!Контроллер сцен
-  sceneController = new GameSceneController({ screen: this.screen, initialScene: 'market' })
+  sceneController = new GameSceneController({ screen: this.screen })
+  setScene(
+    sceneName: ReturnType<
+      InstanceType<typeof GameSceneController>['fnsForCreatingUsedScenes'][number]
+    >['name'],
+  ): Promise<void> {
+    return this.sceneController.setScene(sceneName).then(() => {
+      this.charactersController.clearActiveCharacters()
+      this.collider.clear()
+      this.collider.addStaticObstacles(this.sceneController.currentScene.map.hitboxes)
+    })
+  }
 
   //!Контроллер паузы
   pauseController = new GamePauseController()
@@ -82,21 +118,42 @@ export class GamePlayStore {
   //!Контроллер меню
   menuController = new GameMenuController()
 
-  //!Сетап игры
+  //!Коллайдер
+  collider = new Collider()
+
+  //!Загрузка игры
+  setupGame(): void {
+    this.setScene('market').then(() => {
+      this.createPlayer()
+      //!Игровые события
+      this.actions = new GameActions({ player: this.player })
+      this.addActiveCharacter('player')
+
+      this.player.movement.hideInTopMapBorder()
+    })
+  }
+
   get isGameLoaded(): boolean {
     //Проверка, что все изображения загрузились
     return (
-      this.player.imageContainer.isAllImagesLoaded &&
+      this.charactersController.isAllActiveCharactersImagesLoaded &&
+      Boolean(this.sceneController.currentScene) &&
       this.sceneController.isAllCurrentSceneImagesLoaded
     )
   }
-  setupGame(): void {
-    this.player.movement.hideInTopMapBorder(0)
-  }
 
   //!Игровые циклы
+  updateActiveCharacters(): void {
+    this.charactersController.activeCharactersNames.forEach((activeCharacterName) => {
+      const activeCharacter = this.charactersController.list[activeCharacterName]
+      activeCharacter.update()
+    })
+  }
+
   update(): void {
     this.screen.clear()
+    this.collider.update()
+    this.sceneController.updateCurrentScene()
     this.player.update()
   }
 
@@ -106,7 +163,7 @@ export class GamePlayStore {
     if (
       !this.textboxController.isTextboxOpened &&
       !this.player.movement.isAutoMoving &&
-      this.player.movement.isAllowedPosition(this.player.movement.position)
+      this.player.movement.isAllowedPosition(this.player.position)
     ) {
       this.player.movement.handleMovementKeys(this.keyboard)
     }
