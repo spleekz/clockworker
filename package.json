@@ -16,7 +16,7 @@
       "target": "nsis"
     },
     "nsis": {
-      "artifactName": "clockworker.setup.${ext}",
+      "artifactName": "ClockworkerSetup.${version}.${ext}",
       "oneClick": false,
       "allowToChangeInstallationDirectory": true
     },
