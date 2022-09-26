@@ -10,24 +10,25 @@
     "package:desktop": "electron-builder build --win -c.extraMetadata.main=dist/electron.js --publish never"
   },
   "build": {
-    "productName": "clockworker",
     "appId": "com.spleekz.clockworker",
+    "productName": "clockworker",
     "win": {
-      "target": "nsis"
+      "target": "nsis",
+      "icon": "src/assets/icons/clockworker-icon.ico"
     },
     "nsis": {
       "artifactName": "ClockworkerSetup.${version}.${ext}",
       "oneClick": false,
-      "allowToChangeInstallationDirectory": true
+      "allowToChangeInstallationDirectory": true,
+      "perMachine": true,
+      "installerIcon": "src/assets/icons/clockworker-icon.ico"
     },
-    "files": [
-      "dist/**/*",
-      "node_modules/**/*",
-      "package.json"
-    ],
     "directories": {
       "output": "build"
-    }
+    },
+    "files": [
+      "dist/**/*"
+    ]
   },
   "dependencies": {
     "@react-spring/web": "^9.5.2",
