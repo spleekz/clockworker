@@ -23,8 +23,8 @@ export class GameActions {
       this.player.movement.setCurrentMovementType('entering')
       this.player.movement
         .automove({
-          start: this.player.position,
-          end: { x: 0, y: 0 },
+          from: this.player.position,
+          to: { x: 0, y: 0 },
         })
         .then(() => resolve())
     })
