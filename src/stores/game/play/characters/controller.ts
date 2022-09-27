@@ -6,7 +6,7 @@ type This = InstanceType<typeof CharactersController>
 
 export type CharacterName = keyof This['refList']
 
-type CharactersList = { [P in keyof This['refList']]: InstanceType<This['refList'][P]> }
+type CharactersList = { [P in CharacterName]: InstanceType<This['refList'][P]> }
 
 export class CharactersController {
   constructor() {
