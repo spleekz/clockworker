@@ -177,9 +177,9 @@ export class GamePlayStore {
     if (this.player.movement.isAutoMoving) {
       //Во время паузы останавливать автомув и возобновлять его после отжатия паузы
       if (this.pauseController.isGamePaused) {
-        this.player.movement.pauseAutoMove()
+        this.player.movement.pauseAutomove()
       } else {
-        this.player.movement.resumeAutoMove()
+        this.player.movement.resumeAutomove()
       }
     }
 

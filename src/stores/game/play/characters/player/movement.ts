@@ -44,7 +44,7 @@ type MovementRegulators = Record<MovementRegulatorName, MovementRegulator>
 
 type MoveFunctionConfig = { direction: ExpandedMovementDirection }
 
-type AutoMoveConfig = { start: XY; end: XY }
+type AutomoveConfig = { start: XY; end: XY }
 
 type PlayerMovementConfig = {
   position: Position
@@ -441,16 +441,16 @@ export class PlayerMovement {
     this.isAutoMoving = value
   }
 
-  isAutoMovePaused = false
-  pauseAutoMove(): void {
-    this.isAutoMovePaused = true
+  isAutomovePaused = false
+  pauseAutomove(): void {
+    this.isAutomovePaused = true
   }
-  resumeAutoMove(): void {
-    this.isAutoMovePaused = false
+  resumeAutomove(): void {
+    this.isAutomovePaused = false
   }
 
   //Перемещает персонажа из стартовой позиции в конечную
-  autoMove({ start, end }: AutoMoveConfig): Promise<boolean> {
+  automove({ start, end }: AutomoveConfig): Promise<boolean> {
     return new Promise((resolve) => {
       const startX = start.x
       const startY = start.y
@@ -485,9 +485,9 @@ export class PlayerMovement {
         var shouldMove = true
 
         //Двигаемся в текущем направлении, пока не дойдём до конечной позиции
-        const autoMoveInDirection = (): void => {
+        const automoveInDirection = (): void => {
           if (!areSame(this.position, end)) {
-            if (!this.isAutoMovePaused) {
+            if (!this.isAutomovePaused) {
               //Остановка на конечной позиции, если следующим шагом уходим дальше
               const setPositionToEndAndStopAutoMoving = (x: number, y: number): void => {
                 this.position.setXY(x, y)
@@ -518,13 +518,13 @@ export class PlayerMovement {
               }
             }
 
-            window.requestAnimationFrame(autoMoveInDirection)
+            window.requestAnimationFrame(automoveInDirection)
           } else {
             stopAutoMoving()
             resolve(true)
           }
         }
-        autoMoveInDirection()
+        automoveInDirection()
       } else {
         resolve(false)
       }

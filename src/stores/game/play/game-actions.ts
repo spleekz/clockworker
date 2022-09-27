@@ -22,7 +22,7 @@ export class GameActions {
     return new Promise((resolve) => {
       this.player.movement.setCurrentMovementType('entering')
       this.player.movement
-        .autoMove({
+        .automove({
           start: this.player.position,
           end: { x: 0, y: 0 },
         })
