@@ -356,7 +356,7 @@ export class PlayerMovement {
 
       const positionOnNextStep = this.getPositionOnNextStep()
 
-      if (!this.isAutoMoving) {
+      if (!this.isAutomoving) {
         this.setCurrentMovementRegulator(this.isSprintKeyPressed ? 'sprint' : null)
         //Проверка, если следующим шагом персонаж выходит за границы
         if (!this.isAllowedPosition(positionOnNextStep)) {
@@ -436,9 +436,9 @@ export class PlayerMovement {
   }
 
   //!Автомув
-  isAutoMoving = false
-  setIsAutoMoving(value: boolean): void {
-    this.isAutoMoving = value
+  isAutomoving = false
+  setIsAutomoving(value: boolean): void {
+    this.isAutomoving = value
   }
 
   isAutomovePaused = false
@@ -459,7 +459,7 @@ export class PlayerMovement {
 
       //Если движение по прямой
       if ((startX === endX || startY === endY) && !areSame(from, to)) {
-        this.setIsAutoMoving(true)
+        this.setIsAutomoving(true)
 
         //Перемещаем героя в стартовую позицию
         this.position.setXY(startX, startY)
@@ -476,9 +476,9 @@ export class PlayerMovement {
           movementDirection = 'left'
         }
 
-        const stopAutoMoving = (): void => {
+        const stopAutomoving = (): void => {
           this.stop()
-          this.setIsAutoMoving(false)
+          this.setIsAutomoving(false)
         }
 
         //Нужна, чтобы не вызывать move(), после того, как встали на конечную позицию
@@ -489,7 +489,7 @@ export class PlayerMovement {
           if (!areSame(this.position, to)) {
             if (!this.isAutomovePaused) {
               //Остановка на конечной позиции, если следующим шагом уходим дальше
-              const setPositionToEndAndStopAutoMoving = (x: number, y: number): void => {
+              const setPositionToEndAndStopAutomoving = (x: number, y: number): void => {
                 this.position.setXY(x, y)
                 shouldMove = false
               }
@@ -498,19 +498,19 @@ export class PlayerMovement {
 
               if (movementDirection === 'down') {
                 if (positionOnNextStep.y > to.y) {
-                  setPositionToEndAndStopAutoMoving(this.position.x, to.y)
+                  setPositionToEndAndStopAutomoving(this.position.x, to.y)
                 }
               } else if (movementDirection === 'right') {
                 if (positionOnNextStep.x > to.x) {
-                  setPositionToEndAndStopAutoMoving(to.x, this.position.y)
+                  setPositionToEndAndStopAutomoving(to.x, this.position.y)
                 }
               } else if (movementDirection === 'up') {
                 if (positionOnNextStep.y < to.y) {
-                  setPositionToEndAndStopAutoMoving(this.position.x, to.y)
+                  setPositionToEndAndStopAutomoving(this.position.x, to.y)
                 }
               } else if (movementDirection === 'left') {
                 if (positionOnNextStep.x < to.x) {
-                  setPositionToEndAndStopAutoMoving(to.x, this.position.y)
+                  setPositionToEndAndStopAutomoving(to.x, this.position.y)
                 }
               }
               if (shouldMove) {
@@ -520,7 +520,7 @@ export class PlayerMovement {
 
             window.requestAnimationFrame(automoveInDirection)
           } else {
-            stopAutoMoving()
+            stopAutomoving()
             resolve(true)
           }
         }

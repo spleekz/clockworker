@@ -162,7 +162,7 @@ export class GamePlayStore {
     //автомува, и когда персонаж находится за пределами карты
     if (
       !this.textboxController.isTextboxOpened &&
-      !this.player.movement.isAutoMoving &&
+      !this.player.movement.isAutomoving &&
       this.player.movement.isAllowedPosition(this.player.position)
     ) {
       this.player.movement.handleMovementKeys(this.keyboard)
@@ -174,7 +174,7 @@ export class GamePlayStore {
       this.gameInPlayLoop()
     }
 
-    if (this.player.movement.isAutoMoving) {
+    if (this.player.movement.isAutomoving) {
       //Во время паузы останавливать автомув и возобновлять его после отжатия паузы
       if (this.pauseController.isGamePaused) {
         this.player.movement.pauseAutomove()
