@@ -10,6 +10,7 @@ import { colors } from 'lib/theme'
 
 import { PixelatedButton } from 'components/pixelated/pixelated-components'
 
+import { version } from '../../../package.json'
 import { handleMainScreenEsc } from './handle-esc'
 import { MainMenu } from './main-menu'
 
@@ -25,6 +26,7 @@ export const MainScreen: FC = observer(() => {
         <MainMenu />
       </Body>
       <QuitGameButton onClick={appStore.openQuitGameConfirm}>Выйти из игры</QuitGameButton>
+      <GameVersion>v{version}</GameVersion>
     </Container>
   )
 })
@@ -57,4 +59,10 @@ const QuitGameButton = styled(PixelatedButton).attrs({
   right: 25px;
   font-size: 24px;
   padding: 10px;
+`
+const GameVersion = styled.span`
+  position: absolute;
+  bottom: 3px;
+  left: 5px;
+  font-size: 20px;
 `
