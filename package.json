@@ -5,11 +5,10 @@
   "author": "spleekz",
   "scripts": {
     "start:web": "vite",
-    "build:web": "tsc && vite build --base=./",
-    "build:desktop": "npm run build:web && tsc -p ./electron/tsconfig.json",
     "start:desktop": "electron ./dist/electron.js",
-    "package:desktop": "electron-builder build --win -c.extraMetadata.main=dist/electron.js",
-    "release": "npm run package:desktop -- -p always"
+    "build": "tsc && vite build --base=./ && tsc -p ./electron/tsconfig.json",
+    "package": "npm run build && electron-builder build --win -c.extraMetadata.main=dist/electron.js",
+    "release": "npm run package -- -p always"
   },
   "build": {
     "appId": "com.spleekz.clockworker",
