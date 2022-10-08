@@ -15,7 +15,8 @@
     "noEmit": true,
     "strictPropertyInitialization": false,
     "jsx": "react-jsx",
-    "baseUrl": "src"
+    "baseUrl": "src",
+    "typeRoots": ["node_modules/@types", "@types"]
   },
   "include": ["src", "electron/**/*"],
   "references": [{ "path": "./tsconfig.node.json" }]

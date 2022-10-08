@@ -8,7 +8,8 @@
     "build:web": "tsc && vite build --base=./",
     "build:desktop": "npm run build:web && tsc -p ./electron/tsconfig.json",
     "start:desktop": "electron ./dist/electron.js",
-    "package:desktop": "electron-builder build --win -c.extraMetadata.main=dist/electron.js --publish never"
+    "package:desktop": "electron-builder build --win -c.extraMetadata.main=dist/electron.js",
+    "release": "npm run package:desktop -- -p always"
   },
   "build": {
     "appId": "com.spleekz.clockworker",
@@ -22,17 +23,27 @@
       "oneClick": false,
       "allowToChangeInstallationDirectory": true,
       "perMachine": true,
-      "installerIcon": "src/assets/icons/clockworker-icon.ico"
+      "installerIcon": "src/assets/icons/clockworker-icon.ico",
+      "createDesktopShortcut": "always"
     },
     "directories": {
       "output": "build"
     },
     "files": [
       "dist/**/*"
+    ],
+    "publish": [
+      {
+        "provider": "github",
+        "owner": "spleekz",
+        "repo": "clockworker"
+      }
     ]
   },
   "dependencies": {
     "@react-spring/web": "^9.5.2",
+    "electron-updater": "^5.2.1",
+    "is-electron": "^2.2.1",
     "line-intersect": "^3.0.0",
     "mobx": "^6.6.1",
     "mobx-react-lite": "^3.4.0",

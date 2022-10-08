@@ -7,11 +7,12 @@ import { FC } from 'basic-utility-types'
 import { useStore } from 'stores/root-store/context'
 
 import { QuitGameConfirm } from 'components/game-popups/quit-game-confirm'
+import { UpdateNotification } from 'components/update-notification/update-notification'
 import { Game } from 'screens/game/game'
 import { MainScreen } from 'screens/main/screen'
 
 export const App: FC = observer(() => {
-  const { appStore } = useStore()
+  const { appStore, updateStore } = useStore()
 
   return (
     <>
@@ -23,6 +24,10 @@ export const App: FC = observer(() => {
         {appStore.screen === 'main' && <MainScreen />}
         {appStore.screen === 'game' && <Game />}
       </Container>
+
+      {updateStore && updateStore.isUpdateAvailable && (
+        <UpdateNotification updateStore={updateStore} />
+      )}
     </>
   )
 })
@@ -57,6 +62,14 @@ const GlobalStyles = createGlobalStyle`
   input {
     border:0;
     outline: 0;
+  }
+
+  ::-webkit-scrollbar {
+    width: 12.5px;
+  }
+  ::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    background-color:#ae7e30e4
   }
 `
 const Container = styled.div`

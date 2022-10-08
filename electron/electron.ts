@@ -1,16 +1,16 @@
-import { BrowserWindow, app } from 'electron'
+import { BrowserWindow, app, ipcMain } from 'electron'
+import { autoUpdater } from 'electron-updater'
 import * as path from 'path'
 
-let mainWindow: Electron.BrowserWindow | null
+var mainWindow: Electron.BrowserWindow | null
 
 function createWindow(): void {
   mainWindow = new BrowserWindow({
-    width: 800,
-    height: 800,
     titleBarStyle: 'hidden',
     webPreferences: {
       nodeIntegration: true,
       contextIsolation: false,
+      preload: path.join(__dirname, 'preload.js'),
     },
   })
 
@@ -24,7 +24,10 @@ function createWindow(): void {
   })
 }
 
-app.on('ready', createWindow)
+app.on('ready', () => {
+  createWindow()
+  autoUpdater.checkForUpdates()
+})
 
 app.on('window-all-closed', () => {
   app.quit()
@@ -34,4 +37,20 @@ app.on('activate', () => {
   if (mainWindow === null) {
     createWindow()
   }
+})
+
+autoUpdater.disableWebInstaller = true
+autoUpdater.autoDownload = false
+autoUpdater.on('update-available', ({ version, releaseNotes }) => {
+  if (mainWindow) {
+    mainWindow.webContents.send('updateAvailable', { version, releaseNotes })
+  }
+})
+
+ipcMain.on('updateGame', () => {
+  autoUpdater.downloadUpdate()
+})
+
+autoUpdater.on('update-downloaded', () => {
+  autoUpdater.quitAndInstall()
 })
