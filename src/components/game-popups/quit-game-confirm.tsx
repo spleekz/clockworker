@@ -21,7 +21,7 @@ export const QuitGameConfirm: FC<Props> = observer(({ isOpened }) => {
       width={'580px'}
       height={'300px'}
       styles={{
-        backgroundColor: colors.primary,
+        backgroundColor: colors.mainLight,
       }}
       isOpened={isOpened}
       question={'Выйти из игры?'}
@@ -32,7 +32,7 @@ export const QuitGameConfirm: FC<Props> = observer(({ isOpened }) => {
       buttonsStyles={{
         width: '140px',
         padding: '10px',
-        backgroundColor: colors.secondary,
+        backgroundColor: colors.mainMedium,
       }}
     />
   )

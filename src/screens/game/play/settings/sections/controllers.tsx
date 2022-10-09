@@ -33,8 +33,8 @@ export const ControllersSettingsSection: FC = observer(() => {
                       settingVariant.id,
                     )
                   }
-                  backgroundColor={colors.secondary}
-                  checkedBackgroundColor={colors.selected}
+                  backgroundColor={colors.mainMedium}
+                  checkedBackgroundColor={colors.mainMediumWell}
                 />
               </MovementControllersVariant>
             )

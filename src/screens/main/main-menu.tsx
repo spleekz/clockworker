@@ -30,7 +30,7 @@ const MainMenuButtons = styled.menu`
 `
 const Button = styled(PixelatedButton).attrs({
   pixelsSize: 'medium',
-  backgroundColor: colors.primary,
+  backgroundColor: colors.mainLight,
 })`
   font-size: 32px;
   padding: 22px 5px;

@@ -28,7 +28,7 @@ export const UpdateNotification: FC<Props> = observer(({ updateStore }) => {
           withCloseButton={false}
           title={'Доступно обновление!'}
           styles={{
-            backgroundColor: colors.primary,
+            backgroundColor: colors.mainLight,
           }}
         >
           <Version>Clockworker v{version}</Version>
@@ -57,7 +57,7 @@ const ReleaseNotesContainer = styled.div`
   margin-bottom: 16px;
   font-size: 28px;
   font-weight: bold;
-  background-color: ${colors.tertiary};
+  background-color: ${colors.mainMediumWell};
   border-radius: 16px;
   overflow-y: auto;
 
@@ -98,7 +98,7 @@ const UpdateGameButtonContainer = styled.div`
 `
 const UpdateGameButton = styled(PixelatedButton).attrs({
   pixelsSize: 'medium',
-  backgroundColor: colors.secondary,
+  backgroundColor: colors.mainMedium,
 })`
   padding: 7px;
   font-size: 24px;

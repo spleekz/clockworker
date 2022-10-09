@@ -116,7 +116,7 @@ export const PixelatedButton = React.forwardRef<HTMLButtonElement, PixelatedButt
   ({ pixelsSize, backgroundColor, className, hoverColor, children, ...buttonProps }, ref) => {
     const [isHover, setIsHover] = useState(false)
 
-    const background = isHover ? hoverColor ?? colors.selected : backgroundColor
+    const background = isHover ? hoverColor ?? colors.mainMediumWell : backgroundColor
 
     return (
       <PixelatedDiv

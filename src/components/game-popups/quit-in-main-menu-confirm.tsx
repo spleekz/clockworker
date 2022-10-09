@@ -22,7 +22,7 @@ export const QuitInMainMenuConfirm: FC<Props> = observer(({ isOpened, question }
       width={'580px'}
       height={'300px'}
       styles={{
-        backgroundColor: colors.primary,
+        backgroundColor: colors.mainLight,
       }}
       isOpened={isOpened}
       question={question ?? 'Выйти в главное меню?'}
@@ -39,7 +39,7 @@ export const QuitInMainMenuConfirm: FC<Props> = observer(({ isOpened, question }
       buttonsStyles={{
         width: '140px',
         padding: '10px',
-        backgroundColor: colors.secondary,
+        backgroundColor: colors.mainMedium,
       }}
     />
   )

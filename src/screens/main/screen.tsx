@@ -42,7 +42,7 @@ const Container = styled.div`
 `
 const Title = styled.div`
   font-size: 72px;
-  color: ${colors.secondary};
+  color: ${colors.mainMedium};
 `
 const Body = styled.div`
   flex: 1 0 auto;
@@ -52,7 +52,7 @@ const Body = styled.div`
 `
 const QuitGameButton = styled(PixelatedButton).attrs({
   pixelsSize: 'medium',
-  backgroundColor: colors.primary,
+  backgroundColor: colors.mainLight,
 })`
   position: absolute;
   bottom: 15px;

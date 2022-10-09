@@ -105,7 +105,7 @@ const FormBlock = styled.div`
   height: 700px;
   padding: 15px 22px;
   border-radius: 16px;
-  background: ${colors.primary};
+  background: ${colors.mainLight};
 `
 const Form = styled.form`
   height: 100%;
@@ -117,7 +117,7 @@ const InputContainer = styled.div`
 `
 const Input = styled(PixelatedInput).attrs({
   pixelsSize: 'medium',
-  backgroundColor: colors.secondary,
+  backgroundColor: colors.mainMedium,
   containerStyles: {
     width: '92%',
   },
@@ -150,7 +150,7 @@ const StartGameButtonContainer = styled.div`
 `
 const StartGameButton = styled(PixelatedButton).attrs({
   pixelsSize: 'medium',
-  backgroundColor: colors.secondary,
+  backgroundColor: colors.mainMedium,
 })`
   font-size: 26px;
   padding: 8px;

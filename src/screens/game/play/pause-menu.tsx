@@ -36,7 +36,7 @@ export const PauseMenu: FC<Props> = observer(({ isOpened }) => {
       width={'600px'}
       height={'550px'}
       styles={{
-        backgroundColor: colors.primary,
+        backgroundColor: colors.mainLight,
       }}
       withCloseButton={false}
       title={'Пауза'}
@@ -79,7 +79,7 @@ const Section = styled.div`
 `
 const MenuItem = styled(PixelatedButton).attrs({
   pixelsSize: 'medium',
-  backgroundColor: colors.secondary,
+  backgroundColor: colors.mainMedium,
 })`
   display: block;
   margin-bottom: 16px;

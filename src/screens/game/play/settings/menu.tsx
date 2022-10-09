@@ -23,7 +23,7 @@ export const GameSettingsMenu: FC<Props> = observer(({ isOpened, onClose, afterC
       width={'600px'}
       height={'550px'}
       styles={{
-        backgroundColor: colors.primary,
+        backgroundColor: colors.mainLight,
       }}
       title={'Настройки'}
       withCloseButton={false}
@@ -57,7 +57,7 @@ const OKButtonContainer = styled.div`
 `
 const OKButton = styled(PixelatedButton).attrs({
   pixelsSize: 'medium',
-  backgroundColor: colors.secondary,
+  backgroundColor: colors.mainMedium,
 })`
   font-size: 30px;
   padding: 5px;

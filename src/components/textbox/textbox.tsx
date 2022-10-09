@@ -97,7 +97,7 @@ const Container = styled(animated.div)`
 `
 const CloseButton = styled(PixelatedButton).attrs({
   pixelsSize: 'small',
-  backgroundColor: colors.secondary,
+  backgroundColor: colors.mainMedium,
 })`
   position: absolute;
   top: 15.5px;
@@ -121,6 +121,6 @@ const Box = styled.div`
   max-width: 680px;
   padding: 18px 60px 18px 18px;
   font-size: 24px;
-  background-color: ${colors.primary};
+  background-color: ${colors.mainLight};
   border-radius: 16px;
 `

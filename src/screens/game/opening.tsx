@@ -62,5 +62,5 @@ const Container = styled(animated.div)<{ background: string }>`
 `
 const Content = styled(animated.div)`
   font-size: 110px;
-  color: ${colors.secondary};
+  color: ${colors.mainMedium};
 `

@@ -48,7 +48,7 @@ const Container = styled.div`
 `
 const BackButton = styled(PixelatedButton).attrs({
   pixelsSize: 'medium',
-  backgroundColor: colors.primary,
+  backgroundColor: colors.mainLight,
 })`
   position: absolute;
   bottom: 10px;
@@ -60,7 +60,7 @@ const Title = styled.div`
   font-size: 50px;
   text-align: center;
   margin-top: 35px;
-  color: ${colors.secondary};
+  color: ${colors.mainMedium};
 `
 const Body = styled.div`
   flex: 1 0 auto;

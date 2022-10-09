@@ -6,6 +6,8 @@ import { FC } from 'basic-utility-types'
 
 import { useStore } from 'stores/root-store/context'
 
+import { colors } from 'lib/theme'
+
 import { QuitGameConfirm } from 'components/game-popups/quit-game-confirm'
 import { UpdateNotification } from 'components/update-notification/update-notification'
 import { Game } from 'screens/game/game'
@@ -69,7 +71,7 @@ const GlobalStyles = createGlobalStyle`
   }
   ::-webkit-scrollbar-thumb {
     border-radius: 10px;
-    background-color:#ae7e30e4
+    background-color:${colors.mainDark}
   }
 `
 const Container = styled.div`
