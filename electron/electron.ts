@@ -12,6 +12,7 @@ function createWindow(): void {
       contextIsolation: false,
       preload: path.join(__dirname, 'preload.js'),
     },
+    icon: path.join(__dirname, './assets/clockworker-icon.ico'),
   })
 
   mainWindow.setFullScreen(true)
