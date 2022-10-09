@@ -15,14 +15,14 @@
     "productName": "clockworker",
     "win": {
       "target": "nsis",
-      "icon": "src/assets/icons/clockworker-icon.ico"
+      "icon": "dist/assets/clockworker-icon.ico"
     },
     "nsis": {
       "artifactName": "ClockworkerSetup.${version}.${ext}",
       "oneClick": false,
       "allowToChangeInstallationDirectory": true,
       "perMachine": true,
-      "installerIcon": "src/assets/icons/clockworker-icon.ico",
+      "installerIcon": "dist/assets/clockworker-icon.ico",
       "createDesktopShortcut": "always"
     },
     "directories": {

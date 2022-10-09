@@ -5,6 +5,11 @@ import tsconfigPaths from 'vite-tsconfig-paths'
 
 /* eslint-disable import/no-default-export */
 export default defineConfig({
+  build: {
+    rollupOptions: {
+      output: { assetFileNames: `assets/[name][extname]` },
+    },
+  },
   plugins: [
     react({
       babel: {
