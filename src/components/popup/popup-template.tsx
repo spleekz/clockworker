@@ -14,6 +14,7 @@ export type PopupTemplateProps = {
   height: string
   styles: RequiredBy<CSSProperties, 'backgroundColor'>
   title?: string
+  titleStyles?: CSSProperties
   withCloseButton: boolean
   isOpened: boolean
   fnForClosing?: Callback
@@ -26,6 +27,7 @@ export const Popup: FC<PopupTemplateProps> = observer(
     height,
     styles,
     title,
+    titleStyles,
     withCloseButton,
     isOpened,
     fnForClosing,
@@ -58,7 +60,7 @@ export const Popup: FC<PopupTemplateProps> = observer(
           <PopupBlock width={width} height={height} style={styles}>
             {(withCloseButton || title) && (
               <PopupHeading>
-                {title && <PopupTitle>{title}</PopupTitle>}
+                {title && <PopupTitle style={titleStyles}>{title}</PopupTitle>}
                 {withCloseButton && (
                   <ClosePopupButton onClick={fnForClosing}>
                     <XLg size={32} />

@@ -52,6 +52,12 @@ ipcMain.on('updateGame', () => {
   autoUpdater.downloadUpdate()
 })
 
+autoUpdater.on('download-progress', ({ percent }) => {
+  if (mainWindow) {
+    mainWindow.webContents.send('downloadProgress', { percentage: percent })
+  }
+})
+
 autoUpdater.on('update-downloaded', () => {
   autoUpdater.quitAndInstall()
 })

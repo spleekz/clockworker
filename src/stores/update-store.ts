@@ -2,9 +2,13 @@ import { makeAutoObservable } from 'mobx'
 
 import isElectron from 'is-electron'
 
-type UpdateInfo = {
+export type UpdateInfo = {
   version: string
   releaseNotes: string
+}
+
+type DownloadProgressInfo = {
+  percentage: number
 }
 
 export class UpdateStore {
@@ -12,6 +16,9 @@ export class UpdateStore {
     if (isElectron()) {
       window.ipcRenderer.on('updateAvailable', (_, updateInfo: UpdateInfo) => {
         this.setUpdateInfo(updateInfo)
+      })
+      window.ipcRenderer.on('downloadProgress', (_, downloadProgressInfo: DownloadProgressInfo) => {
+        this.setCurrentPercentage(downloadProgressInfo.percentage)
       })
     }
 
@@ -32,5 +39,10 @@ export class UpdateStore {
 
   updateGame = (): void => {
     window.ipcRenderer.send('updateGame')
+  }
+
+  currentPercentage: number | null = null
+  setCurrentPercentage = (percentage: number): void => {
+    this.currentPercentage = percentage
   }
 }
