@@ -20,7 +20,7 @@ export const useGameStore = (): GameStore => {
   return gameStore
 }
 
-export const Game: FC = observer(() => {
+export const GameScreen: FC = observer(() => {
   const { createGameStore } = useStore()
   const [gameStore] = useState(createGameStore)
 

@@ -10,7 +10,7 @@ import { colors } from 'lib/theme'
 
 import { QuitGameConfirm } from 'components/game-popups/quit-game-confirm'
 import { UpdateNotification } from 'components/update-notification/update-notification'
-import { Game } from 'screens/game/game'
+import { GameScreen } from 'screens/game/game'
 import { MainScreen } from 'screens/main/screen'
 
 export const App: FC = observer(() => {
@@ -24,7 +24,7 @@ export const App: FC = observer(() => {
 
       <Container>
         {appStore.screen === 'main' && <MainScreen />}
-        {appStore.screen === 'game' && <Game />}
+        {appStore.screen === 'game' && <GameScreen />}
       </Container>
 
       {updateStore && updateStore.isUpdateAvailable && (
