@@ -28,5 +28,10 @@
     "no-var": "off",
     "mobx/missing-observer": "warn",
     "local-rules/detect-test-mode": "warn"
+  },
+  "settings": {
+    "react": {
+      "version": "detect"
+    }
   }
 }
