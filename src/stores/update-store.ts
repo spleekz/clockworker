@@ -1,23 +1,15 @@
 import { makeAutoObservable } from 'mobx'
 
+import { DownloadProgressInfo, UpdateInfo } from 'desktop-web-shared-types/index'
 import isElectron from 'is-electron'
-
-export type UpdateInfo = {
-  version: string
-  releaseNotes: string
-}
-
-type DownloadProgressInfo = {
-  percentage: number
-}
 
 export class UpdateStore {
   constructor() {
     if (isElectron()) {
-      window.ipcRenderer.on('updateAvailable', (_, updateInfo: UpdateInfo) => {
+      window.ipcRenderer.on<UpdateInfo>('updateAvailable', (_, updateInfo) => {
         this.setUpdateInfo(updateInfo)
       })
-      window.ipcRenderer.on('downloadProgress', (_, downloadProgressInfo: DownloadProgressInfo) => {
+      window.ipcRenderer.on<DownloadProgressInfo>('downloadProgress', (_, downloadProgressInfo) => {
         this.setCurrentPercentage(downloadProgressInfo.percentage)
       })
     }

@@ -16,8 +16,11 @@
     "strictPropertyInitialization": false,
     "jsx": "react-jsx",
     "baseUrl": "src",
+    "paths": {
+      "desktop-web-shared-types/*": ["../desktop-web-shared-types/*"]
+    },
     "typeRoots": ["node_modules/@types", "@types"]
   },
-  "include": ["src", "electron/**/*"],
+  "include": ["src", "electron/**/*", "desktop-web-shared-types/*"],
   "references": [{ "path": "./tsconfig.node.json" }]
 }

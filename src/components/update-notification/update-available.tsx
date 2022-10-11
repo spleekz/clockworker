@@ -2,16 +2,16 @@ import { observer } from 'mobx-react-lite'
 import React from 'react'
 import styled from 'styled-components'
 
-import { Callback, FC } from 'basic-utility-types'
+import { FC, NonNullableProperties } from 'basic-utility-types'
 
-import { UpdateInfo } from 'stores/update-store'
+import { UpdateStore } from 'stores/update-store'
 
 import { colors } from 'lib/theme'
 
 import { PixelatedButton } from 'components/pixelated/pixelated-components'
 import { Popup } from 'components/popup/popup-template'
 
-type Props = UpdateInfo & { updateGame: Callback }
+type Props = NonNullableProperties<Pick<UpdateStore, 'version' | 'releaseNotes' | 'updateGame'>>
 
 export const UpdateAvailable: FC<Props> = observer(({ version, releaseNotes, updateGame }) => {
   return (

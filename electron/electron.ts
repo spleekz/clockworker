@@ -1,3 +1,4 @@
+import { DownloadProgressInfo, UpdateInfo } from 'desktop-web-shared-types/index'
 import { BrowserWindow, app, ipcMain } from 'electron'
 import { autoUpdater } from 'electron-updater'
 import * as path from 'path'
@@ -44,7 +45,10 @@ autoUpdater.disableWebInstaller = true
 autoUpdater.autoDownload = false
 autoUpdater.on('update-available', ({ version, releaseNotes }) => {
   if (mainWindow) {
-    mainWindow.webContents.send('updateAvailable', { version, releaseNotes })
+    mainWindow.webContents.send<UpdateInfo>('updateAvailable', {
+      version,
+      releaseNotes: releaseNotes as string,
+    })
   }
 })
 
@@ -54,7 +58,7 @@ ipcMain.on('updateGame', () => {
 
 autoUpdater.on('download-progress', ({ percent }) => {
   if (mainWindow) {
-    mainWindow.webContents.send('downloadProgress', { percentage: percent })
+    mainWindow.webContents.send<DownloadProgressInfo>('downloadProgress', { percentage: percent })
   }
 })
 

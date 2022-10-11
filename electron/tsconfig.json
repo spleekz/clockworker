@@ -6,9 +6,10 @@
     "outDir": "../dist",
     "baseUrl": ".",
     "paths": {
-      "*": ["node_modules/*"]
+      "*": ["node_modules/*"],
+      "desktop-web-shared-types/*": ["../desktop-web-shared-types/*"]
     },
     "typeRoots": ["../@types"]
   },
-  "include": ["**/*"]
+  "include": ["**/*", "../desktop-web-shared-types/*"]
 }
