@@ -56,27 +56,27 @@ export const Popup: FC<PopupTemplateProps> = observer(
 
     return (
       <PortalToBody>
-        <PopupContainer>
-          <PopupBlock width={width} height={height} style={styles}>
+        <Container>
+          <Block width={width} height={height} style={styles}>
             {(withCloseButton || title) && (
-              <PopupHeading>
-                {title && <PopupTitle style={titleStyles}>{title}</PopupTitle>}
+              <Heading>
+                {title && <Title style={titleStyles}>{title}</Title>}
                 {withCloseButton && (
-                  <ClosePopupButton onClick={fnForClosing}>
+                  <CloseButton onClick={fnForClosing}>
                     <XLg size={32} />
-                  </ClosePopupButton>
+                  </CloseButton>
                 )}
-              </PopupHeading>
+              </Heading>
             )}
-            <PopupBody>{children}</PopupBody>
-          </PopupBlock>
-        </PopupContainer>
+            <Body>{children}</Body>
+          </Block>
+        </Container>
       </PortalToBody>
     )
   },
 )
 
-const PopupContainer = styled.div`
+const Container = styled.div`
   position: fixed;
   top: 0;
   left: 0;
@@ -88,7 +88,7 @@ const PopupContainer = styled.div`
   align-items: center;
   background-color: #00000083;
 `
-const PopupBlock = styled.div<{ width: string; height: string; color?: string }>`
+const Block = styled.div<{ width: string; height: string; color?: string }>`
   display: flex;
   flex-direction: column;
   width: ${(props) => props.width};
@@ -99,22 +99,22 @@ const PopupBlock = styled.div<{ width: string; height: string; color?: string }>
   background-color: #ffffff;
   box-shadow: 0px 0px 25px 8px rgba(34, 60, 80, 0.2);
 `
-const PopupHeading = styled.div`
+const Heading = styled.div`
   min-height: 32px;
   position: relative;
   margin-bottom: 15px;
 `
-const PopupTitle = styled.h2`
+const Title = styled.h2`
   font-size: 36px;
   text-align: center;
 `
-const ClosePopupButton = styled.button`
+const CloseButton = styled.button`
   position: absolute;
   top: 0;
   right: 0;
   background-color: transparent;
 `
-const PopupBody = styled.div`
+const Body = styled.div`
   flex: 1 0 auto;
   display: flex;
   flex-direction: column;
