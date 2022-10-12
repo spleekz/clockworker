@@ -51,7 +51,7 @@ const Container = styled.div`
   align-items: center;
 `
 const DownloadLine = styled.div<{ width: number }>`
-  min-width: ${(props) => `${props.width}px`};
+  min-width: ${(props) => props.width}px;
   height: 40px;
   border-radius: ${theme.borderRadius}px;
   background-color: ${colors.mainMedium};
@@ -62,8 +62,8 @@ const Pieces = styled.div`
   height: 100%;
 `
 const Piece = styled.div<{ width: number; gap: number }>`
-  width: ${(props) => `${props.width}px`};
-  margin-right: ${(props) => `${props.gap}px`};
+  width: ${(props) => props.width}px;
+  margin-right: ${(props) => props.gap}px;
   height: 100%;
   background-color: #946a00;
   &:last-child {

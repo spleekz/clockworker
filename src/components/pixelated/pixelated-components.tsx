@@ -26,41 +26,33 @@ export const PixelatedDiv = styled.div<PixelatedElementProps>`
     position: absolute;
     z-index: -1;
     top: ${(props) =>
-      `${
-        10 *
-        (props.pixelsSize === 'small'
-          ? scales.small
-          : props.pixelsSize === 'medium'
-          ? scales.medium
-          : scales.large)
-      }px`};
+      10 *
+      (props.pixelsSize === 'small'
+        ? scales.small
+        : props.pixelsSize === 'medium'
+        ? scales.medium
+        : scales.large)}px;
     bottom: ${(props) =>
-      `${
-        10 *
-        (props.pixelsSize === 'small'
-          ? scales.small
-          : props.pixelsSize === 'medium'
-          ? scales.medium
-          : scales.large)
-      }px`};
+      10 *
+      (props.pixelsSize === 'small'
+        ? scales.small
+        : props.pixelsSize === 'medium'
+        ? scales.medium
+        : scales.large)}px;
     left: ${(props) =>
-      `${
-        -10 *
-        (props.pixelsSize === 'small'
-          ? scales.small
-          : props.pixelsSize === 'medium'
-          ? scales.medium
-          : scales.large)
-      }px`};
+      -10 *
+      (props.pixelsSize === 'small'
+        ? scales.small
+        : props.pixelsSize === 'medium'
+        ? scales.medium
+        : scales.large)}px;
     right: ${(props) =>
-      `${
-        -10 *
-        (props.pixelsSize === 'small'
-          ? scales.small
-          : props.pixelsSize === 'medium'
-          ? scales.medium
-          : scales.large)
-      }px`};
+      -10 *
+      (props.pixelsSize === 'small'
+        ? scales.small
+        : props.pixelsSize === 'medium'
+        ? scales.medium
+        : scales.large)}px;
     background-color: ${(props) => props.backgroundColor};
   }
 
@@ -69,41 +61,33 @@ export const PixelatedDiv = styled.div<PixelatedElementProps>`
     position: absolute;
     z-index: -1;
     top: ${(props) =>
-      `${
-        4 *
-        (props.pixelsSize === 'small'
-          ? scales.small
-          : props.pixelsSize === 'medium'
-          ? scales.medium
-          : scales.large)
-      }px`};
+      4 *
+      (props.pixelsSize === 'small'
+        ? scales.small
+        : props.pixelsSize === 'medium'
+        ? scales.medium
+        : scales.large)}px;
     bottom: ${(props) =>
-      `${
-        4 *
-        (props.pixelsSize === 'small'
-          ? scales.small
-          : props.pixelsSize === 'medium'
-          ? scales.medium
-          : scales.large)
-      }px`};
+      4 *
+      (props.pixelsSize === 'small'
+        ? scales.small
+        : props.pixelsSize === 'medium'
+        ? scales.medium
+        : scales.large)}px;
     left: ${(props) =>
-      `${
-        -6 *
-        (props.pixelsSize === 'small'
-          ? scales.small
-          : props.pixelsSize === 'medium'
-          ? scales.medium
-          : scales.large)
-      }px`};
+      -6 *
+      (props.pixelsSize === 'small'
+        ? scales.small
+        : props.pixelsSize === 'medium'
+        ? scales.medium
+        : scales.large)}px;
     right: ${(props) =>
-      `${
-        -6 *
-        (props.pixelsSize === 'small'
-          ? scales.small
-          : props.pixelsSize === 'medium'
-          ? scales.medium
-          : scales.large)
-      }px`};
+      -6 *
+      (props.pixelsSize === 'small'
+        ? scales.small
+        : props.pixelsSize === 'medium'
+        ? scales.medium
+        : scales.large)}px;
     background-color: ${(props) => props.backgroundColor};
   }
 `
