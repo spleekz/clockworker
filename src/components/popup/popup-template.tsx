@@ -7,6 +7,8 @@ import { XLg } from 'react-bootstrap-icons'
 
 import { useStore } from 'stores/root-store/context'
 
+import { theme } from 'lib/theme'
+
 import { PortalToBody } from 'components/utility/portal-to-body'
 
 export type PopupTemplateProps = {
@@ -95,7 +97,7 @@ const Block = styled.div<{ width: string; height: string; color?: string }>`
   height: ${(props) => props.height};
   position: relative;
   padding: 20px;
-  border-radius: 16px;
+  border-radius: ${theme.borderRadius}px;
   background-color: #ffffff;
   box-shadow: 0px 0px 25px 8px rgba(34, 60, 80, 0.2);
 `

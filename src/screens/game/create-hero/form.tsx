@@ -6,7 +6,7 @@ import { FC } from 'basic-utility-types'
 import { SubmitHandler, useForm } from 'react-hook-form'
 
 import { isLetter, isNumber } from 'lib/strings'
-import { colors } from 'lib/theme'
+import { colors, theme } from 'lib/theme'
 
 import {
   PixelatedButton,
@@ -104,7 +104,7 @@ const FormBlock = styled.div`
   width: 640px;
   height: 700px;
   padding: 15px 22px;
-  border-radius: 16px;
+  border-radius: ${theme.borderRadius}px;
   background: ${colors.mainLight};
 `
 const Form = styled.form`

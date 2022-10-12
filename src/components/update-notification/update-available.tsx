@@ -6,7 +6,7 @@ import { FC, NonNullableProperties } from 'basic-utility-types'
 
 import { UpdateStore } from 'stores/update-store'
 
-import { colors } from 'lib/theme'
+import { colors, theme } from 'lib/theme'
 
 import { PixelatedButton } from 'components/pixelated/pixelated-components'
 import { Popup } from 'components/popup/popup-template'
@@ -50,7 +50,7 @@ const ReleaseNotesContainer = styled.div`
   font-size: 28px;
   font-weight: bold;
   background-color: ${colors.mainMediumWell};
-  border-radius: 16px;
+  border-radius: ${theme.borderRadius}px;
   overflow-y: auto;
 
   ::-webkit-scrollbar-track {

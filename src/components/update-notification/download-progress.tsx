@@ -4,7 +4,7 @@ import styled from 'styled-components'
 
 import { FC } from 'basic-utility-types'
 
-import { colors } from 'lib/theme'
+import { colors, theme } from 'lib/theme'
 
 import { Popup } from 'components/popup/popup-template'
 
@@ -53,7 +53,7 @@ const Container = styled.div`
 const DownloadLine = styled.div<{ width: number }>`
   min-width: ${(props) => `${props.width}px`};
   height: 40px;
-  border-radius: 15px;
+  border-radius: ${theme.borderRadius}px;
   background-color: ${colors.mainMedium};
   overflow: hidden;
 `
