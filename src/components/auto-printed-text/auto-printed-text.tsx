@@ -16,7 +16,7 @@ type Props = {
 
 type TextSymbols = Array<{ id: string; value: string; isVisible: boolean }>
 
-export const AutoPrint: FC<Props> = observer(
+export const AutoPrintedText: FC<Props> = observer(
   ({ text, interval = 50, printPrevented = false, onPrintEnds }) => {
     const [textSymbols, setTextSymbols] = useState<TextSymbols>(() => {
       return text.split('').map((symbol) => ({ id: nanoid(), value: symbol, isVisible: false }))

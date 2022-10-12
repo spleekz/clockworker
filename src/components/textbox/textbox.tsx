@@ -9,7 +9,7 @@ import { useWindowClick } from 'hooks/use-window-click'
 
 import { colors, theme } from 'lib/theme'
 
-import { AutoPrint } from 'components/auto-print/auto-print'
+import { AutoPrintedText } from 'components/auto-printed-text/auto-printed-text'
 import { PixelatedButton } from 'components/pixelated/pixelated-components'
 import { useGamePlayStore } from 'screens/game/play/screen'
 
@@ -64,7 +64,7 @@ export const Textbox: FC<Props> = observer(({ isOpened, text }) => {
             <Container ref={containerRef} style={styles}>
               <Box>
                 {
-                  <AutoPrint
+                  <AutoPrintedText
                     text={text}
                     printPrevented={!isTextboxEnteringEnds}
                     onPrintEnds={onTextboxPrintEnds}
