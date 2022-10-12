@@ -10,10 +10,17 @@ type PixelatedElementProps = {
   backgroundColor: string
 }
 
-const scales: { [P in PixelsSize]: number } = {
+const pixelsScales: { [P in PixelsSize]: number } = {
   small: 0.8,
   medium: 1,
   large: 2.5,
+}
+
+const getPixelsScale = (pixelsSize: PixelsSize): number => {
+  return pixelsScales[pixelsSize]
+}
+const getPixelsOffset = (pixelsSize: PixelsSize, pixelsCount: number): number => {
+  return pixelsCount * getPixelsScale(pixelsSize)
 }
 
 export const PixelatedDiv = styled.div<PixelatedElementProps>`
@@ -25,34 +32,10 @@ export const PixelatedDiv = styled.div<PixelatedElementProps>`
     content: '';
     position: absolute;
     z-index: -1;
-    top: ${(props) =>
-      10 *
-      (props.pixelsSize === 'small'
-        ? scales.small
-        : props.pixelsSize === 'medium'
-        ? scales.medium
-        : scales.large)}px;
-    bottom: ${(props) =>
-      10 *
-      (props.pixelsSize === 'small'
-        ? scales.small
-        : props.pixelsSize === 'medium'
-        ? scales.medium
-        : scales.large)}px;
-    left: ${(props) =>
-      -10 *
-      (props.pixelsSize === 'small'
-        ? scales.small
-        : props.pixelsSize === 'medium'
-        ? scales.medium
-        : scales.large)}px;
-    right: ${(props) =>
-      -10 *
-      (props.pixelsSize === 'small'
-        ? scales.small
-        : props.pixelsSize === 'medium'
-        ? scales.medium
-        : scales.large)}px;
+    top: ${({ pixelsSize }) => getPixelsOffset(pixelsSize, 10)}px;
+    bottom: ${({ pixelsSize }) => getPixelsOffset(pixelsSize, 10)}px;
+    left: ${({ pixelsSize }) => getPixelsOffset(pixelsSize, -10)}px;
+    right: ${({ pixelsSize }) => getPixelsOffset(pixelsSize, -10)}px;
     background-color: ${(props) => props.backgroundColor};
   }
 
@@ -60,34 +43,10 @@ export const PixelatedDiv = styled.div<PixelatedElementProps>`
     content: '';
     position: absolute;
     z-index: -1;
-    top: ${(props) =>
-      4 *
-      (props.pixelsSize === 'small'
-        ? scales.small
-        : props.pixelsSize === 'medium'
-        ? scales.medium
-        : scales.large)}px;
-    bottom: ${(props) =>
-      4 *
-      (props.pixelsSize === 'small'
-        ? scales.small
-        : props.pixelsSize === 'medium'
-        ? scales.medium
-        : scales.large)}px;
-    left: ${(props) =>
-      -6 *
-      (props.pixelsSize === 'small'
-        ? scales.small
-        : props.pixelsSize === 'medium'
-        ? scales.medium
-        : scales.large)}px;
-    right: ${(props) =>
-      -6 *
-      (props.pixelsSize === 'small'
-        ? scales.small
-        : props.pixelsSize === 'medium'
-        ? scales.medium
-        : scales.large)}px;
+    top: ${({ pixelsSize }) => getPixelsOffset(pixelsSize, 4)}px;
+    bottom: ${({ pixelsSize }) => getPixelsOffset(pixelsSize, 4)}px;
+    left: ${({ pixelsSize }) => getPixelsOffset(pixelsSize, -6)}px;
+    right: ${({ pixelsSize }) => getPixelsOffset(pixelsSize, -6)}px;
     background-color: ${(props) => props.backgroundColor};
   }
 `
