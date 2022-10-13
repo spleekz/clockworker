@@ -21,6 +21,7 @@ type CurrentGameSettingsConfig = {
   gameSettingsList: GameSettingsList
 }
 
+//Все настройки игры; объединение изменяемых и внутренних настроек
 export class CurrentGameSettings {
   private gameSettingsList: GameSettingsList
 
@@ -32,7 +33,7 @@ export class CurrentGameSettings {
 
   //!Управление
   get movement(): MovementSettings {
-    const controllers = this.gameSettingsList.controllers.movement.controllers.reduce(
+    const controllers = this.gameSettingsList.controls.movement.controllers.reduce(
       (acc, controllersVariant) => {
         if (controllersVariant.isSelected) {
           acc = controllersVariant.value
@@ -41,8 +42,7 @@ export class CurrentGameSettings {
       },
       {} as MovementControllersKeys,
     )
-
-    const regulators = {
+    const regulators: MovementRegulatorsKeys = {
       sprint: 'ShiftLeft',
     }
 

@@ -9,7 +9,7 @@ import { colors } from 'lib/theme'
 import { PixelatedCheckbox } from 'components/checkbox/pixelated-checkbox'
 import { useGamePlayStore } from 'screens/game/play/screen'
 
-export const ControllersSettingsSection: FC = observer(() => {
+export const ControlsSettingsSection: FC = observer(() => {
   const { settings } = useGamePlayStore()
   const settingsList = settings.list
 
@@ -18,28 +18,26 @@ export const ControllersSettingsSection: FC = observer(() => {
       <Title>Управление</Title>
       <Setting>
         <SettingTitle>Движение :</SettingTitle>
-        <MovementControllersVariants>
-          {settingsList.controllers.movement.controllers.map((settingVariant) => {
+        <MovementControlsVariants>
+          {settingsList.controls.movement.controllers.map((controllersVariant) => {
             return (
-              <MovementControllersVariant key={settingVariant.id}>
-                <MovementControllersVariantLabel>
-                  {settingVariant.label}
-                </MovementControllersVariantLabel>
+              <MovementControlsVariant key={controllersVariant.id}>
+                <MovementControlsVariantLabel>{controllersVariant.label}</MovementControlsVariantLabel>
                 <PixelatedCheckbox
-                  checked={settingVariant.isSelected}
+                  checked={controllersVariant.isSelected}
                   onChange={() =>
                     settingsList.selectSettingVariant(
-                      settingsList.controllers.movement.controllers,
-                      settingVariant.id,
+                      settingsList.controls.movement.controllers,
+                      controllersVariant.id,
                     )
                   }
                   backgroundColor={colors.mainMedium}
                   checkedBackgroundColor={colors.mainMediumWell}
                 />
-              </MovementControllersVariant>
+              </MovementControlsVariant>
             )
           })}
-        </MovementControllersVariants>
+        </MovementControlsVariants>
       </Setting>
     </Container>
   )
@@ -60,16 +58,16 @@ const SettingTitle = styled.div`
   top: 10px;
   font-size: 24px;
 `
-const MovementControllersVariants = styled.div`
+const MovementControlsVariants = styled.div`
   flex: 1 0 auto;
   display: flex;
   justify-content: space-around;
 `
-const MovementControllersVariant = styled.div`
+const MovementControlsVariant = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
 `
-const MovementControllersVariantLabel = styled.div`
+const MovementControlsVariantLabel = styled.div`
   margin-bottom: 8px;
 `

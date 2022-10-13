@@ -9,18 +9,19 @@ type Setting<T> = {
   isSelected: boolean
 }
 
-type ControllersSettings = {
+type ControlsSettings = {
   movement: {
     controllers: Array<Setting<MovementControllersKeys>>
   }
 }
 
+//Изменяемые настройки (UI)
 export class GameSettingsList {
   constructor() {
     makeAutoObservable(this, {}, { autoBind: true })
   }
 
-  controllers: ControllersSettings = {
+  controls: ControlsSettings = {
     movement: {
       controllers: [
         {
