@@ -5,7 +5,7 @@ import { ExpandedMovementDirection, PrimitiveMovementDirection, Size } from 'gam
 import { Sprite } from 'stores/entities/sprite'
 import { KeyboardStore } from 'stores/keyboard.store'
 
-import { areSame } from 'lib/are-same'
+import { areEquivalent } from 'lib/are-equivalent'
 import { last } from 'lib/arrays'
 import { XY } from 'lib/coords'
 
@@ -458,7 +458,7 @@ export class PlayerMovement {
       const endY = to.y
 
       //Если движение по прямой
-      if ((startX === endX || startY === endY) && !areSame(from, to)) {
+      if ((startX === endX || startY === endY) && !areEquivalent(from, to)) {
         this.setIsAutomoving(true)
 
         //Перемещаем героя в стартовую позицию
@@ -486,7 +486,7 @@ export class PlayerMovement {
 
         //Двигаемся в текущем направлении, пока не дойдём до конечной позиции
         const automoveInDirection = (): void => {
-          if (!areSame(this.position, to)) {
+          if (!areEquivalent(this.position, to)) {
             if (!this.isAutomovePaused) {
               //Остановка на конечной позиции, если следующим шагом уходим дальше
               const setPositionToEndAndStopAutomoving = (x: number, y: number): void => {

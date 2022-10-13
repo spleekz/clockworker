@@ -1,7 +1,7 @@
 import { ExpandedMovementDirection, Hitbox, HitboxWithId, Side } from 'game-utility-types'
 import { checkIntersection } from 'line-intersect'
 
-import { areSame } from 'lib/are-same'
+import { areEquivalent } from 'lib/are-equivalent'
 import { XY, getDistanceBetweenPoints } from 'lib/coords'
 
 import { Body } from './body'
@@ -150,7 +150,7 @@ export class Collider {
       { x: obstacle.x2, y: obstacle.y2 },
       { x: obstacle.x1, y: obstacle.y2 },
     ]
-    return cornerPoints.some((cornerPoint) => areSame(point, cornerPoint))
+    return cornerPoints.some((cornerPoint) => areEquivalent(point, cornerPoint))
   }
 
   //!Получение дельта-линий
