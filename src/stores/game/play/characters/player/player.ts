@@ -1,6 +1,6 @@
 import { Size } from 'game-utility-types'
 
-import playerSpriteSheetSrc from 'content/sprites/heroes/Player.png'
+import playerCharacterSpriteSheetSrc from 'content/sprites/characters/Player.png'
 
 import { GameScreen } from '../../screen'
 import { CurrentGameSettings } from '../../settings/current-settings'
@@ -14,7 +14,7 @@ type PlayerStoreConfig = {
   mapSize: Size
 }
 
-export class Player extends Character<{ spriteSheet: typeof playerSpriteSheetSrc }> {
+export class Player extends Character<{ spriteSheet: typeof playerCharacterSpriteSheetSrc }> {
   nickname: string
   private settings: CurrentGameSettings
   private mapSize: Size
@@ -26,7 +26,7 @@ export class Player extends Character<{ spriteSheet: typeof playerSpriteSheetSrc
       name: 'player',
       imageContainerConfig: {
         initialImageList: {
-          spriteSheet: playerSpriteSheetSrc,
+          spriteSheet: playerCharacterSpriteSheetSrc,
         },
         options: {
           loadImmediately: true,

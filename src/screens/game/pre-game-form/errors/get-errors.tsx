@@ -1,6 +1,6 @@
 import { DeepRequired, FieldErrorsImpl } from 'react-hook-form'
 
-import { CreateHeroForm } from '../form'
+import { PreGameFormFields } from 'stores/game/pre-game-form'
 
 type FieldError = {
   value: boolean
@@ -15,19 +15,19 @@ export type FieldErrors = {
 }
 
 type GetFormErrorsReturn = {
-  [P in keyof CreateHeroForm]: FieldErrors
+  [P in keyof PreGameFormFields]: FieldErrors
 }
 
 export const getFormErrors = (
-  errors: FieldErrorsImpl<DeepRequired<CreateHeroForm>>,
+  errors: FieldErrorsImpl<DeepRequired<PreGameFormFields>>,
 ): GetFormErrorsReturn => {
-  const isHeroNameError = Boolean(errors.heroName)
-  const isHeroNameEmpty = errors.heroName?.type === 'required'
-  const heroNameEmptyMessage = 'Вы не указали имя своего персонажа'
-  const isHeroNameShort = errors.heroName?.type === 'minLength'
-  const heroNameShortMessage = 'Слишком короткое имя для персонажа'
-  const isHeroNameSpecSymbols = errors.heroName?.type === 'validate'
-  const heroNameSpecSymbolsMessage = 'Имя персонажа содержит недопустимые символы'
+  const isPlayerCharacterNameError = Boolean(errors.playerCharacterName)
+  const isPlayerCharacterNameEmpty = errors.playerCharacterName?.type === 'required'
+  const playerCharacterNameEmptyMessage = 'Вы не указали имя своего персонажа'
+  const isPlayerCharacterNameShort = errors.playerCharacterName?.type === 'minLength'
+  const playerCharacterNameShortMessage = 'Слишком короткое имя для персонажа'
+  const isPlayerCharacterNameSpecSymbols = errors.playerCharacterName?.type === 'validate'
+  const playerCharacterNameSpecSymbolsMessage = 'Имя персонажа содержит недопустимые символы'
 
   const isMarketNameError = Boolean(errors.marketName)
   const isMarketNameEmpty = errors.marketName?.type === 'required'
@@ -38,19 +38,19 @@ export const getFormErrors = (
   const marketNameSpecSymbolsMessage = 'Название магазина содержит недопустимые символы'
 
   return {
-    heroName: {
-      isError: isHeroNameError,
+    playerCharacterName: {
+      isError: isPlayerCharacterNameError,
       isEmpty: {
-        value: isHeroNameEmpty,
-        message: heroNameEmptyMessage,
+        value: isPlayerCharacterNameEmpty,
+        message: playerCharacterNameEmptyMessage,
       },
       isShort: {
-        value: isHeroNameShort,
-        message: heroNameShortMessage,
+        value: isPlayerCharacterNameShort,
+        message: playerCharacterNameShortMessage,
       },
       isSpecSymbols: {
-        value: isHeroNameSpecSymbols,
-        message: heroNameSpecSymbolsMessage,
+        value: isPlayerCharacterNameSpecSymbols,
+        message: playerCharacterNameSpecSymbolsMessage,
       },
     },
     marketName: {

@@ -4,7 +4,7 @@ import { useKey } from 'hooks/use-key'
 
 import { useGameStore } from '../game'
 
-export const handleCreateHeroScreenEsc = (): void => {
+export const handlePreGameFormScreenEsc = (): void => {
   const { appStore } = useStore()
   const gameStore = useGameStore()
 

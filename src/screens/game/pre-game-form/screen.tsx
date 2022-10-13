@@ -11,13 +11,13 @@ import { colors } from 'lib/theme'
 import { QuitInMainMenuConfirm } from 'components/game-popups/quit-in-main-menu-confirm'
 import { PixelatedButton } from 'components/pixelated/pixelated-components'
 
-import { CreateHeroForm } from './form'
-import { handleCreateHeroScreenEsc } from './handle-esc'
+import { PreGameForm } from './form'
+import { handlePreGameFormScreenEsc } from './handle-esc'
 
-export const CreateHeroScreen: FC = observer(() => {
+export const PreGameFormScreen: FC = observer(() => {
   const { appStore } = useStore()
 
-  handleCreateHeroScreenEsc()
+  handlePreGameFormScreenEsc()
 
   const goBack = (): void => {
     appStore.setScreen('main')
@@ -33,7 +33,7 @@ export const CreateHeroScreen: FC = observer(() => {
       <Title>Создайте персонажа</Title>
       <Body>
         <BackButton onClick={goBack}>Назад</BackButton>
-        <CreateHeroForm />
+        <PreGameForm />
       </Body>
     </Container>
   )

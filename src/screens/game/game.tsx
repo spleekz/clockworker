@@ -8,7 +8,7 @@ import { FC } from 'basic-utility-types'
 import { GameStore } from 'stores/game/store'
 import { useStore } from 'stores/root-store/context'
 
-import { CreateHeroScreen } from './create-hero/screen'
+import { PreGameFormScreen } from './pre-game-form/screen'
 import { GamePlayScreen } from './play/screen'
 
 const GameStoreContext = createContext<GameStore | null>(null)
@@ -36,14 +36,14 @@ export const GameScreen: FC = observer(() => {
   return (
     <GameStoreContext.Provider value={gameStore}>
       {gameTransition((styles, item) => {
-        return item === 'createHero' ? (
+        return item === 'preGameForm' ? (
           <GamePageContainer
             style={{
               ...styles,
               opacity: 1,
             }}
           >
-            <CreateHeroScreen />
+            <PreGameFormScreen />
           </GamePageContainer>
         ) : (
           <GamePageContainer style={styles}>

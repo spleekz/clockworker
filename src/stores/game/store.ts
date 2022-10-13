@@ -4,11 +4,11 @@ import { KeyboardStore } from 'stores/keyboard.store'
 
 import { delay } from 'lib/async'
 
-import { DataFromGameSetupForm, GamePlayStore } from './play/store'
-import { GameSetupForm } from './setup-form'
+import { DataFromPreGameForm, GamePlayStore } from './play/store'
+import { PreGameForm } from './pre-game-form'
 import { TransitionScreen } from './transition-screen'
 
-type GameScreen = 'createHero' | 'play'
+type GameScreen = 'preGameForm' | 'play'
 
 type GameStoreConfig = {
   keyboard: KeyboardStore
@@ -24,7 +24,7 @@ export class GameStore {
   }
 
   //!Экран
-  screen: GameScreen = 'createHero'
+  screen: GameScreen = 'preGameForm'
   setScreen(screen: GameScreen): void {
     this.screen = screen
   }
@@ -37,21 +37,21 @@ export class GameStore {
     background: '#000000',
   })
 
-  //!GameSetupForm
-  gameSetupForm = new GameSetupForm()
+  //!PreGameStore
+  preGameForm = new PreGameForm()
 
   //!PlayStore
   playStore: GamePlayStore | null = null
 
   createGamePlayStore(): GamePlayStore {
-    const dataFromGameSetupForm: DataFromGameSetupForm = {
-      playerNickname: this.gameSetupForm.playerNickname,
-      marketName: this.gameSetupForm.marketName,
+    const dataFromPreGameForm: DataFromPreGameForm = {
+      playerCharacterName: this.preGameForm.playerCharacterName,
+      marketName: this.preGameForm.marketName,
     }
 
     const gamePlayStore = new GamePlayStore({
       keyboard: this.keyboard,
-      dataFromGameSetupForm,
+      dataFromPreGameForm,
     })
 
     this.playStore = gamePlayStore

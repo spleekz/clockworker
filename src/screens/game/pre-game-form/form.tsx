@@ -5,6 +5,8 @@ import styled from 'styled-components'
 import { FC } from 'basic-utility-types'
 import { SubmitHandler, useForm } from 'react-hook-form'
 
+import { PreGameFormFields } from 'stores/game/pre-game-form'
+
 import { isLetter, isNumber } from 'lib/strings'
 import { colors, theme } from 'lib/theme'
 
@@ -18,22 +20,17 @@ import { useGameStore } from '../game'
 import { FieldErrorMessages } from './errors/field-error-messages'
 import { getFormErrors } from './errors/get-errors'
 
-export type CreateHeroForm = {
-  heroName: string
-  marketName: string
-}
-
-export const CreateHeroForm: FC = observer(() => {
+export const PreGameForm: FC = observer(() => {
   const gameStore = useGameStore()
-  const { gameSetupForm } = gameStore
+  const { preGameForm } = gameStore
 
-  const { register, handleSubmit, getValues, setValue, formState } = useForm<CreateHeroForm>()
+  const { register, handleSubmit, getValues, setValue, formState } = useForm<PreGameFormFields>()
 
   const errors = getFormErrors(formState.errors)
 
-  const trimHeroName = (): void => {
-    const { heroName } = getValues()
-    setValue('heroName', heroName.trim())
+  const trimPlayerCharacterName = (): void => {
+    const { playerCharacterName } = getValues()
+    setValue('playerCharacterName', playerCharacterName.trim())
   }
   const trimMarketName = (): void => {
     const { marketName } = getValues()
@@ -46,9 +43,9 @@ export const CreateHeroForm: FC = observer(() => {
       .every((symbol) => isLetter(symbol) || isNumber(symbol) || symbol === ' ' || symbol === '-')
   }
 
-  const startGame: SubmitHandler<CreateHeroForm> = ({ heroName, marketName }) => {
-    gameSetupForm.setPlayerNickname(heroName)
-    gameSetupForm.setMarketName(marketName)
+  const startGame: SubmitHandler<PreGameFormFields> = ({ playerCharacterName, marketName }) => {
+    preGameForm.setPlayerCharacterName(playerCharacterName)
+    preGameForm.setMarketName(marketName)
     gameStore.setScreen('play')
   }
 
@@ -57,21 +54,21 @@ export const CreateHeroForm: FC = observer(() => {
       <Form onSubmit={handleSubmit(startGame)}>
         <InputContainer>
           <Input
-            {...register('heroName', {
+            {...register('playerCharacterName', {
               required: true,
               validate: validateNoSpecialSymbols,
-              onBlur: trimHeroName,
+              onBlur: trimPlayerCharacterName,
               minLength: 3,
             })}
             maxLength={20}
             placeholder={'Имя персонажа'}
           />
-          {errors.heroName.isError && (
+          {errors.playerCharacterName.isError && (
             <ExclamationMarkContainer>
               <ExclamationMark>!</ExclamationMark>
             </ExclamationMarkContainer>
           )}
-          <FieldErrorMessages errors={errors.heroName} />
+          <FieldErrorMessages errors={errors.playerCharacterName} />
         </InputContainer>
         <InputContainer>
           <Input

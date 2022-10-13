@@ -4,6 +4,7 @@ import { KeyboardStore } from 'stores/keyboard.store'
 
 import { GameScript, getParsedGameScript } from 'content/text/get-parsed-game-script'
 
+import { PreGameForm } from '../pre-game-form'
 import { CharacterName, CharactersController } from './characters/controller'
 import { Player } from './characters/player/player'
 import { Collider } from './collider'
@@ -16,19 +17,16 @@ import { GameScreen } from './screen'
 import { GameSettings } from './settings/settings'
 import { TextboxController } from './textbox/controller'
 
-export type DataFromGameSetupForm = {
-  playerNickname: string
-  marketName: string
-}
+export type DataFromPreGameForm = Pick<PreGameForm, 'playerCharacterName' | 'marketName'>
 
 export type GamePlayStoreConfig = {
   keyboard: KeyboardStore
-  dataFromGameSetupForm: DataFromGameSetupForm
+  dataFromPreGameForm: DataFromPreGameForm
 }
 
 export class GamePlayStore {
   private keyboard: KeyboardStore
-  dataFromGameSetupForm: DataFromGameSetupForm
+  dataFromPreGameForm: DataFromPreGameForm
 
   script: GameScript
   player: Player
@@ -38,16 +36,16 @@ export class GamePlayStore {
 
   constructor(config: GamePlayStoreConfig) {
     this.keyboard = config.keyboard
-    this.dataFromGameSetupForm = config.dataFromGameSetupForm
+    this.dataFromPreGameForm = config.dataFromPreGameForm
 
     //!Сценарий
     this.script = getParsedGameScript({
-      playerNickname: this.dataFromGameSetupForm.playerNickname,
-      marketName: this.dataFromGameSetupForm.marketName,
+      playerNickname: this.dataFromPreGameForm.playerCharacterName,
+      marketName: this.dataFromPreGameForm.marketName,
     })
 
     //!Магазин
-    this.market = new Market({ name: this.dataFromGameSetupForm.marketName })
+    this.market = new Market({ name: this.dataFromPreGameForm.marketName })
 
     //!Контроллер текстбоксов
     this.textboxController = new TextboxController({ gameScript: this.script })
@@ -64,10 +62,9 @@ export class GamePlayStore {
     }
 
     const playerCharacterConfig = {
-      nickname: this.dataFromGameSetupForm.playerNickname,
+      nickname: this.dataFromPreGameForm.playerCharacterName,
       settings: this.settings.current,
       screen: this.screen,
-
       mapSize: {
         width: getMapSizeParameterValue('width', this.sceneController.currentScene.mapSize.width),
         height: getMapSizeParameterValue('height', this.sceneController.currentScene.mapSize.height),
