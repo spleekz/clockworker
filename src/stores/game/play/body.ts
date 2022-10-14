@@ -3,7 +3,18 @@ import { nanoid } from 'nanoid'
 
 import { Position } from 'stores/entities/position'
 
+type BodyConfig = {
+  is: string
+}
+
 export class Body {
+  //Показывает, чем является тело
+  is: string
+
+  constructor(config: BodyConfig) {
+    this.is = config.is
+  }
+
   readonly id = nanoid(6)
 
   size: Size = { width: 0, height: 0 }

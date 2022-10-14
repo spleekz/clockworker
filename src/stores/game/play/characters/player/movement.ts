@@ -46,7 +46,7 @@ type MoveFunctionConfig = { direction: ExpandedMovementDirection }
 
 type AutomoveConfig = { from: XY; to: XY }
 
-type PlayerMovementConfig = {
+type PlayerCharacterMovementConfig = {
   position: Position
   mapSize: Size
   settings: CurrentGameSettings
@@ -54,14 +54,14 @@ type PlayerMovementConfig = {
   animation: CharacterAnimation
 }
 
-export class PlayerMovement {
+export class PlayerCharacterMovement {
   private position: Position
   private mapSize: Size
   private settings: CurrentGameSettings
   private sprite: Sprite
   private animation: CharacterAnimation
 
-  constructor(config: PlayerMovementConfig) {
+  constructor(config: PlayerCharacterMovementConfig) {
     this.position = config.position
     this.mapSize = config.mapSize
     this.settings = config.settings

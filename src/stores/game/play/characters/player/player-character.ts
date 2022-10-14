@@ -5,25 +5,25 @@ import playerCharacterSpriteSheetSrc from 'content/sprites/characters/Player.png
 import { GameScreen } from '../../screen'
 import { CurrentGameSettings } from '../../settings/current-settings'
 import { Character } from '../character'
-import { PlayerMovement } from './movement'
+import { PlayerCharacterMovement } from './movement'
 
-type PlayerStoreConfig = {
-  nickname: string
+export type PlayerCharacterStoreConfig = {
+  name: string
   settings: CurrentGameSettings
   screen: GameScreen
   mapSize: Size
 }
 
-export class Player extends Character<{ spriteSheet: typeof playerCharacterSpriteSheetSrc }> {
-  nickname: string
+export class PlayerCharacter extends Character<{ spriteSheet: typeof playerCharacterSpriteSheetSrc }> {
+  name: string
   private settings: CurrentGameSettings
   private mapSize: Size
 
-  movement: PlayerMovement
+  movement: PlayerCharacterMovement
 
-  constructor(config: PlayerStoreConfig) {
+  constructor(config: PlayerCharacterStoreConfig) {
     super({
-      name: 'player',
+      is: 'player',
       imageContainerConfig: {
         initialImageList: {
           spriteSheet: playerCharacterSpriteSheetSrc,
@@ -43,13 +43,13 @@ export class Player extends Character<{ spriteSheet: typeof playerCharacterSprit
       screen: config.screen,
       initialSpriteScale: 2.5,
     })
-    this.nickname = config.nickname
+    this.name = config.name
     this.settings = config.settings
 
     this.mapSize = config.mapSize
 
     //!Движение
-    this.movement = new PlayerMovement({
+    this.movement = new PlayerCharacterMovement({
       position: this.position,
       settings: this.settings,
       mapSize: this.mapSize,

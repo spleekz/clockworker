@@ -6,7 +6,7 @@ import { GameScript, getParsedGameScript } from 'content/text/get-parsed-game-sc
 
 import { PreGameForm } from '../pre-game-form'
 import { CharacterName, CharactersController } from './characters/controller'
-import { Player } from './characters/player/player'
+import { PlayerCharacter, PlayerCharacterStoreConfig } from './characters/player/player-character'
 import { Collider } from './collider'
 import { GameActions } from './game-actions'
 import { Market } from './market'
@@ -29,7 +29,7 @@ export class GamePlayStore {
   dataFromPreGameForm: DataFromPreGameForm
 
   script: GameScript
-  player: Player
+  playerCharacter: PlayerCharacter
   market: Market
   actions: GameActions
   textboxController: TextboxController
@@ -40,7 +40,7 @@ export class GamePlayStore {
 
     //!Сценарий
     this.script = getParsedGameScript({
-      playerNickname: this.dataFromPreGameForm.playerCharacterName,
+      playerCharacterName: this.dataFromPreGameForm.playerCharacterName,
       marketName: this.dataFromPreGameForm.marketName,
     })
 
@@ -61,8 +61,8 @@ export class GamePlayStore {
       return value > screenParameterValue ? screenParameterValue : value
     }
 
-    const playerCharacterConfig = {
-      nickname: this.dataFromPreGameForm.playerCharacterName,
+    const playerCharacterConfig: PlayerCharacterStoreConfig = {
+      name: this.dataFromPreGameForm.playerCharacterName,
       settings: this.settings.current,
       screen: this.screen,
       mapSize: {
@@ -71,9 +71,9 @@ export class GamePlayStore {
       },
     }
 
-    this.charactersController.createCharacter('player', playerCharacterConfig)
+    this.charactersController.createCharacter('playerCharacter', playerCharacterConfig)
 
-    this.player = this.charactersController.list['player']
+    this.playerCharacter = this.charactersController.list['playerCharacter']
   }
 
   //!Контроллер персонажей
@@ -123,10 +123,10 @@ export class GamePlayStore {
     this.setScene('market').then(() => {
       this.createPlayer()
       //!Игровые события
-      this.actions = new GameActions({ player: this.player })
-      this.addActiveCharacter('player')
+      this.actions = new GameActions({ playerCharacter: this.playerCharacter })
+      this.addActiveCharacter('playerCharacter')
 
-      this.player.movement.hideInTopMapBorder()
+      this.playerCharacter.movement.hideInTopMapBorder()
     })
   }
 
@@ -151,7 +151,7 @@ export class GamePlayStore {
     this.screen.clear()
     this.collider.update()
     this.sceneController.updateCurrentScene()
-    this.player.update()
+    this.playerCharacter.update()
   }
 
   private gameInPlayLoop(): void {
@@ -159,10 +159,10 @@ export class GamePlayStore {
     //автомува, и когда персонаж находится за пределами карты
     if (
       !this.textboxController.isTextboxOpened &&
-      !this.player.movement.isAutomoving &&
-      this.player.movement.isAllowedPosition(this.player.position)
+      !this.playerCharacter.movement.isAutomoving &&
+      this.playerCharacter.movement.isAllowedPosition(this.playerCharacter.position)
     ) {
-      this.player.movement.handleMovementKeys(this.keyboard)
+      this.playerCharacter.movement.handleMovementKeys(this.keyboard)
     }
   }
 
@@ -171,12 +171,12 @@ export class GamePlayStore {
       this.gameInPlayLoop()
     }
 
-    if (this.player.movement.isAutomoving) {
+    if (this.playerCharacter.movement.isAutomoving) {
       //Во время паузы останавливать автомув и возобновлять его после отжатия паузы
       if (this.pauseController.isGamePaused) {
-        this.player.movement.pauseAutomove()
+        this.playerCharacter.movement.pauseAutomove()
       } else {
-        this.player.movement.resumeAutomove()
+        this.playerCharacter.movement.resumeAutomove()
       }
     }
 
@@ -194,7 +194,9 @@ export class GamePlayStore {
     this.textboxController.setCurrentTextbox({
       name: 'welcome',
       onClose: () =>
-        this.actions.playerEntering().then(() => this.player.movement.setCurrentMovementType('walk')),
+        this.actions
+          .playerEntering()
+          .then(() => this.playerCharacter.movement.setCurrentMovementType('walk')),
     })
   }
 }

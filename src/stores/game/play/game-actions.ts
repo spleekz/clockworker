@@ -2,17 +2,17 @@ import { makeAutoObservable } from 'mobx'
 
 import { delay } from 'lib/async'
 
-import { Player } from './characters/player/player'
+import { PlayerCharacter } from './characters/player/player-character'
 
 type GameActionsConfig = {
-  player: Player
+  playerCharacter: PlayerCharacter
 }
 
 export class GameActions {
-  private player: Player
+  private playerCharacter: PlayerCharacter
 
   constructor(config: GameActionsConfig) {
-    this.player = config.player
+    this.playerCharacter = config.playerCharacter
 
     makeAutoObservable(this, {}, { autoBind: true })
   }
@@ -20,10 +20,10 @@ export class GameActions {
   async playerEntering(): Promise<void> {
     await delay(300)
     return new Promise((resolve) => {
-      this.player.movement.setCurrentMovementType('entering')
-      this.player.movement
+      this.playerCharacter.movement.setCurrentMovementType('entering')
+      this.playerCharacter.movement
         .automove({
-          from: this.player.position,
+          from: this.playerCharacter.position,
           to: { x: 0, y: 0 },
         })
         .then(() => resolve())

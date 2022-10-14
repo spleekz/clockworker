@@ -5,18 +5,18 @@ type KeyOfScriptContent = keyof typeof script['content']
 type Replacers = Array<{ key: string; value: string }>
 
 type ParsedScriptConfig = {
-  playerNickname: string
+  playerCharacterName: string
   marketName: string
 }
 
 export type GameScript = typeof script
 
 export const getParsedGameScript = (config: ParsedScriptConfig): GameScript => {
-  const { playerNickname, marketName } = config
+  const { playerCharacterName, marketName } = config
 
   const replacers: Replacers = [
     //@ - имя игрока
-    { key: '@', value: playerNickname },
+    { key: '@', value: playerCharacterName },
     //# - название магазина
     { key: '#', value: marketName },
   ]

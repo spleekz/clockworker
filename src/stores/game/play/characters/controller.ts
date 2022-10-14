@@ -1,6 +1,6 @@
 import { makeAutoObservable, observable } from 'mobx'
 
-import { Player } from './player/player'
+import { PlayerCharacter } from './player/player-character'
 
 type This = InstanceType<typeof CharactersController>
 
@@ -13,7 +13,7 @@ export class CharactersController {
     makeAutoObservable(this, { refList: observable.shallow })
   }
 
-  refList = { player: Player }
+  refList = { playerCharacter: PlayerCharacter }
 
   list: CharactersList = {} as CharactersList
 

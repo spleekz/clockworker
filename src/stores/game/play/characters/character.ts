@@ -9,7 +9,7 @@ import { CharacterAnimation } from './animation'
 type CharacterConfig<
   InitialImageList extends { [imageName: string]: string } & { spriteSheet: string },
 > = {
-  name: string
+  is: string
   imageContainerConfig: {
     initialImageList: InitialImageList
     options?: ImageContainerOptions
@@ -22,14 +22,12 @@ type CharacterConfig<
 export class Character<
   InitialImageList extends { [imageName: string]: string } & { spriteSheet: string },
 > extends Body {
-  name: string
   imageContainer: ImageContainer<InitialImageList>
   spriteSheet: SpriteSheet
   screen: GameScreen
 
   constructor(config: CharacterConfig<InitialImageList>) {
-    super()
-    this.name = config.name
+    super({ is: config.is })
     this.imageContainer = new ImageContainer(
       config.imageContainerConfig.initialImageList,
       config.imageContainerConfig.options,
