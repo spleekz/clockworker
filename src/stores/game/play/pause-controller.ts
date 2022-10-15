@@ -6,13 +6,13 @@ export class GamePauseController {
   }
 
   isGamePaused = false
-  pauseGame(): void {
+  pauseGame = (): void => {
     this.isGamePaused = true
   }
-  resumeGame(): void {
+  resumeGame = (): void => {
     this.isGamePaused = false
   }
-  toggleGamePause(): void {
+  toggleGamePause = (): void => {
     if (this.isGamePaused) {
       this.resumeGame()
     } else {

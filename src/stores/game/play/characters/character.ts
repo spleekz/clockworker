@@ -45,7 +45,7 @@ export class Character<
   animation = new CharacterAnimation()
 
   spriteScale = 1
-  setSpriteScale(scale: number): void {
+  setSpriteScale = (scale: number): void => {
     this.spriteScale = scale
     //Обновление размеров body в соответствии с новым спрайтом
     this.setSize({
@@ -60,7 +60,7 @@ export class Character<
     })
   }
 
-  update(): void {
+  update = (): void => {
     this.screen.drawSprite(this.currentSprite, this.position)
   }
 }

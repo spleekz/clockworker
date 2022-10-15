@@ -31,11 +31,11 @@ export class GameSceneController {
     InstanceType<typeof GameSceneController>['fnsForCreatingUsedScenes'][number]
   >
 
-  setScene(
+  setScene = (
     sceneName: ReturnType<
       InstanceType<typeof GameSceneController>['fnsForCreatingUsedScenes'][number]
     >['name'],
-  ): Promise<void> {
+  ): Promise<void> => {
     const createAndDrawMap = (): void => {
       this.currentScene.createMap()
       this.currentScene.drawMap()
@@ -51,7 +51,7 @@ export class GameSceneController {
     }
   }
 
-  loadAllCurrentSceneImages(): Promise<void> {
+  loadAllCurrentSceneImages = (): Promise<void> => {
     return this.currentScene.imageContainer.loadAll()
   }
 
@@ -59,7 +59,7 @@ export class GameSceneController {
     return this.currentScene.imageContainer.isAllImagesLoaded
   }
 
-  updateCurrentScene(): void {
+  updateCurrentScene = (): void => {
     this.currentScene.drawMap()
   }
 }

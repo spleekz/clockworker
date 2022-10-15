@@ -23,11 +23,11 @@ export class TransitionScreen<Duration extends number | null> {
   }
 
   isOpened = false
-  open(): Promise<void> {
+  open = (): Promise<void> => {
     this.isOpened = true
     return delay(this.appearanceMs)
   }
-  async close(): Promise<void> {
+  close = async (): Promise<void> => {
     await delay(this.disappearanceMs)
     this.isOpened = false
   }

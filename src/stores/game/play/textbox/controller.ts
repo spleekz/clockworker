@@ -35,7 +35,7 @@ export class TextboxController {
   currentTextbox: ReturnType<
     InstanceType<typeof TextboxController>['fnsForCreatingUsedTextboxes'][number]
   > | null = null
-  setCurrentTextbox({
+  setCurrentTextbox = ({
     name,
     onOpen,
     onClose,
@@ -45,12 +45,12 @@ export class TextboxController {
     >['name']
     onOpen?: Callback
     onClose?: Callback
-  }): void {
+  }): void => {
     this.currentTextbox = this.list[name]
     this.currentTextbox.setCallbacks({ onOpen, onClose })
     this.currentTextbox.onOpen?.()
   }
-  closeCurrentTextbox(): void {
+  closeCurrentTextbox = (): void => {
     if (this.currentTextbox) {
       this.currentTextbox.onClose?.()
     }

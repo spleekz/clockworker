@@ -80,12 +80,12 @@ export class GamePlayStore {
 
   //!Контроллер персонажей
   charactersController = new CharactersController()
-  addActiveCharacter(characterName: CharacterName): void {
+  addActiveCharacter = (characterName: CharacterName): void => {
     this.charactersController.addActiveCharacter(characterName)
     const character = this.charactersController.list[characterName]
     this.collider.addBody(character)
   }
-  removeActiveCharacter(characterName: CharacterName): void {
+  removeActiveCharacter = (characterName: CharacterName): void => {
     const character = this.charactersController.list[characterName]
     this.collider.removeBody(character.id)
     this.charactersController.removeActiveCharacter(characterName)
@@ -99,11 +99,11 @@ export class GamePlayStore {
 
   //!Контроллер сцен
   sceneController = new GameSceneController({ screen: this.screen })
-  setScene(
+  setScene = (
     sceneName: ReturnType<
       InstanceType<typeof GameSceneController>['fnsForCreatingUsedScenes'][number]
     >['name'],
-  ): Promise<void> {
+  ): Promise<void> => {
     return this.sceneController.setScene(sceneName).then(() => {
       this.charactersController.clearActiveCharacters()
       this.collider.clear()
@@ -121,7 +121,7 @@ export class GamePlayStore {
   collider = new Collider()
 
   //!Загрузка игры
-  setupGame(): void {
+  setupGame = (): void => {
     this.setScene('market').then(() => {
       this.createPlayerCharacter()
       if (this.player.character) {
@@ -143,14 +143,14 @@ export class GamePlayStore {
   }
 
   //!Игровые циклы
-  updateActiveCharacters(): void {
+  updateActiveCharacters = (): void => {
     this.charactersController.activeCharactersNames.forEach((activeCharacterName) => {
       const activeCharacter = this.charactersController.list[activeCharacterName]
       activeCharacter.update()
     })
   }
 
-  update(): void {
+  update = (): void => {
     this.screen.clear()
     this.collider.update()
     this.sceneController.updateCurrentScene()
@@ -159,7 +159,7 @@ export class GamePlayStore {
     }
   }
 
-  private gameInPlayLoop(): void {
+  private gameInPlayLoop = (): void => {
     //Пользователь не может управлять героем во время паузы, открытого текстбокса,
     //автомува, и когда персонаж находится за пределами карты
     if (this.player.character) {
@@ -173,7 +173,7 @@ export class GamePlayStore {
     }
   }
 
-  private gameLoop(): void {
+  private gameLoop = (): void => {
     if (!this.pauseController.isGamePaused) {
       this.gameInPlayLoop()
     }
@@ -192,13 +192,13 @@ export class GamePlayStore {
     this.update()
   }
 
-  mainLoop(): void {
+  mainLoop = (): void => {
     this.gameLoop()
     window.requestAnimationFrame(this.mainLoop)
   }
 
   //!Запуск игры
-  run(): void {
+  run = (): void => {
     this.mainLoop()
     this.textboxController.setCurrentTextbox({
       name: 'welcome',

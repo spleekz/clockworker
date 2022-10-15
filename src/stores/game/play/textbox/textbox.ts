@@ -13,7 +13,7 @@ export class Textbox<TextboxName extends string> {
     this.onClose = config.onClose
   }
 
-  setCallbacks({ onOpen, onClose }: { onOpen?: Callback; onClose?: Callback }): void {
+  setCallbacks = ({ onOpen, onClose }: { onOpen?: Callback; onClose?: Callback }): void => {
     this.onOpen = onOpen
     this.onClose = onClose
   }

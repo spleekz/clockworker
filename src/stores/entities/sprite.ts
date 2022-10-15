@@ -36,7 +36,7 @@ export class Sprite {
     return this.height * this.scale
   }
 
-  draw(ctx: Ctx, position: XY): void {
+  draw = (ctx: Ctx, position: XY): void => {
     drawImage(ctx, this.image, {
       width: this.width,
       height: this.height,

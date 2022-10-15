@@ -8,12 +8,12 @@ export class PreGameForm {
   }
 
   playerCharacterName = ''
-  setPlayerCharacterName(name: string): void {
+  setPlayerCharacterName = (name: string): void => {
     this.playerCharacterName = name
   }
 
   marketName = ''
-  setMarketName(name: string): void {
+  setMarketName = (name: string): void => {
     this.marketName = name
   }
 }

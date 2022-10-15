@@ -16,10 +16,10 @@ export class CharacterAnimation {
 
   movementLoop: Array<MovementLoopFrame> = [0, 1, 2, 3]
   movementLoopIndex = 0
-  setMovementLoopIndex(index: number): void {
+  setMovementLoopIndex = (index: number): void => {
     this.movementLoopIndex = index
   }
-  increaseMovementLoopIndex(): void {
+  increaseMovementLoopIndex = (): void => {
     if (this.movementLoopIndex === this.movementLoop.length - 1) {
       this.setMovementLoopIndex(0)
     } else {
@@ -31,15 +31,15 @@ export class CharacterAnimation {
   }
 
   movementFramesCount = 0
-  setMovementFramesCount(value: number): void {
+  setMovementFramesCount = (value: number): void => {
     this.movementFramesCount = value
   }
-  increaseMovementFramesCount(): void {
+  increaseMovementFramesCount = (): void => {
     this.movementFramesCount += 1
   }
 
   viewDirection: ViewDirections = ViewDirections.DOWN
-  setViewDirection(direction: ViewDirections): void {
+  setViewDirection = (direction: ViewDirections): void => {
     this.viewDirection = direction
   }
 }

@@ -19,13 +19,13 @@ export class Collider {
     const bodyWithHitbox: BodyWithHitbox = { ...body, hitbox: this.getBodyHitbox(body) }
     this.bodies.push(bodyWithHitbox)
   }
-  addBodies(bodies: Array<Body>): void {
+  addBodies = (bodies: Array<Body>): void => {
     bodies.forEach(this.addBody)
   }
-  removeBody(bodyId: string): void {
+  removeBody = (bodyId: string): void => {
     this.bodies = this.bodies.filter(({ id }) => id !== bodyId)
   }
-  clearBodies(): void {
+  clearBodies = (): void => {
     this.bodies = []
   }
 
@@ -33,23 +33,23 @@ export class Collider {
   addStaticObstacle = (obstacle: HitboxWithId): void => {
     this.staticObstacles.push(obstacle)
   }
-  addStaticObstacles(obstacleHitboxes: Array<HitboxWithId>): void {
+  addStaticObstacles = (obstacleHitboxes: Array<HitboxWithId>): void => {
     obstacleHitboxes.forEach(this.addStaticObstacle)
   }
-  removeStaticObstacle(obstacleId: string): void {
+  removeStaticObstacle = (obstacleId: string): void => {
     this.staticObstacles = this.staticObstacles.filter(({ id }) => id !== obstacleId)
   }
-  clearStaticObstacles(): void {
+  clearStaticObstacles = (): void => {
     this.staticObstacles = []
   }
 
-  clear(): void {
+  clear = (): void => {
     this.clearBodies()
     this.clearStaticObstacles()
   }
 
   //!Вспомогательные функции
-  private getBodyHitbox(body: Body): Hitbox {
+  private getBodyHitbox = (body: Body): Hitbox => {
     return {
       x1: body.position.x,
       y1: body.position.y,
@@ -58,19 +58,19 @@ export class Collider {
     }
   }
 
-  private getStaticObstacleById(obstacleId: string): HitboxWithId {
+  private getStaticObstacleById = (obstacleId: string): HitboxWithId => {
     return this.staticObstacles.find(({ id }) => id === obstacleId)!
   }
 
   private bodiesPrevHitboxes: Record<string, Hitbox> = {}
-  private setBodyPrevHitbox(id: string, hitbox: Hitbox): void {
+  private setBodyPrevHitbox = (id: string, hitbox: Hitbox): void => {
     this.bodiesPrevHitboxes[id] = hitbox
   }
 
-  private getHitboxMovementDirection(
+  private getHitboxMovementDirection = (
     prevHitbox: Hitbox,
     currentHitbox: Hitbox,
-  ): ExpandedMovementDirection | null {
+  ): ExpandedMovementDirection | null => {
     const prevPosition: XY = { x: prevHitbox.x1, y: prevHitbox.y1 }
     const currentPosition: XY = { x: currentHitbox.x1, y: currentHitbox.y1 }
 
@@ -94,7 +94,7 @@ export class Collider {
     return movementDirection as ExpandedMovementDirection
   }
 
-  private getBottomHitboxLine(hitbox: Hitbox): Hitbox {
+  private getBottomHitboxLine = (hitbox: Hitbox): Hitbox => {
     return {
       x1: hitbox.x1,
       y1: hitbox.y2,
@@ -102,7 +102,7 @@ export class Collider {
       y2: hitbox.y2,
     }
   }
-  private getRightHitboxLine(hitbox: Hitbox): Hitbox {
+  private getRightHitboxLine = (hitbox: Hitbox): Hitbox => {
     return {
       x1: hitbox.x2,
       y1: hitbox.y1,
@@ -110,7 +110,7 @@ export class Collider {
       y2: hitbox.y2,
     }
   }
-  private getTopHitboxLine(hitbox: Hitbox): Hitbox {
+  private getTopHitboxLine = (hitbox: Hitbox): Hitbox => {
     return {
       x1: hitbox.x1,
       y1: hitbox.y1,
@@ -118,7 +118,7 @@ export class Collider {
       y2: hitbox.y1,
     }
   }
-  private getLeftHitboxLine(hitbox: Hitbox): Hitbox {
+  private getLeftHitboxLine = (hitbox: Hitbox): Hitbox => {
     return {
       x1: hitbox.x1,
       y1: hitbox.y1,
@@ -126,7 +126,7 @@ export class Collider {
       y2: hitbox.y2,
     }
   }
-  private getDeltaXHitbox(prevHitbox: Hitbox, currentHitbox: Hitbox): Hitbox {
+  private getDeltaXHitbox = (prevHitbox: Hitbox, currentHitbox: Hitbox): Hitbox => {
     return {
       x1: currentHitbox.x1,
       y1: prevHitbox.y1,
@@ -134,7 +134,7 @@ export class Collider {
       y2: prevHitbox.y2,
     }
   }
-  private getDeltaYHitbox(prevHitbox: Hitbox, currentHitbox: Hitbox): Hitbox {
+  private getDeltaYHitbox = (prevHitbox: Hitbox, currentHitbox: Hitbox): Hitbox => {
     return {
       x1: prevHitbox.x1,
       y1: currentHitbox.y1,
@@ -143,7 +143,7 @@ export class Collider {
     }
   }
 
-  private isObstacleCornerPoint(obstacle: Hitbox, point: XY): boolean {
+  private isObstacleCornerPoint = (obstacle: Hitbox, point: XY): boolean => {
     const cornerPoints: Array<XY> = [
       { x: obstacle.x1, y: obstacle.y1 },
       { x: obstacle.x2, y: obstacle.y1 },
@@ -154,7 +154,7 @@ export class Collider {
   }
 
   //!Получение дельта-линий
-  private getDeltaLines(prevHitbox: Hitbox, currentHitbox: Hitbox, step: number): Array<Hitbox> {
+  private getDeltaLines = (prevHitbox: Hitbox, currentHitbox: Hitbox, step: number): Array<Hitbox> => {
     const width = prevHitbox.x2 - prevHitbox.x1
     const height = prevHitbox.y2 - prevHitbox.y1
 
@@ -216,7 +216,7 @@ export class Collider {
   }
 
   //!Определение точек пересечения
-  private getIntersectionPointOfTwoLines(line1: Hitbox, line2: Hitbox): XY | null {
+  private getIntersectionPointOfTwoLines = (line1: Hitbox, line2: Hitbox): XY | null => {
     const intersectionResult = checkIntersection(
       line1.x1,
       line1.y1,
@@ -233,10 +233,10 @@ export class Collider {
     return intersectionResult.point
   }
 
-  private getIntersectionPointsOfLineAndObstacle(
+  private getIntersectionPointsOfLineAndObstacle = (
     line: Hitbox,
     obstacle: HitboxWithId,
-  ): Array<IntersectionPoint> | null {
+  ): Array<IntersectionPoint> | null => {
     const obstacleHitbox = obstacle.hitbox
     const bottomObstacleLine = this.getBottomHitboxLine(obstacleHitbox)
     const rightObstacleLine = this.getRightHitboxLine(obstacleHitbox)
@@ -276,10 +276,10 @@ export class Collider {
     return intersectionPoints.length ? intersectionPoints : null
   }
 
-  private getClosestIntersectionPoint(
+  private getClosestIntersectionPoint = (
     deltaLine: Hitbox,
     intersectionPoints: Array<IntersectionPoint>,
-  ): IntersectionPointWithDeltaLineLength {
+  ): IntersectionPointWithDeltaLineLength => {
     const deltaLineRoot: XY = { x: deltaLine.x1, y: deltaLine.y1 }
     const intersectionPointsWithDeltaLineLength: Array<IntersectionPointWithDeltaLineLength> =
       intersectionPoints.map((intersectionPoint) => ({
@@ -291,30 +291,30 @@ export class Collider {
     return intersectionPointsWithDeltaLineLength[0]
   }
 
-  private getDownmostIntersectionPoints(points: Array<IntersectionPoint>): IntersectionPoint {
+  private getDownmostIntersectionPoints = (points: Array<IntersectionPoint>): IntersectionPoint => {
     return points
       .filter(({ side }) => side === 'bottom' || side === 'top')
       .sort((a, b) => b.point.y - a.point.y)[0]
   }
-  private getRightmostIntersectionPoint(points: Array<IntersectionPoint>): IntersectionPoint {
+  private getRightmostIntersectionPoint = (points: Array<IntersectionPoint>): IntersectionPoint => {
     return points.filter(({ side }) => side === 'right').sort((a, b) => b.point.x - a.point.x)[0]
   }
-  private getTopmostIntersectionPoint(points: Array<IntersectionPoint>): IntersectionPoint {
+  private getTopmostIntersectionPoint = (points: Array<IntersectionPoint>): IntersectionPoint => {
     return points
       .filter(({ side }) => side === 'top' || side === 'bottom')
       .sort((a, b) => a.point.y - b.point.y)[0]
   }
-  private getLeftmostIntersectionPoint(points: Array<IntersectionPoint>): IntersectionPoint {
+  private getLeftmostIntersectionPoint = (points: Array<IntersectionPoint>): IntersectionPoint => {
     return points.filter(({ side }) => side === 'left').sort((a, b) => a.point.x - b.point.x)[0]
   }
 
-  private getClosestPointsToBody({
+  private getClosestPointsToBody = ({
     intersectionPoints,
     bodyMovementDirection,
   }: {
     intersectionPoints: Array<IntersectionPoint>
     bodyMovementDirection: ExpandedMovementDirection
-  }): Array<IntersectionPoint> | null {
+  }): Array<IntersectionPoint> | null => {
     const closestPoints: Array<IntersectionPoint> = []
 
     if (!intersectionPoints.length) {
@@ -352,7 +352,7 @@ export class Collider {
     return closestPoints
   }
 
-  private getIntersectionPointsOfBodyDeltaLinesAndObstacles({
+  private getIntersectionPointsOfBodyDeltaLinesAndObstacles = ({
     prevHitbox,
     currentHitbox,
     obstacles,
@@ -360,7 +360,7 @@ export class Collider {
     prevHitbox: Hitbox
     currentHitbox: Hitbox
     obstacles: Array<HitboxWithId>
-  }): Array<IntersectionPoint> | null {
+  }): Array<IntersectionPoint> | null => {
     const bodyDeltaLines = this.getDeltaLines(prevHitbox, currentHitbox, 5)
 
     var closestIntersectionPoints: Array<IntersectionPoint> = []
@@ -437,7 +437,7 @@ export class Collider {
     }
   }
 
-  private getIntersectionPointsOfBodyAndObstacles({
+  private getIntersectionPointsOfBodyAndObstacles = ({
     from,
     to,
     obstacles,
@@ -445,7 +445,7 @@ export class Collider {
     from: Hitbox
     to: Hitbox
     obstacles: Array<HitboxWithId>
-  }): Array<IntersectionPoint> | null {
+  }): Array<IntersectionPoint> | null => {
     const prevToCurrentBodyDeltaLinesIntersectionPoints =
       this.getIntersectionPointsOfBodyDeltaLinesAndObstacles({
         prevHitbox: from,
@@ -456,7 +456,10 @@ export class Collider {
     return prevToCurrentBodyDeltaLinesIntersectionPoints
   }
 
-  private handleIntersectionPoint(body: BodyWithHitbox, intersectionPoint: IntersectionPoint): void {
+  private handleIntersectionPoint = (
+    body: BodyWithHitbox,
+    intersectionPoint: IntersectionPoint,
+  ): void => {
     const obstacle = this.staticObstacles.find(({ id }) => id === intersectionPoint.obstacleId)!
     const obstacleHitbox = obstacle.hitbox
     if (intersectionPoint.side === 'bottom') {
@@ -474,24 +477,24 @@ export class Collider {
   }
 
   //!Обработка точек пересечения
-  private setBodyToObstacleBottom(body: BodyWithHitbox, obstacle: Hitbox): void {
+  private setBodyToObstacleBottom = (body: BodyWithHitbox, obstacle: Hitbox): void => {
     body.position.setY(obstacle.y2)
   }
-  private setBodyToObstacleRight(body: BodyWithHitbox, obstacle: Hitbox): void {
+  private setBodyToObstacleRight = (body: BodyWithHitbox, obstacle: Hitbox): void => {
     body.position.setX(obstacle.x2)
   }
-  private setBodyToObstacleTop(body: BodyWithHitbox, obstacle: Hitbox): void {
+  private setBodyToObstacleTop = (body: BodyWithHitbox, obstacle: Hitbox): void => {
     body.position.setY(obstacle.y1 - body.size.height)
   }
-  private setBodyToObstacleLeft(body: BodyWithHitbox, obstacle: Hitbox): void {
+  private setBodyToObstacleLeft = (body: BodyWithHitbox, obstacle: Hitbox): void => {
     body.position.setX(obstacle.x1 - body.size.width)
   }
 
-  private handleYIntersectionOfBodyAndObstacle(
+  private handleYIntersectionOfBodyAndObstacle = (
     body: BodyWithHitbox,
     obstacle: Hitbox,
     actionToChangeBodyPosition: SetBodyToObstacleFn,
-  ): void {
+  ): void => {
     const prevBodyHitbox = this.bodiesPrevHitboxes[body.id]
     const currentBodyHitbox = body.hitbox
 
@@ -515,11 +518,11 @@ export class Collider {
 
     actionToChangeBodyPosition(body, obstacle)
   }
-  private handleXIntersectionPointOfBodyAndObstacle(
+  private handleXIntersectionPointOfBodyAndObstacle = (
     body: BodyWithHitbox,
     obstacle: Hitbox,
     actionToChangeBodyPosition: SetBodyToObstacleFn,
-  ): void {
+  ): void => {
     const prevBodyHitbox = this.bodiesPrevHitboxes[body.id]
     const currentBodyHitbox = body.hitbox
 
@@ -545,7 +548,7 @@ export class Collider {
   }
 
   //!Работа коллайдера
-  private handleBodyAndStaticObstaclesCollision(body: BodyWithHitbox): void {
+  private handleBodyAndStaticObstaclesCollision = (body: BodyWithHitbox): void => {
     const bodyPrevToCurrentIntersectionPointsWithObstacles =
       this.getIntersectionPointsOfBodyAndObstacles({
         from: this.bodiesPrevHitboxes[body.id],
@@ -560,7 +563,7 @@ export class Collider {
     }
   }
 
-  private handleCollision(): void {
+  private handleCollision = (): void => {
     this.bodies.forEach((body) => {
       if (!this.bodiesPrevHitboxes[body.id]) {
         this.setBodyPrevHitbox(body.id, this.getBodyHitbox(body))
@@ -577,7 +580,7 @@ export class Collider {
     })
   }
 
-  update(): void {
+  update = (): void => {
     this.handleCollision()
   }
 }

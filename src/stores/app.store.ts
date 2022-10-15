@@ -9,22 +9,22 @@ export class AppStore {
 
   //!Экран
   screen: AppScreen = 'main'
-  setScreen(screen: AppScreen): void {
+  setScreen = (screen: AppScreen): void => {
     this.screen = screen
   }
 
   //!Выход из игры
-  quitGame(): void {
+  quitGame = (): void => {
     window.close()
   }
   isQuitGameConfirmOpened = false
-  openQuitGameConfirm(): void {
+  openQuitGameConfirm = (): void => {
     this.isQuitGameConfirmOpened = true
   }
-  closeQuitGameConfirm(): void {
+  closeQuitGameConfirm = (): void => {
     this.isQuitGameConfirmOpened = false
   }
-  toggleQuitGameConfirm(): void {
+  toggleQuitGameConfirm = (): void => {
     if (this.isQuitGameConfirmOpened) {
       this.closeQuitGameConfirm()
     } else {
@@ -34,13 +34,13 @@ export class AppStore {
 
   //!Выход в главное меню
   isQuitInMainMenuConfirmOpened = false
-  openQuitInMainMenuConfirm(): void {
+  openQuitInMainMenuConfirm = (): void => {
     this.isQuitInMainMenuConfirmOpened = true
   }
-  closeQuitInMainMenuConfirm(): void {
+  closeQuitInMainMenuConfirm = (): void => {
     this.isQuitInMainMenuConfirmOpened = false
   }
-  toggleQuitInMainMenuConfirm(): void {
+  toggleQuitInMainMenuConfirm = (): void => {
     if (this.isQuitInMainMenuConfirmOpened) {
       this.closeQuitInMainMenuConfirm()
     } else {
@@ -50,10 +50,10 @@ export class AppStore {
 
   //!Открытые попапы
   openedPopupsCount = 0
-  increaseOpenedPopupsCount(): void {
+  increaseOpenedPopupsCount = (): void => {
     this.openedPopupsCount += 1
   }
-  decreaseOpenedPopupsCount(): void {
+  decreaseOpenedPopupsCount = (): void => {
     this.openedPopupsCount -= 1
   }
   get isAnyPopupOpened(): boolean {

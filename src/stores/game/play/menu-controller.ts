@@ -8,13 +8,13 @@ export class GameMenuController {
   }
 
   currentMenu: GameMenuName | null = null
-  openMenu(name: GameMenuName): void {
+  openMenu = (name: GameMenuName): void => {
     this.currentMenu = name
   }
-  closeCurrentMenu(): void {
+  closeCurrentMenu = (): void => {
     this.currentMenu = null
   }
-  toggle(name: GameMenuName): void {
+  toggle = (name: GameMenuName): void => {
     if (this.currentMenu === name) {
       this.closeCurrentMenu()
     } else {

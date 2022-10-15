@@ -23,7 +23,7 @@ export class GameScreen {
     this.initializeCanvasAndCtx()
   }
 
-  initializeCanvasAndCtx(): void {
+  initializeCanvasAndCtx = (): void => {
     const canvas = document.createElement('canvas')
     canvas.width = this.width
     canvas.height = this.height
@@ -32,11 +32,11 @@ export class GameScreen {
     this.ctx = this.canvas.getContext('2d')!
   }
 
-  clear(): void {
+  clear = (): void => {
     this.ctx.clearRect(0, 0, this.width, this.height)
   }
 
-  drawSprite(sprite: Sprite, position: XY): void {
+  drawSprite = (sprite: Sprite, position: XY): void => {
     sprite.draw(this.ctx, position)
   }
 }

@@ -50,7 +50,7 @@ export class GameSettingsList {
     },
   }
 
-  selectSettingVariant(settingArray: Array<Setting<any>>, variantId: string): void {
+  selectSettingVariant = (settingArray: Array<Setting<any>>, variantId: string): void => {
     settingArray.forEach((variant) => {
       if (variant.id === variantId) {
         variant.isSelected = true

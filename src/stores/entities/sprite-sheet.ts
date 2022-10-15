@@ -33,7 +33,7 @@ export class SpriteSheet {
     this.skipY = config.skipY
   }
 
-  getSprite(row: number, column: number, config?: GetSpriteConfig): Sprite {
+  getSprite = (row: number, column: number, config?: GetSpriteConfig): Sprite => {
     const spriteSourceX = this.firstSkipX + (this.spriteWidth + this.skipX) * column
     const spriteSourceY = this.firstSkipY + (this.spriteHeight + this.skipY) * row
     const spriteScale = config?.scale ?? 1

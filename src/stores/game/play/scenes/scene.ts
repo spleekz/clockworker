@@ -43,7 +43,7 @@ export class GameScene<SceneName extends string> {
     this.imageContainer = new ImageContainer({ tileset: this.mapConfig.tilesetSrc })
   }
 
-  getMapHitboxes(): Array<HitboxWithId> {
+  getMapHitboxes = (): Array<HitboxWithId> => {
     return this.mapConfig.scheme.layers.reduce((acc, layer) => {
       if (layer.type === 'objectgroup') {
         layer.objects.forEach((object) => {
@@ -61,7 +61,7 @@ export class GameScene<SceneName extends string> {
     }, [] as Array<HitboxWithId>)
   }
 
-  createMap(): void {
+  createMap = (): void => {
     this.map = {
       size: this.mapSize,
       tileset: new SpriteSheet({
@@ -78,7 +78,7 @@ export class GameScene<SceneName extends string> {
     }
   }
 
-  drawMap(): void {
+  drawMap = (): void => {
     const getSourceSpritePositionByIndex = (index: number): { row: number; column: number } => {
       const tilesCountInTilesetRow = this.map.tileset.image.width / this.map.scheme.tilewidth
 

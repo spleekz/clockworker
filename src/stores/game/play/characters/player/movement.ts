@@ -72,9 +72,8 @@ export class PlayerCharacterMovement {
   }
 
   //@Позиция
-  //!Позиция персонажа
   //!Позиция на следующий шаг
-  getPositionOnNextStep(): XY {
+  getPositionOnNextStep = (): XY => {
     const { stepSize } = this.currentMovementConfig
 
     //Длина шага по диагонали должна быть равна длине шага по прямой
@@ -122,20 +121,20 @@ export class PlayerCharacterMovement {
 
   //!Допустимая позиция
   //С учётом размера спрайта
-  isOutOfDownMapBorder(position: XY): boolean {
+  isOutOfDownMapBorder = (position: XY): boolean => {
     return position.y > this.maxYCoordinate
   }
-  isOutOfRightMapBorder(position: XY): boolean {
+  isOutOfRightMapBorder = (position: XY): boolean => {
     return position.x > this.maxXCoordinate
   }
-  isOutOfTopMapBorder(position: XY): boolean {
+  isOutOfTopMapBorder = (position: XY): boolean => {
     return position.y < 0
   }
-  isOutOfLeftMapBorder(position: XY): boolean {
+  isOutOfLeftMapBorder = (position: XY): boolean => {
     return position.x < 0
   }
 
-  isAllowedPosition(position: XY): boolean {
+  isAllowedPosition = (position: XY): boolean => {
     return !(
       this.isOutOfDownMapBorder(position) ||
       this.isOutOfRightMapBorder(position) ||
@@ -152,37 +151,37 @@ export class PlayerCharacterMovement {
     return this.mapSize.height - this.sprite.scaledHeight
   }
 
-  setPositionToDownMapBorder(x?: number): void {
+  setPositionToDownMapBorder = (x?: number): void => {
     this.position.setXY(x ?? this.position.x, this.maxYCoordinate)
   }
-  setPositionToRightMapBorder(y?: number): void {
+  setPositionToRightMapBorder = (y?: number): void => {
     this.position.setXY(this.maxXCoordinate, y ?? this.position.y)
   }
-  setPositionToTopMapBorder(x?: number): void {
+  setPositionToTopMapBorder = (x?: number): void => {
     this.position.setXY(x ?? this.position.x, 0)
   }
-  setPositionToLeftMapBorder(y?: number): void {
+  setPositionToLeftMapBorder = (y?: number): void => {
     this.position.setXY(0, y ?? this.position.y)
   }
 
   //!Прятание героя за границы
-  hideInDownMapBorder(x?: number): void {
+  hideInDownMapBorder = (x?: number): void => {
     this.position.setXY(x ?? this.position.x, this.mapSize.height)
   }
-  hideInRightMapBorder(y?: number): void {
+  hideInRightMapBorder = (y?: number): void => {
     this.position.setXY(this.mapSize.width, y ?? this.position.y)
   }
-  hideInTopMapBorder(x?: number): void {
+  hideInTopMapBorder = (x?: number): void => {
     this.position.setXY(x ?? this.position.x, -this.sprite.scaledHeight)
   }
-  hideInLeftMapBorder(y?: number): void {
+  hideInLeftMapBorder = (y?: number): void => {
     this.position.setXY(-this.sprite.scaledWidth, y ?? this.position.y)
   }
 
   //!Направление движения
   //Существует только в момент движения персонажа
   movementDirection: ExpandedMovementDirection | null = null
-  setMovementDirection(direction: ExpandedMovementDirection | null): void {
+  setMovementDirection = (direction: ExpandedMovementDirection | null): void => {
     //Установка направления взгляда
     if (direction) {
       const newViewDirection: ViewDirections = direction.includes('right')
@@ -204,7 +203,9 @@ export class PlayerCharacterMovement {
     this.movementDirection = direction
   }
 
-  getReversedPrimitiveDirection(direction: PrimitiveMovementDirection): PrimitiveMovementDirection {
+  getReversedPrimitiveDirection = (
+    direction: PrimitiveMovementDirection,
+  ): PrimitiveMovementDirection => {
     if (direction === 'down') {
       return 'up'
     } else if (direction === 'right') {
@@ -241,10 +242,10 @@ export class PlayerCharacterMovement {
     type: 'walk',
     regulator: null,
   }
-  setCurrentMovementType(typeName: MovementTypeName): void {
+  setCurrentMovementType = (typeName: MovementTypeName): void => {
     this.currentMovementConfigParametersNames.type = typeName
   }
-  setCurrentMovementRegulator(regulatorName: MovementRegulatorName | null): void {
+  setCurrentMovementRegulator = (regulatorName: MovementRegulatorName | null): void => {
     this.currentMovementConfigParametersNames.regulator = regulatorName
   }
   get currentMovementConfigParameters(): MovementConfigParameters {
@@ -269,13 +270,13 @@ export class PlayerCharacterMovement {
   }
 
   isMoving = false
-  setIsMoving(value: boolean): void {
+  setIsMoving = (value: boolean): void => {
     this.isMoving = value
   }
 
   //@Клавиши управления
   pressedKeys: Array<string> = []
-  setPressedKeys(keys: Array<string>): void {
+  setPressedKeys = (keys: Array<string>): void => {
     this.pressedKeys = keys
   }
 
@@ -287,7 +288,7 @@ export class PlayerCharacterMovement {
   get movementControllersKeys(): MovementControllersKeys {
     return this.movementKeys.controllers
   }
-  isMovementControllerKey(key: string): boolean {
+  isMovementControllerKey = (key: string): boolean => {
     return Object.values(this.movementControllersKeys).some((controller) => key === controller)
   }
 
@@ -326,7 +327,7 @@ export class PlayerCharacterMovement {
   get movementRegulatorsKeys(): MovementRegulatorsKeys {
     return this.movementKeys.regulators
   }
-  isMovementRegulatorKey(key: string): boolean {
+  isMovementRegulatorKey = (key: string): boolean => {
     return Object.values(this.movementRegulatorsKeys).some((regulator) => key === regulator)
   }
 
@@ -344,7 +345,7 @@ export class PlayerCharacterMovement {
 
   //!Движение
   //Отвечает за анимацию движения и за перемещение персонажа в валидную позицию
-  move({ direction }: MoveFunctionConfig): void {
+  move = ({ direction }: MoveFunctionConfig): void => {
     this.setMovementDirection(direction)
 
     if (this.isSprintKeyPressed) {
@@ -388,7 +389,7 @@ export class PlayerCharacterMovement {
   }
 
   //!Остановка
-  stop(): void {
+  stop = (): void => {
     this.setIsMoving(false)
     this.setMovementDirection(null)
     this.animation.setMovementFramesCount(0)
@@ -396,7 +397,7 @@ export class PlayerCharacterMovement {
   }
 
   //!Обработка клавиш движения
-  handleMovementKeys(keyboard: KeyboardStore): void {
+  handleMovementKeys = (keyboard: KeyboardStore): void => {
     this.setPressedKeys(keyboard.pressedKeysArray)
 
     if (this.isMovementControllerPressed) {
@@ -437,20 +438,20 @@ export class PlayerCharacterMovement {
 
   //!Автомув
   isAutomoving = false
-  setIsAutomoving(value: boolean): void {
+  setIsAutomoving = (value: boolean): void => {
     this.isAutomoving = value
   }
 
   isAutomovePaused = false
-  pauseAutomove(): void {
+  pauseAutomove = (): void => {
     this.isAutomovePaused = true
   }
-  resumeAutomove(): void {
+  resumeAutomove = (): void => {
     this.isAutomovePaused = false
   }
 
   //Перемещает персонажа из стартовой позиции в конечную
-  automove({ from, to }: AutomoveConfig): Promise<boolean> {
+  automove = ({ from, to }: AutomoveConfig): Promise<boolean> => {
     return new Promise((resolve) => {
       const startX = from.x
       const startY = from.y
@@ -486,7 +487,7 @@ export class PlayerCharacterMovement {
 
         //Двигаемся в текущем направлении, пока не дойдём до конечной позиции
         const automoveInDirection = (): void => {
-          if (!areEquivalent(this.position, to)) {
+          if (!areEquivalent({ x: this.position.x, y: this.position.y }, to)) {
             if (!this.isAutomovePaused) {
               //Остановка на конечной позиции, если следующим шагом уходим дальше
               const setPositionToEndAndStopAutomoving = (x: number, y: number): void => {

@@ -25,7 +25,7 @@ export class GameStore {
 
   //!Экран
   screen: GameScreen = 'preGameForm'
-  setScreen(screen: GameScreen): void {
+  setScreen = (screen: GameScreen): void => {
     this.screen = screen
   }
 
@@ -43,7 +43,7 @@ export class GameStore {
   //!PlayStore
   playStore: GamePlayStore | null = null
 
-  createGamePlayStore(): GamePlayStore {
+  createGamePlayStore = (): GamePlayStore => {
     const dataFromPreGameForm: DataFromPreGameForm = {
       playerCharacterName: this.preGameForm.playerCharacterName,
       marketName: this.preGameForm.marketName,
@@ -59,7 +59,7 @@ export class GameStore {
     return gamePlayStore
   }
 
-  async startGame(): Promise<void> {
+  startGame = async (): Promise<void> => {
     if (this.playStore) {
       this.playStore.setupGame()
       await this.opening.open()

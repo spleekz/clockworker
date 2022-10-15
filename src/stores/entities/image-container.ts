@@ -21,7 +21,7 @@ export class ImageContainer<InitialImageList extends { [imageName: string]: stri
     makeAutoObservable(this, {}, { autoBind: true })
   }
 
-  private configureImageList(): void {
+  private configureImageList = (): void => {
     this.list = (Object.keys(this.initialList) as Array<keyof typeof this.initialList>).reduce(
       (acc, imageName) => {
         acc[imageName] = { isLoaded: false, imageElement: new Image() }
@@ -31,7 +31,7 @@ export class ImageContainer<InitialImageList extends { [imageName: string]: stri
     )
   }
 
-  loadImage(imageName: keyof InitialImageList): Promise<void> {
+  loadImage = (imageName: keyof InitialImageList): Promise<void> => {
     return new Promise((resolve) => {
       this.list[imageName].imageElement.addEventListener('load', () => {
         this.list[imageName].isLoaded = true
@@ -41,7 +41,7 @@ export class ImageContainer<InitialImageList extends { [imageName: string]: stri
     })
   }
 
-  loadAll(): Promise<void> {
+  loadAll = (): Promise<void> => {
     return new Promise((resolve) => {
       const promises: Array<Promise<void>> = []
       ;(Object.keys(this.list) as Array<keyof typeof this.list>).forEach((imageName) => {
