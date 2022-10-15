@@ -6,12 +6,13 @@ import { GameScript, getParsedGameScript } from 'content/text/get-parsed-game-sc
 
 import { PreGameForm } from '../pre-game-form'
 import { CharacterName, CharactersController } from './characters/controller'
-import { PlayerCharacter, PlayerCharacterStoreConfig } from './characters/player/player-character'
+import { PlayerCharacterConfig } from './characters/player/player-character'
 import { Collider } from './collider'
 import { GameActions } from './game-actions'
 import { Market } from './market'
 import { GameMenuController } from './menu-controller'
 import { GamePauseController } from './pause-controller'
+import { Player } from './player'
 import { GameSceneController } from './scenes/controller'
 import { GameScreen } from './screen'
 import { GameSettings } from './settings/settings'
@@ -29,7 +30,6 @@ export class GamePlayStore {
   dataFromPreGameForm: DataFromPreGameForm
 
   script: GameScript
-  playerCharacter: PlayerCharacter
   market: Market
   actions: GameActions
   textboxController: TextboxController
@@ -53,15 +53,16 @@ export class GamePlayStore {
     makeAutoObservable(this, {}, { autoBind: true })
   }
 
-  //!Создание игрока
-  createPlayer(): void {
+  //!Игрок
+  player: Player = new Player()
+  createPlayerCharacter = (): void => {
     //Временное решение
     const getMapSizeParameterValue = (parameterName: 'width' | 'height', value: number): number => {
       const screenParameterValue = this.screen[parameterName]
       return value > screenParameterValue ? screenParameterValue : value
     }
 
-    const playerCharacterConfig: PlayerCharacterStoreConfig = {
+    const playerCharacterConfig: PlayerCharacterConfig = {
       name: this.dataFromPreGameForm.playerCharacterName,
       settings: this.settings.current,
       screen: this.screen,
@@ -71,9 +72,10 @@ export class GamePlayStore {
       },
     }
 
-    this.charactersController.createCharacter('playerCharacter', playerCharacterConfig)
-
-    this.playerCharacter = this.charactersController.list['playerCharacter']
+    this.player.createCharacter({
+      charactersController: this.charactersController,
+      characterConfig: playerCharacterConfig,
+    })
   }
 
   //!Контроллер персонажей
@@ -121,12 +123,13 @@ export class GamePlayStore {
   //!Загрузка игры
   setupGame(): void {
     this.setScene('market').then(() => {
-      this.createPlayer()
-      //!Игровые события
-      this.actions = new GameActions({ playerCharacter: this.playerCharacter })
-      this.addActiveCharacter('playerCharacter')
-
-      this.playerCharacter.movement.hideInTopMapBorder()
+      this.createPlayerCharacter()
+      if (this.player.character) {
+        //!Игровые события
+        this.actions = new GameActions({ playerCharacter: this.player.character })
+        this.addActiveCharacter('playerCharacter')
+        this.player.character.movement.hideInTopMapBorder()
+      }
     })
   }
 
@@ -151,18 +154,22 @@ export class GamePlayStore {
     this.screen.clear()
     this.collider.update()
     this.sceneController.updateCurrentScene()
-    this.playerCharacter.update()
+    if (this.player.character) {
+      this.player.character.update()
+    }
   }
 
   private gameInPlayLoop(): void {
     //Пользователь не может управлять героем во время паузы, открытого текстбокса,
     //автомува, и когда персонаж находится за пределами карты
-    if (
-      !this.textboxController.isTextboxOpened &&
-      !this.playerCharacter.movement.isAutomoving &&
-      this.playerCharacter.movement.isAllowedPosition(this.playerCharacter.position)
-    ) {
-      this.playerCharacter.movement.handleMovementKeys(this.keyboard)
+    if (this.player.character) {
+      if (
+        !this.textboxController.isTextboxOpened &&
+        !this.player.character.movement.isAutomoving &&
+        this.player.character.movement.isAllowedPosition(this.player.character.position)
+      ) {
+        this.player.character.movement.handleMovementKeys(this.keyboard)
+      }
     }
   }
 
@@ -171,12 +178,14 @@ export class GamePlayStore {
       this.gameInPlayLoop()
     }
 
-    if (this.playerCharacter.movement.isAutomoving) {
-      //Во время паузы останавливать автомув и возобновлять его после отжатия паузы
-      if (this.pauseController.isGamePaused) {
-        this.playerCharacter.movement.pauseAutomove()
-      } else {
-        this.playerCharacter.movement.resumeAutomove()
+    if (this.player.character) {
+      if (this.player.character.movement.isAutomoving) {
+        //Во время паузы останавливать автомув и возобновлять его после отжатия паузы
+        if (this.pauseController.isGamePaused) {
+          this.player.character.movement.pauseAutomove()
+        } else {
+          this.player.character.movement.resumeAutomove()
+        }
       }
     }
 
@@ -194,9 +203,11 @@ export class GamePlayStore {
     this.textboxController.setCurrentTextbox({
       name: 'welcome',
       onClose: () =>
-        this.actions
-          .playerEntering()
-          .then(() => this.playerCharacter.movement.setCurrentMovementType('walk')),
+        this.actions.playerCharacterEntering().then(() => {
+          if (this.player.character) {
+            this.player.character.movement.setCurrentMovementType('walk')
+          }
+        }),
     })
   }
 }

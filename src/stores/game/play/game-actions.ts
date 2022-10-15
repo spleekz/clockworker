@@ -17,7 +17,7 @@ export class GameActions {
     makeAutoObservable(this, {}, { autoBind: true })
   }
 
-  async playerEntering(): Promise<void> {
+  async playerCharacterEntering(): Promise<void> {
     await delay(300)
     return new Promise((resolve) => {
       this.playerCharacter.movement.setCurrentMovementType('entering')

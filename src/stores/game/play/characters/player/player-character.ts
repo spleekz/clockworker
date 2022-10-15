@@ -7,7 +7,7 @@ import { CurrentGameSettings } from '../../settings/current-settings'
 import { Character } from '../character'
 import { PlayerCharacterMovement } from './movement'
 
-export type PlayerCharacterStoreConfig = {
+export type PlayerCharacterConfig = {
   name: string
   settings: CurrentGameSettings
   screen: GameScreen
@@ -21,7 +21,7 @@ export class PlayerCharacter extends Character<{ spriteSheet: typeof playerChara
 
   movement: PlayerCharacterMovement
 
-  constructor(config: PlayerCharacterStoreConfig) {
+  constructor(config: PlayerCharacterConfig) {
     super({
       is: 'player',
       imageContainerConfig: {
