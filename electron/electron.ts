@@ -5,7 +5,7 @@ import * as path from 'path'
 
 var mainWindow: Electron.BrowserWindow | null
 
-function createWindow(): void {
+const createWindow = (): void => {
   mainWindow = new BrowserWindow({
     titleBarStyle: 'hidden',
     webPreferences: {
@@ -13,13 +13,13 @@ function createWindow(): void {
       contextIsolation: false,
       preload: path.join(__dirname, 'preload.js'),
     },
-    icon: path.join(__dirname, './assets/clockworker-icon.ico'),
+    icon: path.join(__dirname, '../assets/clockworker-icon.ico'),
   })
 
   mainWindow.setFullScreen(true)
   mainWindow.removeMenu()
 
-  mainWindow.loadFile(path.join(__dirname, 'index.html'))
+  mainWindow.loadFile(path.join(__dirname, '../index.html'))
 
   mainWindow.on('closed', () => {
     mainWindow = null
