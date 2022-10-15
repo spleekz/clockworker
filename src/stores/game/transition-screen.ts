@@ -19,7 +19,7 @@ export class TransitionScreen<Duration extends number | null> {
     this.durationMs = config.durationMs
     this.background = config.background
 
-    makeAutoObservable(this, {}, { autoBind: true })
+    makeAutoObservable(this)
   }
 
   isOpened = false

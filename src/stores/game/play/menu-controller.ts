@@ -4,7 +4,7 @@ type GameMenuName = 'pause' | 'settings'
 
 export class GameMenuController {
   constructor() {
-    makeAutoObservable(this, {}, { autoBind: true })
+    makeAutoObservable(this)
   }
 
   currentMenu: GameMenuName | null = null

@@ -20,7 +20,7 @@ export class GameStore {
   constructor(config: GameStoreConfig) {
     this.keyboard = config.keyboard
 
-    makeAutoObservable(this, {}, { autoBind: true })
+    makeAutoObservable(this)
   }
 
   //!Экран

@@ -1,5 +1,3 @@
-import { makeAutoObservable } from 'mobx'
-
 import { GameSettingsList } from './settings-list'
 
 export type MovementControllersKeys = {
@@ -27,8 +25,6 @@ export class CurrentGameSettings {
 
   constructor(config: CurrentGameSettingsConfig) {
     this.gameSettingsList = config.gameSettingsList
-
-    makeAutoObservable(this, {}, { autoBind: true })
   }
 
   //!Управление

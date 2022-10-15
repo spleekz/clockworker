@@ -50,7 +50,7 @@ export class GamePlayStore {
     //!Контроллер текстбоксов
     this.textboxController = new TextboxController({ gameScript: this.script })
 
-    makeAutoObservable(this, {}, { autoBind: true })
+    makeAutoObservable(this)
   }
 
   //!Игрок

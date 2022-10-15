@@ -24,7 +24,7 @@ export class GameSceneController {
       return acc
     }, {} as Record<ReturnType<InstanceType<typeof GameSceneController>['fnsForCreatingUsedScenes'][number]>['name'], ReturnType<InstanceType<typeof GameSceneController>['fnsForCreatingUsedScenes'][number]>>)
 
-    makeAutoObservable(this, {}, { autoBind: true })
+    makeAutoObservable(this)
   }
 
   currentScene: ReturnType<

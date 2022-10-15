@@ -18,7 +18,7 @@ type ControlsSettings = {
 //Изменяемые настройки (UI)
 export class GameSettingsList {
   constructor() {
-    makeAutoObservable(this, {}, { autoBind: true })
+    makeAutoObservable(this)
   }
 
   controls: ControlsSettings = {

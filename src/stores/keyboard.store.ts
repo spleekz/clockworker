@@ -13,7 +13,7 @@ export class KeyboardStore {
       this.pressedKeys = new Set()
     })
 
-    makeAutoObservable(this, {}, { autoBind: true })
+    makeAutoObservable(this)
   }
 
   private pressedKeys: Set<string> = new Set()

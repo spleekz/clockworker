@@ -18,7 +18,7 @@ export class ImageContainer<InitialImageList extends { [imageName: string]: stri
       this.loadAll()
     }
 
-    makeAutoObservable(this, {}, { autoBind: true })
+    makeAutoObservable(this)
   }
 
   private configureImageList = (): void => {

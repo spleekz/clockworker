@@ -1,5 +1,3 @@
-import { makeAutoObservable } from 'mobx'
-
 type MovementLoopFrame = 0 | 1 | 2 | 3
 
 export enum ViewDirections {
@@ -10,10 +8,6 @@ export enum ViewDirections {
 }
 
 export class CharacterAnimation {
-  constructor() {
-    makeAutoObservable(this, {}, { autoBind: true })
-  }
-
   movementLoop: Array<MovementLoopFrame> = [0, 1, 2, 3]
   movementLoopIndex = 0
   setMovementLoopIndex = (index: number): void => {

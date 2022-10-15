@@ -68,7 +68,7 @@ export class PlayerCharacterMovement {
     this.sprite = config.sprite
     this.animation = config.animation
 
-    makeAutoObservable(this, {}, { autoBind: true })
+    makeAutoObservable(this)
   }
 
   //@Позиция

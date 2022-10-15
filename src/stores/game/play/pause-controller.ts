@@ -2,7 +2,7 @@ import { makeAutoObservable } from 'mobx'
 
 export class GamePauseController {
   constructor() {
-    makeAutoObservable(this, {}, { autoBind: true })
+    makeAutoObservable(this)
   }
 
   isGamePaused = false

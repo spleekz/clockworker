@@ -4,7 +4,7 @@ type AppScreen = 'main' | 'game'
 
 export class AppStore {
   constructor() {
-    makeAutoObservable(this, {}, { autoBind: true })
+    makeAutoObservable(this)
   }
 
   //!Экран

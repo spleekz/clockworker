@@ -4,7 +4,7 @@ export type PreGameFormFields = Pick<PreGameForm, 'playerCharacterName' | 'marke
 
 export class PreGameForm {
   constructor() {
-    makeAutoObservable(this, {}, { autoBind: true })
+    makeAutoObservable(this)
   }
 
   playerCharacterName = ''

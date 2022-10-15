@@ -1,5 +1,3 @@
-import { makeAutoObservable } from 'mobx'
-
 import { delay } from 'lib/async'
 
 import { PlayerCharacter } from './characters/player/player-character'
@@ -13,8 +11,6 @@ export class GameActions {
 
   constructor(config: GameActionsConfig) {
     this.playerCharacter = config.playerCharacter
-
-    makeAutoObservable(this, {}, { autoBind: true })
   }
 
   playerCharacterEntering = async (): Promise<void> => {
