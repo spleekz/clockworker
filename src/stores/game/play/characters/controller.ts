@@ -13,8 +13,10 @@ export class CharactersController {
     makeAutoObservable(this, { refList: observable.shallow })
   }
 
+  //Список всех персонажей, использующихся в контроллере
   refList = { playerCharacter: PlayerCharacter }
 
+  //Список созданных персонажей
   list: CharactersList = {} as CharactersList
 
   createCharacter = <
@@ -28,6 +30,7 @@ export class CharactersController {
     this.list[name] = new this.refList[name](characterConfig)
   }
 
+  //Список персонажей, активных в текущий момент
   activeCharactersNames: Array<CharacterName> = []
 
   addActiveCharacter = (characterName: CharacterName): void => {
