@@ -21,6 +21,6 @@
     },
     "typeRoots": ["node_modules/@types", "@types"]
   },
-  "include": ["src", "electron/**/*", "desktop-web-shared-types/*"],
+  "include": ["src", "desktop-web-shared-types"],
   "references": [{ "path": "./tsconfig.node.json" }]
 }
