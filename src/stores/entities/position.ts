@@ -1,6 +1,9 @@
+import { XY } from 'project-utility-types'
+
 export class Position {
   x = 0
   y = 0
+
   setX = (x: number): void => {
     this.x = x
   }
@@ -10,5 +13,9 @@ export class Position {
   setXY = (x: number, y: number): void => {
     this.setX(x)
     this.setY(y)
+  }
+
+  get value(): XY {
+    return { x: this.x, y: this.y }
   }
 }

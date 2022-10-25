@@ -394,7 +394,7 @@ export class PlayerCharacterMovement {
 
         //Двигаемся в текущем направлении, пока не дойдём до конечной позиции
         const automoveInDirection = (): void => {
-          if (!areEquivalent({ x: this.position.x, y: this.position.y }, to)) {
+          if (!areEquivalent(this.position.value, to)) {
             if (!this.isAutomovePaused) {
               //Остановка на конечной позиции, если следующим шагом уходим дальше
               const setPositionToEndAndStopAutomoving = (x: number, y: number): void => {
