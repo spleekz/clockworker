@@ -1,19 +1,22 @@
+import { GamePlayStore } from 'stores/game/play/store'
 import { useStore } from 'stores/root-store/context'
 
 import { useKey } from 'hooks/use-key'
 
-import { useGameStore } from '../game'
-
-export const handlePreGameFormScreenEsc = (): void => {
+type Config = { gamePlayStore: GamePlayStore | null }
+export const handlePreGameFormScreenEsc = (config: Config): void => {
   const { appStore } = useStore()
-  const gameStore = useGameStore()
+  const { gamePlayStore } = config
 
-  useKey({
-    key: 'Escape',
-    fn: () => {
-      if (!gameStore.opening.isOpened) {
-        appStore.toggleQuitInMainMenuConfirm()
-      }
+  useKey(
+    {
+      key: 'Escape',
+      fn: () => {
+        if (!gamePlayStore?.opening.isOpened) {
+          appStore.toggleQuitInMainMenuConfirm()
+        }
+      },
     },
-  })
+    [gamePlayStore],
+  )
 }

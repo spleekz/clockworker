@@ -1,5 +1,5 @@
 import { observer } from 'mobx-react-lite'
-import React, { createContext, useContext, useState } from 'react'
+import React, { createContext, useContext } from 'react'
 
 import { FC } from 'basic-utility-types'
 
@@ -8,7 +8,6 @@ import { useStore } from 'stores/root-store/context'
 
 import { QuitInMainMenuConfirm } from 'components/game-popups/quit-in-main-menu-confirm'
 
-import { useGameStore } from '../game'
 import { GameOpening } from '../opening'
 import { handleGamePlayScreenEsc } from './handle-esc'
 import { PauseMenu } from './pause-menu'
@@ -24,16 +23,17 @@ export const useGamePlayStore = (): GamePlayStore => {
   return gamePlayStore
 }
 
-export const GamePlayScreen: FC = observer(() => {
+type Props = {
+  gamePlayStore: GamePlayStore
+}
+export const GamePlayScreen: FC<Props> = observer(({ gamePlayStore }) => {
   const { appStore } = useStore()
-  const gameStore = useGameStore()
-  const [gamePlayStore] = useState(gameStore.createGamePlayStore)
 
   handleGamePlayScreenEsc({ gamePlayStore })
 
   return (
     <GamePlayStoreContext.Provider value={gamePlayStore}>
-      <GameOpening isOpened={gameStore.opening.isOpened} />
+      <GameOpening />
       <PauseMenu isOpened={gamePlayStore.menuController.isGamePauseMenuOpened} />
       <GameSettingsMenu
         isOpened={gamePlayStore.menuController.isSettingsMenuOpened}

@@ -3,20 +3,17 @@ import { useStore } from 'stores/root-store/context'
 
 import { useKey } from 'hooks/use-key'
 
-import { useGameStore } from '../game'
-
 type Config = {
   gamePlayStore: GamePlayStore
 }
 
 export const handleGamePlayScreenEsc = ({ gamePlayStore }: Config): void => {
   const { appStore } = useStore()
-  const gameStore = useGameStore()
 
   useKey({
     key: 'Escape',
     fn: () => {
-      if (!gameStore.opening.isOpened) {
+      if (!gamePlayStore.opening.isOpened) {
         if (!gamePlayStore.textboxController.isTextboxOpened) {
           if (appStore.isQuitGameConfirmOpened) {
             appStore.closeQuitGameConfirm()

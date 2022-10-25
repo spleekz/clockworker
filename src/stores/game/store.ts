@@ -2,11 +2,8 @@ import { makeAutoObservable } from 'mobx'
 
 import { KeyboardStore } from 'stores/keyboard.store'
 
-import { delay } from 'lib/async'
-
 import { DataFromPreGameForm, GamePlayStore } from './play/store'
 import { PreGameForm } from './pre-game-form'
-import { TransitionScreen } from './transition-screen'
 
 type GameScreen = 'preGameForm' | 'play'
 
@@ -28,14 +25,6 @@ export class GameStore {
   setScreen = (screen: GameScreen): void => {
     this.screen = screen
   }
-
-  //!Опенинг
-  opening = new TransitionScreen({
-    appearanceMs: 1500,
-    disappearanceMs: 1500,
-    durationMs: 3500,
-    background: '#000000',
-  })
 
   //!PreGameStore
   preGameForm = new PreGameForm()

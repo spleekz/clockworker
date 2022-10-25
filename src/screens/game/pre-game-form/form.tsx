@@ -16,7 +16,7 @@ import {
   PixelatedInput,
 } from 'components/pixelated/pixelated-components'
 
-import { useGameStore } from '../game'
+import { useGameStore } from '../screen'
 import { FieldErrorMessages } from './errors/field-error-messages'
 import { getFormErrors } from './errors/get-errors'
 

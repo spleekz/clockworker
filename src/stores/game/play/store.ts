@@ -16,7 +16,9 @@ import { Player } from './player'
 import { GameSceneController } from './scenes/controller'
 import { GameScreen } from './screen'
 import { GameSettings } from './settings/settings'
+import { SharedPlayMethods } from './shared-methods/shared-methods'
 import { TextboxController } from './textbox/controller'
+import { TransitionScreen } from './transition-screen'
 
 export type DataFromPreGameForm = Pick<PreGameForm, 'playerCharacterName' | 'marketName'>
 
@@ -48,7 +50,10 @@ export class GamePlayStore {
     this.market = new Market({ name: this.dataFromPreGameForm.marketName })
 
     //!Контроллер текстбоксов
-    this.textboxController = new TextboxController({ gameScript: this.script })
+    this.textboxController = new TextboxController({
+      gameScript: this.script,
+      sharedPlayMethods: this.sharedMethods,
+    })
 
     makeAutoObservable(this)
   }
@@ -120,27 +125,19 @@ export class GamePlayStore {
   //!Коллайдер
   collider = new Collider()
 
-  //!Загрузка игры
-  setupGame = (): void => {
-    this.setScene('market').then(() => {
-      this.createPlayerCharacter()
-      if (this.player.character) {
-        //!Игровые события
-        this.actions = new GameActions({ playerCharacter: this.player.character })
-        this.addActiveCharacter('playerCharacter')
-        this.player.character.movement.hideInTopMapBorder()
-      }
+  //!Общие методы
+  sharedMethods = new SharedPlayMethods()
     })
   }
 
-  get isGameLoaded(): boolean {
-    //Проверка, что все изображения загрузились
-    return (
-      this.charactersController.isAllActiveCharactersImagesLoaded &&
-      Boolean(this.sceneController.currentScene) &&
-      this.sceneController.isAllCurrentSceneImagesLoaded
-    )
-  }
+  //!Опенинг
+  opening = new TransitionScreen({
+    sharedPlayMethods: this.sharedMethods,
+    appearanceMs: 1500,
+    disappearanceMs: 1500,
+    durationMs: 3500,
+    background: '#000000',
+  })
 
   //!Игровые циклы
   updateActiveCharacters = (): void => {

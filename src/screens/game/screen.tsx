@@ -8,8 +8,8 @@ import { FC } from 'basic-utility-types'
 import { GameStore } from 'stores/game/store'
 import { useStore } from 'stores/root-store/context'
 
-import { PreGameFormScreen } from './pre-game-form/screen'
 import { GamePlayScreen } from './play/screen'
+import { PreGameFormScreen } from './pre-game-form/screen'
 
 const GameStoreContext = createContext<GameStore | null>(null)
 export const useGameStore = (): GameStore => {
@@ -23,13 +23,14 @@ export const useGameStore = (): GameStore => {
 export const GameScreen: FC = observer(() => {
   const { createGameStore } = useStore()
   const [gameStore] = useState(createGameStore)
+  const { playStore } = gameStore
 
   const gameTransition = useTransition(gameStore.screen, {
     from: { opacity: 0 },
     enter: { opacity: 1 },
     leave: { opacity: 0 },
     config: {
-      duration: gameStore.opening.appearanceMs,
+      duration: playStore?.opening.appearanceMs ?? 0,
     },
   })
 
@@ -46,9 +47,11 @@ export const GameScreen: FC = observer(() => {
             <PreGameFormScreen />
           </GamePageContainer>
         ) : (
-          <GamePageContainer style={styles}>
-            <GamePlayScreen />
-          </GamePageContainer>
+          gameStore.playStore && (
+            <GamePageContainer style={styles}>
+              <GamePlayScreen gamePlayStore={gameStore.playStore} />
+            </GamePageContainer>
+          )
         )
       })}
     </GameStoreContext.Provider>

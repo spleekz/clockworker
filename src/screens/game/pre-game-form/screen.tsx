@@ -11,13 +11,16 @@ import { colors } from 'lib/theme'
 import { QuitInMainMenuConfirm } from 'components/game-popups/quit-in-main-menu-confirm'
 import { PixelatedButton } from 'components/pixelated/pixelated-components'
 
+import { useGameStore } from '../screen'
 import { PreGameForm } from './form'
 import { handlePreGameFormScreenEsc } from './handle-esc'
 
 export const PreGameFormScreen: FC = observer(() => {
   const { appStore } = useStore()
+  const gameStore = useGameStore()
+  const gamePlayStore = gameStore.playStore
 
-  handlePreGameFormScreenEsc()
+  handlePreGameFormScreenEsc({ gamePlayStore })
 
   const goBack = (): void => {
     appStore.setScreen('main')

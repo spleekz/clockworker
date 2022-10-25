@@ -7,30 +7,27 @@ import { FC } from 'basic-utility-types'
 
 import { colors } from 'lib/theme'
 
-import { useGameStore } from './game'
+import { useGamePlayStore } from './play/screen'
 
-type Props = {
-  isOpened: boolean
-}
-
-export const GameOpening: FC<Props> = observer(({ isOpened }) => {
-  const gameStore = useGameStore()
+export const GameOpening: FC = observer(() => {
+  const gamePlayStore = useGamePlayStore()
+  const { opening } = gamePlayStore
 
   const containerStyles = useSpring({
     from: { opacity: 1 },
     to: { opacity: 0 },
-    delay: gameStore.opening.appearanceMs + gameStore.opening.durationMs,
-    cancel: !isOpened,
+    delay: opening.appearanceMs + opening.durationMs,
+    cancel: !opening.isOpened,
     config: {
-      duration: gameStore.opening.disappearanceMs,
+      duration: opening.disappearanceMs,
     },
   })
 
   const contentStyles = useSpring({
     from: { opacity: 0 },
     to: { opacity: 1 },
-    delay: gameStore.opening.appearanceMs + 270,
-    cancel: !isOpened,
+    delay: opening.appearanceMs + 270,
+    cancel: !opening.isOpened,
     config: {
       duration: 1700,
     },
@@ -38,8 +35,8 @@ export const GameOpening: FC<Props> = observer(({ isOpened }) => {
 
   return (
     <>
-      {isOpened && (
-        <Container background={gameStore.opening.background} style={containerStyles}>
+      {opening.isOpened && (
+        <Container background={opening.background} style={containerStyles}>
           <Content style={contentStyles}>clockworker</Content>
         </Container>
       )}
