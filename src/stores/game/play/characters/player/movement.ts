@@ -397,42 +397,48 @@ export class PlayerCharacterMovement {
   }
 
   //!Обработка клавиш движения
+  isHandleMovementKeys = true
+  setIsHandleMovementKeys = (value: boolean): void => {
+    this.isHandleMovementKeys = value
+  }
   handleMovementKeys = (keyboard: KeyboardStore): void => {
-    this.setPressedKeys(keyboard.pressedKeysArray)
+    if (this.isHandleMovementKeys) {
+      this.setPressedKeys(keyboard.pressedKeysArray)
 
-    if (this.isMovementControllerPressed) {
-      const getMovementDirection = (): ExpandedMovementDirection | null => {
-        var movementDirection: ExpandedMovementDirection | null = null
+      if (this.isMovementControllerPressed) {
+        const getMovementDirection = (): ExpandedMovementDirection | null => {
+          var movementDirection: ExpandedMovementDirection | null = null
 
-        //Убираем направления, компенсирующие друг друга (пример: вверх-вниз)
-        const filteredPressedMovementDirections = this.pressedMovementDirections.filter(
-          (pressedDirection) => {
-            return this.pressedMovementDirections.every(
-              (d) => d !== this.getReversedPrimitiveDirection(pressedDirection),
-            )
-          },
-        )
+          //Убираем направления, компенсирующие друг друга (пример: вверх-вниз)
+          const filteredPressedMovementDirections = this.pressedMovementDirections.filter(
+            (pressedDirection) => {
+              return this.pressedMovementDirections.every(
+                (d) => d !== this.getReversedPrimitiveDirection(pressedDirection),
+              )
+            },
+          )
 
-        //Если длина массива 0, значит, все направления скомпенсировали друг друга - персонаж стоит на месте
-        if (filteredPressedMovementDirections.length) {
-          movementDirection = filteredPressedMovementDirections
-            //Сортируем, чтобы названия направлений получались в едином формате
-            .sort((_, b) => (b === 'down' || b === 'up' ? 1 : -1))
-            .join('') as ExpandedMovementDirection
-        } else {
-          this.stop()
+          //Если длина массива 0, значит, все направления скомпенсировали друг друга - персонаж стоит на месте
+          if (filteredPressedMovementDirections.length) {
+            movementDirection = filteredPressedMovementDirections
+              //Сортируем, чтобы названия направлений получались в едином формате
+              .sort((_, b) => (b === 'down' || b === 'up' ? 1 : -1))
+              .join('') as ExpandedMovementDirection
+          } else {
+            this.stop()
+          }
+
+          return movementDirection
         }
 
-        return movementDirection
-      }
+        const movementDirection = getMovementDirection()
 
-      const movementDirection = getMovementDirection()
-
-      if (movementDirection) {
-        this.move({ direction: movementDirection })
+        if (movementDirection) {
+          this.move({ direction: movementDirection })
+        }
+      } else {
+        this.stop()
       }
-    } else {
-      this.stop()
     }
   }
 
@@ -460,7 +466,18 @@ export class PlayerCharacterMovement {
 
       //Если движение по прямой
       if ((startX === endX || startY === endY) && !areEquivalent(from, to)) {
-        this.setIsAutomoving(true)
+        const startAutoMoving = (): void => {
+          this.setIsAutomoving(true)
+          //Запрещаем во время автомува управлять персонажем клавишами
+          this.setIsHandleMovementKeys(false)
+        }
+        const stopAutomoving = (): void => {
+          this.stop()
+          this.setIsAutomoving(false)
+          this.setIsHandleMovementKeys(true)
+        }
+
+        startAutoMoving()
 
         //Перемещаем героя в стартовую позицию
         this.position.setXY(startX, startY)
@@ -475,11 +492,6 @@ export class PlayerCharacterMovement {
           movementDirection = 'up'
         } else if (endX < startX) {
           movementDirection = 'left'
-        }
-
-        const stopAutomoving = (): void => {
-          this.stop()
-          this.setIsAutomoving(false)
         }
 
         //Нужна, чтобы не вызывать move(), после того, как встали на конечную позицию

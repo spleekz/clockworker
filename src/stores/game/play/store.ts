@@ -179,16 +179,8 @@ export class GamePlayStore {
   }
 
   private gameInPlayLoop = (): void => {
-    //Пользователь не может управлять героем во время паузы, открытого текстбокса,
-    //автомува, и когда персонаж находится за пределами карты
     if (this.player.character) {
-      if (
-        !this.textboxController.isTextboxOpened &&
-        !this.player.character.movement.isAutomoving &&
-        this.player.character.movement.isAllowedPosition(this.player.character.position)
-      ) {
-        this.player.character.movement.handleMovementKeys(this.keyboard)
-      }
+      this.player.character.movement.handleMovementKeys(this.keyboard)
     }
   }
 
