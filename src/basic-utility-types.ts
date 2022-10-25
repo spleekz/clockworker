@@ -6,7 +6,7 @@ export type AnyArray = Array<any>
 
 export type Callback = () => void
 
-export type FC<T = AnyObject> = React.FC<PropsWithChildren<T>>
+export type FC<T = unknown> = React.FC<PropsWithChildren<T>>
 
 export type NotUndefinded<T> = T extends undefined ? never : T
 
