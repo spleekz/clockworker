@@ -12,7 +12,7 @@ const isWindow = (element: unknown): element is Window => {
   return element === window
 }
 
-export const useKey = ({ element = window, key, fn }: UseKeyConfig): void => {
+export const useKey = ({ element = window, key, fn }: UseKeyConfig, deps?: Array<any>): void => {
   useEffect(() => {
     const onKeyDown = (e: Event): void => {
       const { code } = e as KeyboardEvent
@@ -29,5 +29,5 @@ export const useKey = ({ element = window, key, fn }: UseKeyConfig): void => {
     }
 
     return () => element?.removeEventListener('keydown', onKeyDown)
-  }, [element, fn])
+  }, [element, fn, ...(deps ?? [])])
 }
