@@ -6,7 +6,7 @@ import { ImageContainer } from 'stores/entities/image-container'
 import { Sprite } from 'stores/entities/sprite'
 import { SpriteSheet } from 'stores/entities/sprite-sheet'
 
-import { CharactersList } from '../characters/controller'
+import { CharacterList } from '../characters/controller'
 import { GameScreen } from '../screen'
 import { SceneCharactersManipulator } from './manipulator'
 
@@ -24,7 +24,7 @@ export type GameMap = {
 
 export class GameScene<SceneName extends string> {
   private screen: GameScreen
-  private characterList: CharactersList
+  private characterList: CharacterList
 
   name: SceneName
   private mapConfig: GameMapConfig
@@ -39,7 +39,7 @@ export class GameScene<SceneName extends string> {
     name: SceneName
     map: GameMapConfig
     screen: GameScreen
-    characterList: CharactersList
+    characterList: CharacterList
   }) {
     this.screen = config.screen
     this.characterList = config.characterList

@@ -16,7 +16,7 @@ type ControlsSettings = {
 }
 
 //Изменяемые настройки (UI)
-export class GameSettingsList {
+export class GameSettingList {
   constructor() {
     makeAutoObservable(this)
   }

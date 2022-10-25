@@ -1,7 +1,7 @@
 import { CurrentGameSettings } from './current-settings'
-import { GameSettingsList } from './settings-list'
+import { GameSettingList } from './setting-list'
 
 export class GameSettings {
-  list = new GameSettingsList()
-  current = new CurrentGameSettings({ gameSettingsList: this.list })
+  list = new GameSettingList()
+  current = new CurrentGameSettings({ gameSettingList: this.list })
 }

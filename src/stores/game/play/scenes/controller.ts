@@ -2,17 +2,17 @@ import { makeAutoObservable } from 'mobx'
 
 import { resolvedPromise } from 'lib/async'
 
-import { CharactersList } from '../characters/controller'
+import { CharacterList } from '../characters/controller'
 import { GameScreen } from '../screen'
 import { createMainGameScene } from './list/market'
 
 type GameSceneControllerConfig = {
   screen: GameScreen
-  characterList: CharactersList
+  characterList: CharacterList
 }
 export class GameSceneController {
   private screen: GameScreen
-  private characterList: CharactersList
+  private characterList: CharacterList
 
   private fnsForCreatingUsedScenes = [createMainGameScene] as const
 

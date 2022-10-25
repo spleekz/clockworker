@@ -6,7 +6,7 @@ type This = InstanceType<typeof CharactersController>
 
 export type CharacterName = keyof This['refList']
 
-export type CharactersList = { [P in CharacterName]: InstanceType<This['refList'][P]> }
+export type CharacterList = { [P in CharacterName]: InstanceType<This['refList'][P]> }
 
 export class CharactersController {
   constructor() {
@@ -17,7 +17,7 @@ export class CharactersController {
   refList = { playerCharacter: PlayerCharacter }
 
   //Список созданных персонажей
-  list: CharactersList = {} as CharactersList
+  list: CharacterList = {} as CharacterList
 
   createCharacter = async <
     T extends CharacterName,

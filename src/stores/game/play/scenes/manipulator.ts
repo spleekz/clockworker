@@ -1,7 +1,7 @@
 import { OptionalProperties } from 'basic-utility-types'
 import { Size, XY } from 'project-utility-types'
 
-import { CharacterName, CharactersList } from '../characters/controller'
+import { CharacterName, CharacterList } from '../characters/controller'
 
 type PositionOnScene = { x: 'left' | 'right' | 'center'; y: 'top' | 'down' | 'center' }
 
@@ -14,11 +14,11 @@ const isPositionOnScene = (
 
 type SceneCharactersManipulatorConfig = {
   mapSize: Size
-  characterList: CharactersList
+  characterList: CharacterList
 }
 export class SceneCharactersManipulator {
   private mapSize: Size
-  private characterList: CharactersList
+  private characterList: CharacterList
 
   constructor(config: SceneCharactersManipulatorConfig) {
     this.mapSize = config.mapSize

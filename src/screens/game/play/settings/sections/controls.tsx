@@ -11,7 +11,7 @@ import { useGamePlayStore } from 'screens/game/play/screen'
 
 export const ControlsSettingsSection: FC = observer(() => {
   const { settings } = useGamePlayStore()
-  const settingsList = settings.list
+  const settingList = settings.list
 
   return (
     <Container>
@@ -19,15 +19,15 @@ export const ControlsSettingsSection: FC = observer(() => {
       <Setting>
         <SettingTitle>Движение :</SettingTitle>
         <MovementControlsVariants>
-          {settingsList.controls.movement.controllers.map((controllersVariant) => {
+          {settingList.controls.movement.controllers.map((controllersVariant) => {
             return (
               <MovementControlsVariant key={controllersVariant.id}>
                 <MovementControlsVariantLabel>{controllersVariant.label}</MovementControlsVariantLabel>
                 <PixelatedCheckbox
                   checked={controllersVariant.isSelected}
                   onChange={() =>
-                    settingsList.selectSettingVariant(
-                      settingsList.controls.movement.controllers,
+                    settingList.selectSettingVariant(
+                      settingList.controls.movement.controllers,
                       controllersVariant.id,
                     )
                   }

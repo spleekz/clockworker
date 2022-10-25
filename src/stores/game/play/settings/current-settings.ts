@@ -1,4 +1,4 @@
-import { GameSettingsList } from './settings-list'
+import { GameSettingList } from './setting-list'
 
 export type MovementControllersKeys = {
   down: string
@@ -16,20 +16,20 @@ export type MovementKeys = {
 type MovementSettings = { keys: MovementKeys }
 
 type CurrentGameSettingsConfig = {
-  gameSettingsList: GameSettingsList
+  gameSettingList: GameSettingList
 }
 
 //Все настройки игры; объединение изменяемых и внутренних настроек
 export class CurrentGameSettings {
-  private gameSettingsList: GameSettingsList
+  private gameSettingList: GameSettingList
 
   constructor(config: CurrentGameSettingsConfig) {
-    this.gameSettingsList = config.gameSettingsList
+    this.gameSettingList = config.gameSettingList
   }
 
   //!Управление
   get movement(): MovementSettings {
-    const controllers = this.gameSettingsList.controls.movement.controllers.reduce(
+    const controllers = this.gameSettingList.controls.movement.controllers.reduce(
       (acc, controllersVariant) => {
         if (controllersVariant.isSelected) {
           acc = controllersVariant.value
