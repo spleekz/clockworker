@@ -5,6 +5,7 @@ import { areEquivalent } from 'lib/are-equivalent'
 import { XY, getDistanceBetweenPoints } from 'lib/coords'
 
 import { Body } from './body'
+import { GameScreen } from './screen'
 
 type BodyWithHitbox = Body & { hitbox: Hitbox }
 
@@ -13,7 +14,16 @@ type IntersectionPointWithDeltaLineLength = IntersectionPoint & { deltaLineLengt
 
 type SetBodyToObstacleFn = (body: BodyWithHitbox, obstacle: Hitbox) => void
 
+type ColliderConfig = {
+  screen: GameScreen
+}
 export class Collider {
+  private screen: GameScreen
+
+  constructor(config: ColliderConfig) {
+    this.screen = config.screen
+  }
+
   private bodies: Array<BodyWithHitbox> = []
   addBody = (body: Body): void => {
     const bodyWithHitbox: BodyWithHitbox = { ...body, hitbox: this.getBodyHitbox(body) }
@@ -580,7 +590,31 @@ export class Collider {
     })
   }
 
+  //?Пока что не разрешаем выходить персонажам за ЭКРАН
+  private keepBodiesInMap = (): void => {
+    this.bodies.forEach((body) => {
+      const bodyMinX = 0
+      const bodyMinY = 0
+      const bodyMaxX = this.screen.width - body.size.width
+      const bodyMaxY = this.screen.height - body.size.height
+
+      if (body.position.x < bodyMinX) {
+        body.position.setX(bodyMinX)
+      }
+      if (body.position.y < bodyMinY) {
+        body.position.setY(bodyMinY)
+      }
+      if (body.position.x > bodyMaxX) {
+        body.position.setX(bodyMaxX)
+      }
+      if (body.position.y > bodyMaxY) {
+        body.position.setY(bodyMaxY)
+      }
+    })
+  }
+
   update = (): void => {
     this.handleCollision()
+    this.keepBodiesInMap()
   }
 }

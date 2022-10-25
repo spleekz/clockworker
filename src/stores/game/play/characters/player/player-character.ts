@@ -52,12 +52,8 @@ export class PlayerCharacter extends Character<{ spriteSheet: typeof playerChara
     this.movement = new PlayerCharacterMovement({
       position: this.position,
       settings: this.settings,
-      mapSize: this.mapSize,
-      sprite: this.currentSprite,
       animation: this.animation,
     })
-
-    this.imageContainer.loadAll()
 
     this.size = {
       width: this.currentSprite.width * this.currentSprite.scale,

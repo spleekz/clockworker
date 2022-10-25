@@ -124,7 +124,7 @@ export class GamePlayStore {
   menuController = new GameMenuController()
 
   //!Коллайдер
-  collider = new Collider()
+  collider = new Collider({ screen: this.screen })
 
   //!Общие методы
   sharedMethods = new SharedPlayMethods()

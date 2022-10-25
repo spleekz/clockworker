@@ -1,8 +1,7 @@
 import { makeAutoObservable } from 'mobx'
 
-import { ExpandedMovementDirection, PrimitiveMovementDirection, Size } from 'game-utility-types'
+import { ExpandedMovementDirection, PrimitiveMovementDirection } from 'game-utility-types'
 
-import { Sprite } from 'stores/entities/sprite'
 import { KeyboardStore } from 'stores/keyboard.store'
 
 import { areEquivalent } from 'lib/are-equivalent'
@@ -42,30 +41,24 @@ type MovementRegulator = {
 }
 type MovementRegulators = Record<MovementRegulatorName, MovementRegulator>
 
-type MoveFunctionConfig = { direction: ExpandedMovementDirection }
+type MoveConfig = { direction: ExpandedMovementDirection }
 
 type AutomoveConfig = { from: XY; to: XY }
 
 type PlayerCharacterMovementConfig = {
   position: Position
-  mapSize: Size
   settings: CurrentGameSettings
-  sprite: Sprite
   animation: CharacterAnimation
 }
 
 export class PlayerCharacterMovement {
   private position: Position
-  private mapSize: Size
   private settings: CurrentGameSettings
-  private sprite: Sprite
   private animation: CharacterAnimation
 
   constructor(config: PlayerCharacterMovementConfig) {
     this.position = config.position
-    this.mapSize = config.mapSize
     this.settings = config.settings
-    this.sprite = config.sprite
     this.animation = config.animation
 
     makeAutoObservable(this)
@@ -81,101 +74,24 @@ export class PlayerCharacterMovement {
 
     const { x, y } = this.position
 
-    //Если герой упирается в границы карты
-    const isRestedInDownMapBorder = y === this.maxYCoordinate
-    const isRestedInRightMapBorder = x === this.maxXCoordinate
-    const isRestedInTopMapBorder = y === 0
-    const isRestedInLeftMapBorder = x === 0
-
     if (this.movementDirection === 'down') {
       return { x, y: y + stepSize }
     } else if (this.movementDirection === 'downright') {
-      return {
-        x: isRestedInRightMapBorder ? x : x + diagonalStepSize,
-        y: isRestedInDownMapBorder ? y : y + diagonalStepSize,
-      }
+      return { x: x + diagonalStepSize, y: y + diagonalStepSize }
     } else if (this.movementDirection === 'right') {
       return { x: x + stepSize, y }
     } else if (this.movementDirection === 'upright') {
-      return {
-        x: isRestedInRightMapBorder ? x : x + diagonalStepSize,
-        y: isRestedInTopMapBorder ? y : y - diagonalStepSize,
-      }
+      return { x: x + diagonalStepSize, y: y - diagonalStepSize }
     } else if (this.movementDirection === 'up') {
       return { x, y: y - stepSize }
     } else if (this.movementDirection === 'upleft') {
-      return {
-        x: isRestedInLeftMapBorder ? x : x - diagonalStepSize,
-        y: isRestedInTopMapBorder ? y : y - diagonalStepSize,
-      }
+      return { x: x - diagonalStepSize, y: y - diagonalStepSize }
     } else if (this.movementDirection === 'left') {
       return { x: x - stepSize, y }
     } else {
       //downleft
-      return {
-        x: isRestedInLeftMapBorder ? x : x - diagonalStepSize,
-        y: isRestedInDownMapBorder ? y : y + diagonalStepSize,
-      }
+      return { x: x - diagonalStepSize, y: y + diagonalStepSize }
     }
-  }
-
-  //!Допустимая позиция
-  //С учётом размера спрайта
-  isOutOfDownMapBorder = (position: XY): boolean => {
-    return position.y > this.maxYCoordinate
-  }
-  isOutOfRightMapBorder = (position: XY): boolean => {
-    return position.x > this.maxXCoordinate
-  }
-  isOutOfTopMapBorder = (position: XY): boolean => {
-    return position.y < 0
-  }
-  isOutOfLeftMapBorder = (position: XY): boolean => {
-    return position.x < 0
-  }
-
-  isAllowedPosition = (position: XY): boolean => {
-    return !(
-      this.isOutOfDownMapBorder(position) ||
-      this.isOutOfRightMapBorder(position) ||
-      this.isOutOfTopMapBorder(position) ||
-      this.isOutOfLeftMapBorder(position)
-    )
-  }
-
-  //!Установка позиции к краям карты
-  get maxXCoordinate(): number {
-    return this.mapSize.width - this.sprite.scaledWidth
-  }
-  get maxYCoordinate(): number {
-    return this.mapSize.height - this.sprite.scaledHeight
-  }
-
-  setPositionToDownMapBorder = (x?: number): void => {
-    this.position.setXY(x ?? this.position.x, this.maxYCoordinate)
-  }
-  setPositionToRightMapBorder = (y?: number): void => {
-    this.position.setXY(this.maxXCoordinate, y ?? this.position.y)
-  }
-  setPositionToTopMapBorder = (x?: number): void => {
-    this.position.setXY(x ?? this.position.x, 0)
-  }
-  setPositionToLeftMapBorder = (y?: number): void => {
-    this.position.setXY(0, y ?? this.position.y)
-  }
-
-  //!Прятание героя за границы
-  hideInDownMapBorder = (x?: number): void => {
-    this.position.setXY(x ?? this.position.x, this.mapSize.height)
-  }
-  hideInRightMapBorder = (y?: number): void => {
-    this.position.setXY(this.mapSize.width, y ?? this.position.y)
-  }
-  hideInTopMapBorder = (x?: number): void => {
-    this.position.setXY(x ?? this.position.x, -this.sprite.scaledHeight)
-  }
-  hideInLeftMapBorder = (y?: number): void => {
-    this.position.setXY(-this.sprite.scaledWidth, y ?? this.position.y)
   }
 
   //!Направление движения
@@ -345,41 +261,21 @@ export class PlayerCharacterMovement {
 
   //!Движение
   //Отвечает за анимацию движения и за перемещение персонажа в валидную позицию
-  move = ({ direction }: MoveFunctionConfig): void => {
+  move = ({ direction }: MoveConfig): void => {
     this.setMovementDirection(direction)
 
     if (this.isSprintKeyPressed) {
       this.setCurrentMovementRegulator('sprint')
+    } else {
+      this.setCurrentMovementRegulator(null)
     }
 
     if (this.currentMovementConfig) {
-      const { framesPerStep } = this.currentMovementConfig
-
       const positionOnNextStep = this.getPositionOnNextStep()
-
-      if (!this.isAutomoving) {
-        this.setCurrentMovementRegulator(this.isSprintKeyPressed ? 'sprint' : null)
-        //Проверка, если следующим шагом персонаж выходит за границы
-        if (!this.isAllowedPosition(positionOnNextStep)) {
-          if (this.isOutOfDownMapBorder(positionOnNextStep)) {
-            this.setPositionToDownMapBorder()
-          } else if (this.isOutOfRightMapBorder(positionOnNextStep)) {
-            this.setPositionToRightMapBorder()
-          } else if (this.isOutOfTopMapBorder(positionOnNextStep)) {
-            this.setPositionToTopMapBorder()
-          } else if (this.isOutOfLeftMapBorder(positionOnNextStep)) {
-            this.setPositionToLeftMapBorder()
-          }
-        } else {
-          //Персонаж идёт дальше, только если не выходит за пределы карты
-          this.position.setXY(positionOnNextStep.x, positionOnNextStep.y)
-        }
-      } else {
-        //Автомувнутый персонаж может выходить за пределы карты
-        this.position.setXY(positionOnNextStep.x, positionOnNextStep.y)
-      }
+      this.position.setXY(positionOnNextStep.x, positionOnNextStep.y)
 
       //Обновление счётчика кадров и анимации ходьбы
+      const { framesPerStep } = this.currentMovementConfig
       this.animation.increaseMovementFramesCount()
       if (this.animation.movementFramesCount >= framesPerStep) {
         this.animation.setMovementFramesCount(0)
