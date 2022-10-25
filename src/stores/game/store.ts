@@ -32,7 +32,7 @@ export class GameStore {
   //!PlayStore
   playStore: GamePlayStore | null = null
 
-  createGamePlayStore = (): GamePlayStore => {
+  createGamePlayStore = (): void => {
     const dataFromPreGameForm: DataFromPreGameForm = {
       playerCharacterName: this.preGameForm.playerCharacterName,
       marketName: this.preGameForm.marketName,
@@ -44,17 +44,13 @@ export class GameStore {
     })
 
     this.playStore = gamePlayStore
-
-    return gamePlayStore
   }
 
   startGame = async (): Promise<void> => {
+    this.createGamePlayStore()
     if (this.playStore) {
-      this.playStore.setupGame()
-      await this.opening.open()
-      await delay(this.opening.durationMs)
-      await this.opening.close()
       this.playStore.run()
+      this.setScreen('play')
     }
   }
 }

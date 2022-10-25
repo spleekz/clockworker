@@ -6,7 +6,7 @@ type This = InstanceType<typeof CharactersController>
 
 export type CharacterName = keyof This['refList']
 
-type CharactersList = { [P in CharacterName]: InstanceType<This['refList'][P]> }
+export type CharactersList = { [P in CharacterName]: InstanceType<This['refList'][P]> }
 
 export class CharactersController {
   constructor() {
@@ -19,15 +19,16 @@ export class CharactersController {
   //Список созданных персонажей
   list: CharactersList = {} as CharactersList
 
-  createCharacter = <
+  createCharacter = async <
     T extends CharacterName,
     CharacterConfig extends ConstructorParameters<This['refList'][T]>[number],
   >(
     name: T,
     ...args: CharacterConfig extends never ? [undefined] : [CharacterConfig]
-  ): void => {
+  ): Promise<void> => {
     const characterConfig = args[0]
     this.list[name] = new this.refList[name](characterConfig)
+    await this.list[name].imageContainer.loadAll()
   }
 
   //Список персонажей, активных в текущий момент

@@ -60,7 +60,7 @@ export class GamePlayStore {
 
   //!Игрок
   player: Player = new Player()
-  createPlayerCharacter = (): void => {
+  createPlayerCharacter = (): Promise<void> => {
     //Временное решение
     const getMapSizeParameterValue = (parameterName: 'width' | 'height', value: number): number => {
       const screenParameterValue = this.screen[parameterName]
@@ -77,7 +77,7 @@ export class GamePlayStore {
       },
     }
 
-    this.player.createCharacter({
+    return this.player.createCharacter({
       charactersController: this.charactersController,
       characterConfig: playerCharacterConfig,
     })
@@ -127,6 +127,28 @@ export class GamePlayStore {
 
   //!Общие методы
   sharedMethods = new SharedPlayMethods()
+
+  //!Подготовка игры
+  isGamePrepared = false
+  setIsGamePrepared = (value: boolean): void => {
+    this.isGamePrepared = value
+  }
+  prepareGame = (): Promise<void> => {
+    return this.setScene('market').then(() => {
+      return this.createPlayerCharacter().then(() => {
+        if (this.player.character) {
+          this.sharedMethods.playerCharacter.setPlayerCharacter(this.player.character)
+          this.addActiveCharacter('playerCharacter')
+          this.sceneController.currentScene.charactersManipulator.positionCharacter(
+            'playerCharacter',
+            {
+              x: 'center',
+              y: 'center',
+            },
+          )
+          this.setIsGamePrepared(true)
+        }
+      })
     })
   }
 
@@ -196,15 +218,11 @@ export class GamePlayStore {
 
   //!Запуск игры
   run = (): void => {
-    this.mainLoop()
-    this.textboxController.setCurrentTextbox({
-      name: 'welcome',
-      onClose: () =>
-        this.actions.playerCharacterEntering().then(() => {
-          if (this.player.character) {
-            this.player.character.movement.setCurrentMovementType('walk')
-          }
-        }),
+    this.prepareGame().then(() => {
+      this.mainLoop()
+      this.opening.run().then(() => {
+        this.textboxController.setCurrentTextbox({ name: 'welcome' })
+      })
     })
   }
 }

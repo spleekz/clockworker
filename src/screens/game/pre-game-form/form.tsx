@@ -46,7 +46,7 @@ export const PreGameForm: FC = observer(() => {
   const startGame: SubmitHandler<PreGameFormFields> = ({ playerCharacterName, marketName }) => {
     preGameForm.setPlayerCharacterName(playerCharacterName)
     preGameForm.setMarketName(marketName)
-    gameStore.setScreen('play')
+    gameStore.startGame()
   }
 
   return (
