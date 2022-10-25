@@ -8,14 +8,16 @@ import { SpriteSheet } from 'stores/entities/sprite-sheet'
 
 import { XY } from 'lib/coords'
 
+import { CharactersList } from '../characters/controller'
 import { GameScreen } from '../screen'
+import { SceneCharactersManipulator } from './manipulator'
 
 type GameMapConfig = {
   tilesetSrc: string
   scheme: TiledMap
 }
 
-type GameMap = {
+export type GameMap = {
   size: Size
   tileset: SpriteSheet
   scheme: TiledMap
@@ -24,6 +26,7 @@ type GameMap = {
 
 export class GameScene<SceneName extends string> {
   private screen: GameScreen
+  private characterList: CharactersList
 
   name: SceneName
   private mapConfig: GameMapConfig
@@ -32,8 +35,16 @@ export class GameScene<SceneName extends string> {
 
   imageContainer: ImageContainer<Record<'tileset', string>>
 
-  constructor(config: { name: SceneName; map: GameMapConfig; screen: GameScreen }) {
+  charactersManipulator: SceneCharactersManipulator
+
+  constructor(config: {
+    name: SceneName
+    map: GameMapConfig
+    screen: GameScreen
+    characterList: CharactersList
+  }) {
     this.screen = config.screen
+    this.characterList = config.characterList
     this.name = config.name
     this.mapConfig = config.map
     this.mapSize = {
@@ -41,6 +52,11 @@ export class GameScene<SceneName extends string> {
       height: this.mapConfig.scheme.height * this.mapConfig.scheme.tileheight,
     }
     this.imageContainer = new ImageContainer({ tileset: this.mapConfig.tilesetSrc })
+
+    this.charactersManipulator = new SceneCharactersManipulator({
+      mapSize: this.mapSize,
+      characterList: this.characterList,
+    })
   }
 
   getMapHitboxes = (): Array<HitboxWithId> => {

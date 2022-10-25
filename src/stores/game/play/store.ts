@@ -8,7 +8,6 @@ import { PreGameForm } from '../pre-game-form'
 import { CharacterName, CharactersController } from './characters/controller'
 import { PlayerCharacterConfig } from './characters/player/player-character'
 import { Collider } from './collider'
-import { GameActions } from './game-actions'
 import { Market } from './market'
 import { GameMenuController } from './menu-controller'
 import { GamePauseController } from './pause-controller'
@@ -33,7 +32,6 @@ export class GamePlayStore {
 
   script: GameScript
   market: Market
-  actions: GameActions
   textboxController: TextboxController
 
   constructor(config: GamePlayStoreConfig) {
@@ -103,7 +101,10 @@ export class GamePlayStore {
   screen = new GameScreen({ width: screen.width, height: screen.height })
 
   //!Контроллер сцен
-  sceneController = new GameSceneController({ screen: this.screen })
+  sceneController = new GameSceneController({
+    screen: this.screen,
+    characterList: this.charactersController.list,
+  })
   setScene = (
     sceneName: ReturnType<
       InstanceType<typeof GameSceneController>['fnsForCreatingUsedScenes'][number]

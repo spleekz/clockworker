@@ -16,3 +16,5 @@ export type RequiredBy<T, K extends keyof T> = Omit<T, K> &
   }>
 
 export type NonNullableProperties<T> = { [P in keyof T]: NonNullable<T[P]> }
+
+export type OptionalProperties<T> = { [P in keyof T]?: T[P] }

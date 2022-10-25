@@ -2,11 +2,17 @@ import { makeAutoObservable } from 'mobx'
 
 import { resolvedPromise } from 'lib/async'
 
+import { CharactersList } from '../characters/controller'
 import { GameScreen } from '../screen'
 import { createMainGameScene } from './list/market'
 
+type GameSceneControllerConfig = {
+  screen: GameScreen
+  characterList: CharactersList
+}
 export class GameSceneController {
   private screen: GameScreen
+  private characterList: CharactersList
 
   private fnsForCreatingUsedScenes = [createMainGameScene] as const
 
@@ -15,11 +21,11 @@ export class GameSceneController {
     ReturnType<InstanceType<typeof GameSceneController>['fnsForCreatingUsedScenes'][number]>
   >
 
-  constructor(config: { screen: GameScreen }) {
+  constructor(config: GameSceneControllerConfig) {
     this.screen = config.screen
 
     this.list = this.fnsForCreatingUsedScenes.reduce((acc, createScene) => {
-      const scene = createScene(this.screen)
+      const scene = createScene({ screen: this.screen, characterList: config.characterList })
       acc[scene.name] = scene
       return acc
     }, {} as Record<ReturnType<InstanceType<typeof GameSceneController>['fnsForCreatingUsedScenes'][number]>['name'], ReturnType<InstanceType<typeof GameSceneController>['fnsForCreatingUsedScenes'][number]>>)
