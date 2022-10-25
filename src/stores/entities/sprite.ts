@@ -1,4 +1,4 @@
-import { Ctx, XY } from 'game-utility-types'
+import { Ctx, XY } from 'project-utility-types'
 
 import { drawImage } from 'lib/draw-image'
 

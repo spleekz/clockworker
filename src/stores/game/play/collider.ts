@@ -1,5 +1,5 @@
-import { ExpandedMovementDirection, Hitbox, HitboxWithId, Side, XY } from 'game-utility-types'
 import { checkIntersection } from 'line-intersect'
+import { ExpandedMovementDirection, Hitbox, HitboxWithId, Side, XY } from 'project-utility-types'
 
 import { areEquivalent } from 'lib/are-equivalent'
 import { getDistanceBetweenPoints } from 'lib/coords'

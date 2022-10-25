@@ -1,5 +1,5 @@
-import { Hitbox, HitboxWithId, Size, XY } from 'game-utility-types'
 import { nanoid } from 'nanoid'
+import { Hitbox, HitboxWithId, Size, XY } from 'project-utility-types'
 import { TiledMap } from 'tiled-types'
 
 import { ImageContainer } from 'stores/entities/image-container'

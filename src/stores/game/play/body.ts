@@ -1,5 +1,5 @@
-import { Size } from 'game-utility-types'
 import { nanoid } from 'nanoid'
+import { Size } from 'project-utility-types'
 
 import { Position } from 'stores/entities/position'
 

@@ -1,5 +1,5 @@
 import { OptionalProperties } from 'basic-utility-types'
-import { Size, XY } from 'game-utility-types'
+import { Size, XY } from 'project-utility-types'
 
 import { CharacterName, CharactersList } from '../characters/controller'
 

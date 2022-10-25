@@ -1,4 +1,4 @@
-import { Canvas, Ctx, XY } from 'game-utility-types'
+import { Canvas, Ctx, XY } from 'project-utility-types'
 
 import { Sprite } from 'stores/entities/sprite'
 

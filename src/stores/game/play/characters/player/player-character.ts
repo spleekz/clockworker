@@ -1,4 +1,4 @@
-import { Size } from 'game-utility-types'
+import { Size } from 'project-utility-types'
 
 import playerCharacterSpriteSheetSrc from 'content/sprites/characters/Player.png'
 
