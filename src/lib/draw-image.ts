@@ -1,4 +1,4 @@
-import { XY } from './coords'
+import { XY } from 'game-utility-types'
 
 export type DrawImageConfig = {
   width: number

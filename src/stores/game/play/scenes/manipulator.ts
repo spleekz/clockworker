@@ -1,7 +1,5 @@
 import { OptionalProperties } from 'basic-utility-types'
-import { Size } from 'game-utility-types'
-
-import { XY } from 'lib/coords'
+import { Size, XY } from 'game-utility-types'
 
 import { CharacterName, CharactersList } from '../characters/controller'
 

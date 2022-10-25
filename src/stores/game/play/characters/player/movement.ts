@@ -1,12 +1,12 @@
 import { makeAutoObservable } from 'mobx'
 
-import { ExpandedMovementDirection, PrimitiveMovementDirection } from 'game-utility-types'
+import { ExpandedMovementDirection, PrimitiveMovementDirection, XY } from 'game-utility-types'
 
 import { KeyboardStore } from 'stores/keyboard.store'
 
 import { areEquivalent } from 'lib/are-equivalent'
 import { last } from 'lib/arrays'
-import { XY } from 'lib/coords'
+
 
 import { Position } from '../../../../entities/position'
 import {

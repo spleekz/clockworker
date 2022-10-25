@@ -1,8 +1,6 @@
-import { Canvas, Ctx } from 'game-utility-types'
+import { Canvas, Ctx, XY } from 'game-utility-types'
 
 import { Sprite } from 'stores/entities/sprite'
-
-import { XY } from 'lib/coords'
 
 type GameScreenConfig = {
   width: number

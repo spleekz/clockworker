@@ -1,6 +1,5 @@
-import { Ctx } from 'game-utility-types'
+import { Ctx, XY } from 'game-utility-types'
 
-import { XY } from 'lib/coords'
 import { drawImage } from 'lib/draw-image'
 
 type SpriteConfig = {

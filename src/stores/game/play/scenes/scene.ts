@@ -1,12 +1,10 @@
-import { Hitbox, HitboxWithId, Size } from 'game-utility-types'
+import { Hitbox, HitboxWithId, Size, XY } from 'game-utility-types'
 import { nanoid } from 'nanoid'
 import { TiledMap } from 'tiled-types'
 
 import { ImageContainer } from 'stores/entities/image-container'
 import { Sprite } from 'stores/entities/sprite'
 import { SpriteSheet } from 'stores/entities/sprite-sheet'
-
-import { XY } from 'lib/coords'
 
 import { CharactersList } from '../characters/controller'
 import { GameScreen } from '../screen'
