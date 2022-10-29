@@ -20,3 +20,5 @@ export type NonNullableProperties<T> = { [P in keyof T]: NonNullable<T[P]> }
 export type Merge<A, B> = A | B extends AnyObject
   ? Omit<A, keyof B> & Omit<B, keyof A> & { [K in keyof (A | B)]: Merge<A[K], B[K]> }
   : B
+
+export type DeepPartial<T> = T extends AnyObject ? { [K in keyof T]?: DeepPartial<T[K]> } : T
