@@ -1,14 +1,11 @@
-import { OptionalProperties } from 'basic-utility-types'
 import { Size, XY } from 'project-utility-types'
 
-import { CharacterName, CharacterList } from '../characters/controller'
+import { CharacterList, CharacterName } from '../characters/controller'
 
 type PositionOnScene = { x: 'left' | 'right' | 'center'; y: 'top' | 'down' | 'center' }
 
-type CharacterPositionOnMap = OptionalProperties<XY> | OptionalProperties<PositionOnScene>
-const isPositionOnScene = (
-  position: CharacterPositionOnMap,
-): position is OptionalProperties<PositionOnScene> => {
+type CharacterPositionOnMap = Partial<XY> | Partial<PositionOnScene>
+const isPositionOnScene = (position: CharacterPositionOnMap): position is Partial<PositionOnScene> => {
   return typeof position.x === 'string' || typeof position.y === 'string'
 }
 
