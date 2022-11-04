@@ -3,20 +3,20 @@ import { Size } from 'project-utility-types'
 import playerCharacterSpriteSheetSrc from 'content/sprites/characters/Player.png'
 
 import { GameScreen } from '../../screen'
-import { CurrentGameSettings } from '../../settings/current-settings'
+import { GameSettings } from '../../settings/settings'
 import { Character } from '../character'
 import { PlayerCharacterMovement } from './movement'
 
 export type PlayerCharacterConfig = {
   name: string
-  settings: CurrentGameSettings
+  settings: GameSettings
   screen: GameScreen
   mapSize: Size
 }
 
 export class PlayerCharacter extends Character<{ spriteSheet: typeof playerCharacterSpriteSheetSrc }> {
   name: string
-  private settings: CurrentGameSettings
+  private settings: GameSettings
   private mapSize: Size
 
   movement: PlayerCharacterMovement

@@ -67,7 +67,7 @@ export class GamePlayStore {
 
     const playerCharacterConfig: PlayerCharacterConfig = {
       name: this.dataFromPreGameForm.playerCharacterName,
-      settings: this.settings.current,
+      settings: this.settings,
       screen: this.screen,
       mapSize: {
         width: getMapSizeParameterValue('width', this.sceneController.currentScene.mapSize.width),

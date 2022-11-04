@@ -2,18 +2,18 @@ import { makeAutoObservable } from 'mobx'
 
 import { ExpandedMovementDirection, PrimitiveMovementDirection, XY } from 'project-utility-types'
 
+import { Position } from 'stores/entities/position'
 import { KeyboardStore } from 'stores/keyboard.store'
 
 import { areEquivalent } from 'lib/are-equivalent'
 import { last } from 'lib/arrays'
 
-import { Position } from '../../../../entities/position'
 import {
-  CurrentGameSettings,
+  GameSettings,
+  GameSettingsMovementControls,
   MovementControllersKeys,
-  MovementKeys,
   MovementRegulatorsKeys,
-} from '../../settings/current-settings'
+} from '../../settings/settings'
 import { CharacterAnimation, ViewDirections } from '../animation'
 
 type MovementConfig = {
@@ -46,13 +46,13 @@ type AutomoveConfig = { from: XY; to: XY }
 
 type PlayerCharacterMovementConfig = {
   position: Position
-  settings: CurrentGameSettings
+  settings: GameSettings
   animation: CharacterAnimation
 }
 
 export class PlayerCharacterMovement {
   private position: Position
-  private settings: CurrentGameSettings
+  private settings: GameSettings
   private animation: CharacterAnimation
 
   constructor(config: PlayerCharacterMovementConfig) {
@@ -195,13 +195,13 @@ export class PlayerCharacterMovement {
     this.pressedKeys = keys
   }
 
-  get movementKeys(): MovementKeys {
-    return this.settings.movement.keys
+  get movementControls(): GameSettingsMovementControls {
+    return this.settings.current.controls.movement
   }
 
   //!Контроллеры
   get movementControllersKeys(): MovementControllersKeys {
-    return this.movementKeys.controllers
+    return this.movementControls.controllers.value
   }
   isMovementControllerKey = (key: string): boolean => {
     return Object.values(this.movementControllersKeys).some((controller) => key === controller)
@@ -240,7 +240,7 @@ export class PlayerCharacterMovement {
 
   //!Регуляторы
   get movementRegulatorsKeys(): MovementRegulatorsKeys {
-    return this.movementKeys.regulators
+    return this.movementControls.regulators.value
   }
   isMovementRegulatorKey = (key: string): boolean => {
     return Object.values(this.movementRegulatorsKeys).some((regulator) => key === regulator)
