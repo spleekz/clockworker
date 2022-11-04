@@ -8,7 +8,7 @@ export const merge = <T1 extends AnyObject, T2 extends AnyObject>(
   object1: T1,
   object2: T2,
 ): Merge<T1, T2> => {
-  const merged = object1
+  const merged = { ...object1 }
 
   const mergeObjects = (target: AnyObject, source: AnyObject): void => {
     Object.keys(source).forEach((key) => {
