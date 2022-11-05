@@ -59,20 +59,10 @@ export class GamePlayStore {
   //!Игрок
   player: Player = new Player()
   createPlayerCharacter = (): Promise<void> => {
-    //Временное решение
-    const getMapSizeParameterValue = (parameterName: 'width' | 'height', value: number): number => {
-      const screenParameterValue = this.screen[parameterName]
-      return value > screenParameterValue ? screenParameterValue : value
-    }
-
     const playerCharacterConfig: PlayerCharacterConfig = {
       name: this.dataFromPreGameForm.playerCharacterName,
       settings: this.settings,
       screen: this.screen,
-      mapSize: {
-        width: getMapSizeParameterValue('width', this.sceneController.currentScene.mapSize.width),
-        height: getMapSizeParameterValue('height', this.sceneController.currentScene.mapSize.height),
-      },
     }
 
     return this.player.createCharacter({
