@@ -42,7 +42,7 @@ type MovementRegulators = Record<MovementRegulatorName, MovementRegulator>
 
 type MoveConfig = { direction: ExpandedMovementDirection }
 
-type AutomoveConfig = { from: XY; to: XY }
+type AutomoveConfig = { from?: XY; to: XY }
 
 type PlayerCharacterMovementConfig = {
   position: Position
@@ -354,8 +354,8 @@ export class PlayerCharacterMovement {
   //Перемещает персонажа из стартовой позиции в конечную
   automove = ({ from, to }: AutomoveConfig): Promise<boolean> => {
     return new Promise((resolve) => {
-      const startX = from.x
-      const startY = from.y
+      const startX = from ? from.x : this.position.x
+      const startY = from ? from.y : this.position.y
       const endX = to.x
       const endY = to.y
 
