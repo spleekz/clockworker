@@ -1,8 +1,7 @@
-import { checkIntersection } from 'line-intersect'
 import { ExpandedMovementDirection, Hitbox, HitboxWithId, Side, XY } from 'project-utility-types'
 
 import { areEquivalent } from 'lib/are-equivalent'
-import { getDistanceBetweenPoints } from 'lib/coords'
+import { checkIntersection, getDistanceBetweenPoints } from 'lib/coords'
 
 import { Body } from './body'
 import { GameScreen } from './screen'
@@ -227,20 +226,11 @@ export class Collider {
 
   //!Определение точек пересечения
   private getIntersectionPointOfTwoLines = (line1: Hitbox, line2: Hitbox): XY | null => {
-    const intersectionResult = checkIntersection(
-      line1.x1,
-      line1.y1,
-      line1.x2,
-      line1.y2,
-      line2.x1,
-      line2.y1,
-      line2.x2,
-      line2.y2,
-    )
-    if (intersectionResult.type !== 'intersecting') {
+    const intersectionCheckResult = checkIntersection(line1, line2)
+    if (intersectionCheckResult.type !== 'intersecting') {
       return null
     }
-    return intersectionResult.point
+    return intersectionCheckResult.point
   }
 
   private getIntersectionPointsOfLineAndObstacle = (
