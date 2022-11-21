@@ -1,4 +1,4 @@
-import { ExpandedMovementDirection, Hitbox, HitboxWithId, Side, XY } from 'project-utility-types'
+import { ExpandedMovementDirection, PointPair, Side, XY } from 'project-utility-types'
 
 import { areEquivalent } from 'lib/are-equivalent'
 import { checkIntersection, getDistanceBetweenPoints } from 'lib/coords'
@@ -6,12 +6,13 @@ import { checkIntersection, getDistanceBetweenPoints } from 'lib/coords'
 import { Body } from './body'
 import { GameScreen } from './screen'
 
-type BodyWithHitbox = Body & { hitbox: Hitbox }
+type BodyWithHitbox = Body & { hitbox: PointPair }
+export type HitboxWithId = { hitbox: PointPair; id: string }
 
 type IntersectionPoint = { obstacleId: string; side: Side; point: XY }
 type IntersectionPointWithDeltaLineLength = IntersectionPoint & { deltaLineLength: number }
 
-type SetBodyToObstacleFn = (body: BodyWithHitbox, obstacle: Hitbox) => void
+type SetBodyToObstacleFn = (body: BodyWithHitbox, obstacle: PointPair) => void
 
 type ColliderConfig = {
   screen: GameScreen
@@ -58,7 +59,7 @@ export class Collider {
   }
 
   //!Вспомогательные функции
-  private getBodyHitbox = (body: Body): Hitbox => {
+  private getBodyHitbox = (body: Body): PointPair => {
     return {
       x1: body.position.x,
       y1: body.position.y,
@@ -71,14 +72,14 @@ export class Collider {
     return this.staticObstacles.find(({ id }) => id === obstacleId)!
   }
 
-  private bodiesPrevHitboxes: Record<string, Hitbox> = {}
-  private setBodyPrevHitbox = (id: string, hitbox: Hitbox): void => {
+  private bodiesPrevHitboxes: Record<string, PointPair> = {}
+  private setBodyPrevHitbox = (id: string, hitbox: PointPair): void => {
     this.bodiesPrevHitboxes[id] = hitbox
   }
 
   private getHitboxMovementDirection = (
-    prevHitbox: Hitbox,
-    currentHitbox: Hitbox,
+    prevHitbox: PointPair,
+    currentHitbox: PointPair,
   ): ExpandedMovementDirection | null => {
     const prevPosition: XY = { x: prevHitbox.x1, y: prevHitbox.y1 }
     const currentPosition: XY = { x: currentHitbox.x1, y: currentHitbox.y1 }
@@ -103,7 +104,7 @@ export class Collider {
     return movementDirection as ExpandedMovementDirection
   }
 
-  private getBottomHitboxLine = (hitbox: Hitbox): Hitbox => {
+  private getBottomHitboxLine = (hitbox: PointPair): PointPair => {
     return {
       x1: hitbox.x1,
       y1: hitbox.y2,
@@ -111,7 +112,7 @@ export class Collider {
       y2: hitbox.y2,
     }
   }
-  private getRightHitboxLine = (hitbox: Hitbox): Hitbox => {
+  private getRightHitboxLine = (hitbox: PointPair): PointPair => {
     return {
       x1: hitbox.x2,
       y1: hitbox.y1,
@@ -119,7 +120,7 @@ export class Collider {
       y2: hitbox.y2,
     }
   }
-  private getTopHitboxLine = (hitbox: Hitbox): Hitbox => {
+  private getTopHitboxLine = (hitbox: PointPair): PointPair => {
     return {
       x1: hitbox.x1,
       y1: hitbox.y1,
@@ -127,7 +128,7 @@ export class Collider {
       y2: hitbox.y1,
     }
   }
-  private getLeftHitboxLine = (hitbox: Hitbox): Hitbox => {
+  private getLeftHitboxLine = (hitbox: PointPair): PointPair => {
     return {
       x1: hitbox.x1,
       y1: hitbox.y1,
@@ -135,7 +136,7 @@ export class Collider {
       y2: hitbox.y2,
     }
   }
-  private getDeltaXHitbox = (prevHitbox: Hitbox, currentHitbox: Hitbox): Hitbox => {
+  private getDeltaXHitbox = (prevHitbox: PointPair, currentHitbox: PointPair): PointPair => {
     return {
       x1: currentHitbox.x1,
       y1: prevHitbox.y1,
@@ -143,7 +144,7 @@ export class Collider {
       y2: prevHitbox.y2,
     }
   }
-  private getDeltaYHitbox = (prevHitbox: Hitbox, currentHitbox: Hitbox): Hitbox => {
+  private getDeltaYHitbox = (prevHitbox: PointPair, currentHitbox: PointPair): PointPair => {
     return {
       x1: prevHitbox.x1,
       y1: currentHitbox.y1,
@@ -152,7 +153,7 @@ export class Collider {
     }
   }
 
-  private isObstacleCornerPoint = (obstacle: Hitbox, point: XY): boolean => {
+  private isObstacleCornerPoint = (obstacle: PointPair, point: XY): boolean => {
     const cornerPoints: Array<XY> = [
       { x: obstacle.x1, y: obstacle.y1 },
       { x: obstacle.x2, y: obstacle.y1 },
@@ -163,7 +164,11 @@ export class Collider {
   }
 
   //!Получение дельта-линий
-  private getDeltaLines = (prevHitbox: Hitbox, currentHitbox: Hitbox, step: number): Array<Hitbox> => {
+  private getDeltaLines = (
+    prevHitbox: PointPair,
+    currentHitbox: PointPair,
+    step: number,
+  ): Array<PointPair> => {
     const width = prevHitbox.x2 - prevHitbox.x1
     const height = prevHitbox.y2 - prevHitbox.y1
 
@@ -172,7 +177,7 @@ export class Collider {
     const linesCount = 2 * (linesForWidth + linesForHeight)
 
     var currentSide = 0
-    const deltaLines: Array<Hitbox> = Array.from({ length: linesCount }, (_, index) => {
+    const deltaLines: Array<PointPair> = Array.from({ length: linesCount }, (_, index) => {
       if (currentSide === 0) {
         if (index < linesForWidth) {
           return {
@@ -219,13 +224,13 @@ export class Collider {
           }
         }
       }
-    }) as Array<Hitbox>
+    }) as Array<PointPair>
 
     return deltaLines
   }
 
   //!Определение точек пересечения
-  private getIntersectionPointOfTwoLines = (line1: Hitbox, line2: Hitbox): XY | null => {
+  private getIntersectionPointOfTwoLines = (line1: PointPair, line2: PointPair): XY | null => {
     const intersectionCheckResult = checkIntersection(line1, line2)
     if (intersectionCheckResult.type !== 'intersecting') {
       return null
@@ -234,7 +239,7 @@ export class Collider {
   }
 
   private getIntersectionPointsOfLineAndObstacle = (
-    line: Hitbox,
+    line: PointPair,
     obstacle: HitboxWithId,
   ): Array<IntersectionPoint> | null => {
     const obstacleHitbox = obstacle.hitbox
@@ -277,7 +282,7 @@ export class Collider {
   }
 
   private getClosestIntersectionPoint = (
-    deltaLine: Hitbox,
+    deltaLine: PointPair,
     intersectionPoints: Array<IntersectionPoint>,
   ): IntersectionPointWithDeltaLineLength => {
     const deltaLineRoot: XY = { x: deltaLine.x1, y: deltaLine.y1 }
@@ -357,8 +362,8 @@ export class Collider {
     currentHitbox,
     obstacles,
   }: {
-    prevHitbox: Hitbox
-    currentHitbox: Hitbox
+    prevHitbox: PointPair
+    currentHitbox: PointPair
     obstacles: Array<HitboxWithId>
   }): Array<IntersectionPoint> | null => {
     const bodyDeltaLines = this.getDeltaLines(prevHitbox, currentHitbox, 5)
@@ -442,8 +447,8 @@ export class Collider {
     to,
     obstacles,
   }: {
-    from: Hitbox
-    to: Hitbox
+    from: PointPair
+    to: PointPair
     obstacles: Array<HitboxWithId>
   }): Array<IntersectionPoint> | null => {
     const prevToCurrentBodyDeltaLinesIntersectionPoints =
@@ -477,22 +482,22 @@ export class Collider {
   }
 
   //!Обработка точек пересечения
-  private setBodyToObstacleBottom = (body: BodyWithHitbox, obstacle: Hitbox): void => {
+  private setBodyToObstacleBottom = (body: BodyWithHitbox, obstacle: PointPair): void => {
     body.position.setY(obstacle.y2)
   }
-  private setBodyToObstacleRight = (body: BodyWithHitbox, obstacle: Hitbox): void => {
+  private setBodyToObstacleRight = (body: BodyWithHitbox, obstacle: PointPair): void => {
     body.position.setX(obstacle.x2)
   }
-  private setBodyToObstacleTop = (body: BodyWithHitbox, obstacle: Hitbox): void => {
+  private setBodyToObstacleTop = (body: BodyWithHitbox, obstacle: PointPair): void => {
     body.position.setY(obstacle.y1 - body.size.height)
   }
-  private setBodyToObstacleLeft = (body: BodyWithHitbox, obstacle: Hitbox): void => {
+  private setBodyToObstacleLeft = (body: BodyWithHitbox, obstacle: PointPair): void => {
     body.position.setX(obstacle.x1 - body.size.width)
   }
 
   private handleYIntersectionOfBodyAndObstacle = (
     body: BodyWithHitbox,
-    obstacle: Hitbox,
+    obstacle: PointPair,
     actionToChangeBodyPosition: SetBodyToObstacleFn,
   ): void => {
     const prevBodyHitbox = this.bodiesPrevHitboxes[body.id]
@@ -520,7 +525,7 @@ export class Collider {
   }
   private handleXIntersectionPointOfBodyAndObstacle = (
     body: BodyWithHitbox,
-    obstacle: Hitbox,
+    obstacle: PointPair,
     actionToChangeBodyPosition: SetBodyToObstacleFn,
   ): void => {
     const prevBodyHitbox = this.bodiesPrevHitboxes[body.id]

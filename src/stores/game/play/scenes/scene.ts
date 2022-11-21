@@ -1,5 +1,5 @@
 import { nanoid } from 'nanoid'
-import { Hitbox, HitboxWithId, Size, XY } from 'project-utility-types'
+import { PointPair, Size, XY } from 'project-utility-types'
 import { TiledMap } from 'tiled-types'
 
 import { ImageContainer } from 'stores/entities/image-container'
@@ -7,6 +7,7 @@ import { Sprite } from 'stores/entities/sprite'
 import { SpriteSheet } from 'stores/entities/sprite-sheet'
 
 import { CharacterList } from '../characters/controller'
+import { HitboxWithId } from '../collider'
 import { GameScreen } from '../screen'
 import { SceneCharactersManipulator } from './manipulator'
 
@@ -61,7 +62,7 @@ export class GameScene<SceneName extends string> {
     return this.mapConfig.scheme.layers.reduce((acc, layer) => {
       if (layer.type === 'objectgroup') {
         layer.objects.forEach((object) => {
-          const hitbox: Hitbox = {
+          const hitbox: PointPair = {
             x1: object.x,
             y1: object.y,
             x2: object.x + object.width,
