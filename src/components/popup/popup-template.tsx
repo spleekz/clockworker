@@ -3,13 +3,14 @@ import React, { CSSProperties, useEffect } from 'react'
 import styled from 'styled-components'
 
 import { Callback, FC, RequiredBy } from 'basic-utility-types'
-import { XLg } from 'react-bootstrap-icons'
 
 import { useStore } from 'stores/root-store/context'
 
 import { theme } from 'lib/theme'
 
 import { PortalToBody } from 'components/utility/portal-to-body'
+
+import cross from 'assets/icons/cross.png'
 
 export type PopupTemplateProps = {
   width: string
@@ -65,7 +66,7 @@ export const Popup: FC<PopupTemplateProps> = observer(
                 {title && <Title style={titleStyles}>{title}</Title>}
                 {withCloseButton && (
                   <CloseButton onClick={fnForClosing}>
-                    <XLg size={32} />
+                    <img src={cross} width={32} height={32} />
                   </CloseButton>
                 )}
               </Heading>
