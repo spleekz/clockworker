@@ -10,7 +10,7 @@ import { theme } from 'lib/theme'
 
 import { PortalToBody } from 'components/utility/portal-to-body'
 
-import cross from 'assets/icons/cross.png'
+import { CrossIcon } from 'assets/icons/cross'
 
 export type PopupTemplateProps = {
   width: string
@@ -66,7 +66,7 @@ export const Popup: FC<PopupTemplateProps> = observer(
                 {title && <Title style={titleStyles}>{title}</Title>}
                 {withCloseButton && (
                   <CloseButton onClick={fnForClosing}>
-                    <img src={cross} width={32} height={32} />
+                    <CrossIcon size={32} />
                   </CloseButton>
                 )}
               </Heading>

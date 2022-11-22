@@ -6,7 +6,7 @@ import { Callback, FC } from 'basic-utility-types'
 
 import { PixelatedDiv } from 'components/pixelated/pixelated-components'
 
-import checkMark from 'assets/icons/check-mark.png'
+import { CheckMarkIcon } from 'assets/icons/check-mark'
 
 type Props = {
   checked?: boolean
@@ -22,7 +22,11 @@ export const PixelatedCheckbox: FC<Props> = observer(
 
     return (
       <StyledPixelatedCheckbox onClick={onChange} backgroundColor={background}>
-        {checked && <CheckMark />}
+        {checked && (
+          <CheckMarkContainer>
+            <CheckMarkIcon size={42} />
+          </CheckMarkContainer>
+        )}
       </StyledPixelatedCheckbox>
     )
   },
@@ -37,13 +41,7 @@ export const StyledPixelatedCheckbox = styled(PixelatedDiv).attrs({
   justify-content: center;
   align-items: center;
 `
-const CheckMark = styled.div`
+const CheckMarkContainer = styled.div`
   position: absolute;
   top: -5px;
-  width: 42px;
-  height: 42px;
-  background-image: url(${checkMark});
-  background-position: center;
-  background-repeat: no-repeat;
-  background-size: cover;
 `

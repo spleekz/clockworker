@@ -13,7 +13,7 @@ import { AutoPrintedText } from 'components/auto-printed-text/auto-printed-text'
 import { PixelatedButton } from 'components/pixelated/pixelated-components'
 import { useGamePlayStore } from 'screens/game/play/screen'
 
-import cross from 'assets/icons/cross.png'
+import { CrossIcon } from 'assets/icons/cross'
 
 type Props = {
   text: string
@@ -73,7 +73,7 @@ export const Textbox: FC<Props> = observer(({ isOpened, text }) => {
                 {/* Показывать крестик только после того, как текст напечатался */}
                 {!isTextboxAutoPrint && (
                   <CloseButton onClick={close}>
-                    <CloseCross />
+                    <CrossIcon size={17.5} />
                   </CloseButton>
                 )}
               </Box>
@@ -107,14 +107,6 @@ const CloseButton = styled(PixelatedButton).attrs({
   align-items: center;
   width: 21px;
   height: 33px;
-`
-const CloseCross = styled.div`
-  width: 17.5px;
-  height: 17.5px;
-  background-image: url(${cross});
-  background-position: center;
-  background-repeat: no-repeat;
-  background-size: cover;
 `
 const Box = styled.div`
   position: relative;
