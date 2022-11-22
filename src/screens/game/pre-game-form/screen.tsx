@@ -8,8 +8,8 @@ import { useStore } from 'stores/root-store/context'
 
 import { colors } from 'lib/theme'
 
-import { QuitInMainMenuConfirm } from 'components/game-popups/quit-in-main-menu-confirm'
 import { PixelatedButton } from 'components/pixelated/pixelated-components'
+import { QuitInMainMenuConfirm } from 'components/popup/game-popups/quit-in-main-menu-confirm'
 
 import { useGameStore } from '../screen'
 import { PreGameForm } from './form'

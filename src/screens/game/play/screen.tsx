@@ -6,7 +6,7 @@ import { FC } from 'basic-utility-types'
 import { GamePlayStore } from 'stores/game/play/store'
 import { useStore } from 'stores/root-store/context'
 
-import { QuitInMainMenuConfirm } from 'components/game-popups/quit-in-main-menu-confirm'
+import { QuitInMainMenuConfirm } from 'components/popup/game-popups/quit-in-main-menu-confirm'
 
 import { GameOpening } from '../opening'
 import { handleGamePlayScreenEsc } from './handle-esc'

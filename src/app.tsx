@@ -8,7 +8,7 @@ import { useStore } from 'stores/root-store/context'
 
 import { colors } from 'lib/theme'
 
-import { QuitGameConfirm } from 'components/game-popups/quit-game-confirm'
+import { QuitGameConfirm } from 'components/popup/game-popups/quit-game-confirm'
 import { UpdateNotification } from 'components/update-notification/update-notification'
 import { GameScreen } from 'screens/game/screen'
 import { MainScreen } from 'screens/main/screen'
