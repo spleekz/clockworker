@@ -58,7 +58,7 @@ export const PreGameForm: FC = observer(() => {
               required: true,
               validate: validateNoSpecialSymbols,
               onBlur: trimPlayerCharacterName,
-              minLength: 3,
+              minLength: 2,
             })}
             maxLength={20}
             placeholder={'Имя персонажа'}
