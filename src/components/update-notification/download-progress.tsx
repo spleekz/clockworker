@@ -65,7 +65,7 @@ const Piece = styled.div<{ width: number; gap: number }>`
   width: ${(props) => props.width}px;
   margin-right: ${(props) => props.gap}px;
   height: 100%;
-  background-color: #946a00;
+  background-color: ${colors.mainDarkWell};
   &:last-child {
     margin-right: 0;
   }
