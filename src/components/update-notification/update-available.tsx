@@ -4,7 +4,7 @@ import styled from 'styled-components'
 
 import { FC, NonNullableProperties } from 'basic-utility-types'
 
-import { UpdateStore } from 'stores/update-store'
+import { UpdateStore } from 'stores/update.store'
 
 import { colors, theme } from 'lib/theme'
 

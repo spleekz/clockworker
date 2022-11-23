@@ -3,7 +3,7 @@ import React from 'react'
 
 import { FC } from 'basic-utility-types'
 
-import { UpdateStore } from 'stores/update-store'
+import { UpdateStore } from 'stores/update.store'
 
 import { DownloadProgress } from './download-progress'
 import { UpdateAvailable } from './update-available'
