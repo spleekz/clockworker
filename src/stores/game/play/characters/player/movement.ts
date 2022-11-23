@@ -42,7 +42,26 @@ type MovementRegulators = Record<MovementRegulatorName, MovementRegulator>
 
 type MoveConfig = { direction: ExpandedMovementDirection }
 
-type AutomoveConfig = { from?: XY; to: XY }
+type AutomoveFromTo = { from?: XY; to: XY }
+type AutomoveDeltaX = { deltaX: number }
+type AutomoveDeltaY = { deltaY: number }
+type AutomoveConfig = AutomoveFromTo | AutomoveDeltaX | AutomoveDeltaY
+
+type Automove = {
+  (config: AutomoveFromTo): Promise<boolean>
+  (config: AutomoveDeltaX): Promise<boolean>
+  (config: AutomoveDeltaY): Promise<boolean>
+}
+
+const isAutomoveFromToConfig = (config: AutomoveConfig): config is AutomoveFromTo => {
+  return (config as AutomoveFromTo).to !== undefined
+}
+const isAutomoveDeltaXConfig = (config: AutomoveConfig): config is AutomoveDeltaX => {
+  return (config as AutomoveDeltaX).deltaX !== undefined
+}
+const isAutomoveDeltaYConfig = (config: AutomoveConfig): config is AutomoveDeltaY => {
+  return (config as AutomoveDeltaY).deltaY !== undefined
+}
 
 type PlayerCharacterMovementConfig = {
   position: Position
@@ -94,6 +113,23 @@ export class PlayerCharacterMovement {
   }
 
   //!Направление движения
+  getMovementDirection = (start: XY, end: XY): ExpandedMovementDirection => {
+    var direction: ExpandedMovementDirection = '' as ExpandedMovementDirection
+    if (start.y < end.y) {
+      direction += 'down'
+    } else if (start.y > end.y) {
+      direction += 'up'
+    }
+
+    if (start.x < end.x) {
+      direction += 'right'
+    } else if (start.x > end.x) {
+      direction += 'left'
+    }
+
+    return direction as ExpandedMovementDirection
+  }
+
   //Существует только в момент движения персонажа
   movementDirection: ExpandedMovementDirection | null = null
   setMovementDirection = (direction: ExpandedMovementDirection | null): void => {
@@ -352,90 +388,94 @@ export class PlayerCharacterMovement {
   }
 
   //Перемещает персонажа из стартовой позиции в конечную
-  automove = ({ from, to }: AutomoveConfig): Promise<boolean> => {
+  automove: Automove = (config) => {
     return new Promise((resolve) => {
-      const startX = from ? from.x : this.position.x
-      const startY = from ? from.y : this.position.y
-      const endX = to.x
-      const endY = to.y
+      const start: XY = { x: this.position.x, y: this.position.y }
+      const end: XY = { x: this.position.x, y: this.position.y }
 
-      //Если движение по прямой
-      if ((startX === endX || startY === endY) && !areEquivalent(from, to)) {
-        const startAutoMoving = (): void => {
-          this.setIsAutomoving(true)
-          //Запрещаем во время автомува управлять персонажем клавишами
-          this.setIsHandleMovementKeys(false)
+      if (isAutomoveFromToConfig(config)) {
+        const { from, to } = config
+        if (from) {
+          start.x = from.x
+          start.y = from.y
         }
-        const stopAutomoving = (): void => {
-          this.stop()
-          this.setIsAutomoving(false)
-          this.setIsHandleMovementKeys(true)
-        }
+        end.x = to.x
+        end.y = to.y
+      } else if (isAutomoveDeltaXConfig(config)) {
+        const { deltaX } = config
+        end.x = start.x + deltaX
+      } else if (isAutomoveDeltaYConfig(config)) {
+        const { deltaY } = config
+        end.y = start.y + deltaY
+      }
 
-        startAutoMoving()
+      //Если движение НЕ по прямой
+      if ((start.x !== end.x && start.y !== end.y) || areEquivalent(start, end)) {
+        return resolve(false)
+      }
 
-        //Перемещаем героя в стартовую позицию
-        this.position.setXY(startX, startY)
+      const startAutoMoving = (): void => {
+        this.setIsAutomoving(true)
+        //Запрещаем во время автомува управлять персонажем клавишами
+        this.setIsHandleMovementKeys(false)
+      }
+      const stopAutomoving = (): void => {
+        this.stop()
+        this.setIsAutomoving(false)
+        this.setIsHandleMovementKeys(true)
+      }
 
-        var movementDirection: PrimitiveMovementDirection
-        //Вычисляем направление движения
-        if (endY > startY) {
-          movementDirection = 'down'
-        } else if (endX > startX) {
-          movementDirection = 'right'
-        } else if (endY < startY) {
-          movementDirection = 'up'
-        } else if (endX < startX) {
-          movementDirection = 'left'
-        }
+      startAutoMoving()
 
-        //Нужна, чтобы не вызывать move(), после того, как встали на конечную позицию
-        var shouldMove = true
+      //Перемещаем героя в стартовую позицию
+      this.position.setXY(start.x, start.y)
 
-        //Двигаемся в текущем направлении, пока не дойдём до конечной позиции
-        const automoveInDirection = (): void => {
-          if (!areEquivalent(this.position.value, to)) {
-            if (!this.isAutomovePaused) {
-              //Остановка на конечной позиции, если следующим шагом уходим дальше
-              const setPositionToEndAndStopAutomoving = (x: number, y: number): void => {
-                this.position.setXY(x, y)
-                shouldMove = false
-              }
+      const movementDirection = this.getMovementDirection(start, end)
 
-              const positionOnNextStep = this.getPositionOnNextStep()
+      //Нужна, чтобы не вызывать move(), после того, как встали на конечную позицию
+      var shouldMove = true
 
-              if (movementDirection === 'down') {
-                if (positionOnNextStep.y > to.y) {
-                  setPositionToEndAndStopAutomoving(this.position.x, to.y)
-                }
-              } else if (movementDirection === 'right') {
-                if (positionOnNextStep.x > to.x) {
-                  setPositionToEndAndStopAutomoving(to.x, this.position.y)
-                }
-              } else if (movementDirection === 'up') {
-                if (positionOnNextStep.y < to.y) {
-                  setPositionToEndAndStopAutomoving(this.position.x, to.y)
-                }
-              } else if (movementDirection === 'left') {
-                if (positionOnNextStep.x < to.x) {
-                  setPositionToEndAndStopAutomoving(to.x, this.position.y)
-                }
-              }
-              if (shouldMove) {
-                this.move({ direction: movementDirection })
-              }
+      //Двигаемся в текущем направлении, пока не дойдём до конечной позиции
+      const automoveInDirection = (): void => {
+        if (!areEquivalent(this.position.value, end)) {
+          if (!this.isAutomovePaused) {
+            //Остановка на конечной позиции, если следующим шагом уходим дальше
+            const setPositionToEndAndStopAutomoving = (x: number, y: number): void => {
+              this.position.setXY(x, y)
+              shouldMove = false
             }
 
-            window.requestAnimationFrame(automoveInDirection)
-          } else {
-            stopAutomoving()
-            resolve(true)
+            const positionOnNextStep = this.getPositionOnNextStep()
+
+            if (movementDirection === 'down') {
+              if (positionOnNextStep.y > end.y) {
+                setPositionToEndAndStopAutomoving(this.position.x, end.y)
+              }
+            } else if (movementDirection === 'right') {
+              if (positionOnNextStep.x > end.x) {
+                setPositionToEndAndStopAutomoving(end.x, this.position.y)
+              }
+            } else if (movementDirection === 'up') {
+              if (positionOnNextStep.y < end.y) {
+                setPositionToEndAndStopAutomoving(this.position.x, end.y)
+              }
+            } else if (movementDirection === 'left') {
+              if (positionOnNextStep.x < end.x) {
+                setPositionToEndAndStopAutomoving(end.x, this.position.y)
+              }
+            }
+            if (shouldMove) {
+              this.move({ direction: movementDirection })
+            }
           }
+
+          window.requestAnimationFrame(automoveInDirection)
+        } else {
+          stopAutomoving()
+          resolve(true)
         }
-        automoveInDirection()
-      } else {
-        resolve(false)
       }
+      automoveInDirection()
     })
   }
   //^@Обработка движения
