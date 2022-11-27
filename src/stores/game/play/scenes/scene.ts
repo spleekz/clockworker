@@ -23,6 +23,13 @@ export type GameMap = {
   hitboxes: Array<HitboxWithId>
 }
 
+type GameSceneConfig<Name extends string> = {
+  name: Name
+  map: GameMapConfig
+  screen: GameScreen
+  characterList: CharacterList
+}
+
 export class GameScene<SceneName extends string> {
   private screen: GameScreen
   private characterList: CharacterList
@@ -36,12 +43,7 @@ export class GameScene<SceneName extends string> {
 
   charactersManipulator: SceneCharactersManipulator
 
-  constructor(config: {
-    name: SceneName
-    map: GameMapConfig
-    screen: GameScreen
-    characterList: CharacterList
-  }) {
+  constructor(config: GameSceneConfig<SceneName>) {
     this.screen = config.screen
     this.characterList = config.characterList
     this.name = config.name
