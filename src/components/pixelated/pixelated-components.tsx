@@ -1,6 +1,8 @@
 import React, { ButtonHTMLAttributes, CSSProperties, InputHTMLAttributes, useState } from 'react'
 import styled from 'styled-components'
 
+import { Side } from 'project-utility-types'
+
 import { colors } from 'lib/theme'
 
 type PixelsSize = 'small' | 'medium' | 'large'
@@ -23,31 +25,53 @@ const getPixelsOffset = (pixelsSize: PixelsSize, pixelsCount: number): number =>
   return pixelsCount * getPixelsScale(pixelsSize)
 }
 
+type GetPixelatedPseudoElementStylesConfig = {
+  pixelsSize: PixelsSize
+  offsets: Record<Side, number>
+  backgroundColor: string
+}
+
+const getPixelatedPseudoElementStyles = ({
+  pixelsSize,
+  offsets,
+  backgroundColor,
+}: GetPixelatedPseudoElementStylesConfig): string => {
+  const { bottom, right, top, left } = offsets
+  return `
+  content: '';
+  position: absolute;
+  z-index: -1;
+  bottom:  ${getPixelsOffset(pixelsSize, bottom)}px;
+  right:  ${getPixelsOffset(pixelsSize, right)}px;
+  top: ${getPixelsOffset(pixelsSize, top)}px;
+  left:  ${getPixelsOffset(pixelsSize, left)}px;
+  background-color: ${backgroundColor};
+  `
+}
+
 export const PixelatedDiv = styled.div<PixelatedElementProps>`
   position: relative;
   z-index: 3;
   background-color: ${(props) => props.backgroundColor};
 
   &:before {
-    content: '';
-    position: absolute;
-    z-index: -1;
-    top: ${({ pixelsSize }) => getPixelsOffset(pixelsSize, 10)}px;
-    bottom: ${({ pixelsSize }) => getPixelsOffset(pixelsSize, 10)}px;
-    left: ${({ pixelsSize }) => getPixelsOffset(pixelsSize, -10)}px;
-    right: ${({ pixelsSize }) => getPixelsOffset(pixelsSize, -10)}px;
-    background-color: ${(props) => props.backgroundColor};
+    ${({ pixelsSize, backgroundColor }) => {
+      return getPixelatedPseudoElementStyles({
+        pixelsSize,
+        backgroundColor,
+        offsets: { bottom: 10, right: -10, top: 10, left: -10 },
+      })
+    }}
   }
 
   &:after {
-    content: '';
-    position: absolute;
-    z-index: -1;
-    top: ${({ pixelsSize }) => getPixelsOffset(pixelsSize, 4)}px;
-    bottom: ${({ pixelsSize }) => getPixelsOffset(pixelsSize, 4)}px;
-    left: ${({ pixelsSize }) => getPixelsOffset(pixelsSize, -6)}px;
-    right: ${({ pixelsSize }) => getPixelsOffset(pixelsSize, -6)}px;
-    background-color: ${(props) => props.backgroundColor};
+    ${({ pixelsSize, backgroundColor }) => {
+      return getPixelatedPseudoElementStyles({
+        pixelsSize,
+        backgroundColor,
+        offsets: { bottom: 4, right: -6, top: 4, left: -6 },
+      })
+    }}
   }
 `
 

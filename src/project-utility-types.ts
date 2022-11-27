@@ -9,7 +9,7 @@ export type ExpandedMovementDirection =
   | 'upleft'
   | 'downleft'
 
-export type Side = 'top' | 'right' | 'bottom' | 'left'
+export type Side = 'bottom' | 'right' | 'top' | 'left'
 
 export type Size = {
   width: number
