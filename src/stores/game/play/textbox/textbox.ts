@@ -1,10 +1,17 @@
 import { Callback } from 'basic-utility-types'
 
+type TextboxConfig<Name extends string> = {
+  name: Name
+  text: string
+  onOpen?: Callback
+  onClose?: Callback
+}
+
 export class Textbox<TextboxName extends string> {
   name: TextboxName
   text: string
 
-  constructor(config: { name: TextboxName; text: string; onOpen?: Callback; onClose?: Callback }) {
+  constructor(config: TextboxConfig<TextboxName>) {
     this.name = config.name
     this.text = config.text
 
