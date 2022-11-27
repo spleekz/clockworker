@@ -1,4 +1,4 @@
-import { ImageContainer, ImageContainerOptions } from 'stores/entities/image-container'
+import { ImageContainer, ImageContainerOptions, ImageSrcs } from 'stores/entities/image-container'
 import { Sprite } from 'stores/entities/sprite'
 import { SpriteSheet, SpriteSheetConfig } from 'stores/entities/sprite-sheet'
 
@@ -6,9 +6,9 @@ import { Body } from '../body'
 import { GameScreen } from '../screen'
 import { CharacterAnimation } from './animation'
 
-type CharacterConfig<
-  InitialImageList extends { [imageName: string]: string } & { spriteSheet: string },
-> = {
+type CharacterInitialImageList = ImageSrcs & { spriteSheet: string }
+
+type CharacterConfig<InitialImageList extends CharacterInitialImageList> = {
   is: string
   imageContainerConfig: {
     initialImageList: InitialImageList
@@ -19,24 +19,26 @@ type CharacterConfig<
   initialSpriteScale?: number
 }
 
-export class Character<
-  InitialImageList extends { [imageName: string]: string } & { spriteSheet: string },
-> extends Body {
+export class Character<InitialImageList extends CharacterInitialImageList> extends Body {
   imageContainer: ImageContainer<InitialImageList>
   spriteSheet: SpriteSheet
   screen: GameScreen
 
   constructor(config: CharacterConfig<InitialImageList>) {
     super({ is: config.is })
+
     this.imageContainer = new ImageContainer(
       config.imageContainerConfig.initialImageList,
       config.imageContainerConfig.options,
     )
+
     this.spriteSheet = new SpriteSheet({
       ...config.spriteSheetConfig,
       image: this.imageContainer.list.spriteSheet.imageElement,
     })
+
     this.screen = config.screen
+
     if (config.initialSpriteScale) {
       this.setSpriteScale(config.initialSpriteScale)
     }
@@ -47,7 +49,7 @@ export class Character<
   spriteScale = 1
   setSpriteScale = (scale: number): void => {
     this.spriteScale = scale
-    //Обновление размеров body в соответствии с новым спрайтом
+    //Обновление размеров body в соответствии с новым масштабом спрайта
     this.setSize({
       width: this.spriteSheet.spriteWidth * scale,
       height: this.spriteSheet.spriteHeight * scale,
