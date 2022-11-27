@@ -124,14 +124,11 @@ export class GamePlayStore {
       return this.createPlayerCharacter().then(() => {
         if (this.player.character) {
           this.sharedMethods.playerCharacter.setPlayerCharacter(this.player.character)
-          this.addActiveCharacter('playerCharacter')
-          this.sceneController.currentScene.charactersManipulator.positionCharacter(
-            'playerCharacter',
-            {
-              x: 'center',
-              y: 'center',
-            },
-          )
+          this.addActiveCharacter('player')
+          this.sceneController.currentScene.charactersManipulator.positionCharacter('player', {
+            x: 'center',
+            y: 'center',
+          })
           this.setIsGamePrepared(true)
         }
       })

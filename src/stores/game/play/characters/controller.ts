@@ -14,7 +14,7 @@ export class CharactersController {
   }
 
   //Список персонажей, использующихся в контроллере
-  refList = { playerCharacter: PlayerCharacter }
+  refList = { player: PlayerCharacter }
 
   //Список созданных персонажей
   list: CharacterList = {} as CharacterList
