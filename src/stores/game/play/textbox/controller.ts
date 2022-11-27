@@ -1,11 +1,23 @@
 import { makeAutoObservable } from 'mobx'
 
-import { Callback } from 'basic-utility-types'
+import { Callback, UnionProperties } from 'basic-utility-types'
 
 import { GameScript } from 'content/text/get-parsed-game-script'
 
 import { SharedPlayMethods } from '../shared-methods/shared-methods'
 import { createWelcomeTextbox } from './list/welcome'
+
+type This = InstanceType<typeof TextboxController>
+
+type TextboxInController = ReturnType<UnionProperties<This['refList']>>
+type List = Record<keyof This['refList'], TextboxInController>
+type TextboxName = keyof This['refList']
+
+type SetTextboxConfig = {
+  name: TextboxName
+  onOpen?: Callback
+  onClose?: Callback
+}
 
 type TextboxControllerConfig = {
   gameScript: GameScript
@@ -16,24 +28,13 @@ export class TextboxController {
   private gameScript: GameScript
   private sharedPlayMethods: SharedPlayMethods
 
-  private fnsForCreatingUsedTextboxes = [createWelcomeTextbox]
+  private refList = { welcome: createWelcomeTextbox }
 
-  list: Record<
-    ReturnType<InstanceType<typeof TextboxController>['fnsForCreatingUsedTextboxes'][number]>['name'],
-    ReturnType<InstanceType<typeof TextboxController>['fnsForCreatingUsedTextboxes'][number]>
-  >
+  list: List = {} as List
 
   constructor(config: TextboxControllerConfig) {
     this.gameScript = config.gameScript
     this.sharedPlayMethods = config.sharedPlayMethods
-
-    this.list = this.fnsForCreatingUsedTextboxes.reduce((acc, createTextbox) => {
-      const textbox = createTextbox({
-        gameScript: this.gameScript,
-      })
-      acc[textbox.name] = textbox
-      return acc
-    }, {} as Record<ReturnType<InstanceType<typeof TextboxController>['fnsForCreatingUsedTextboxes'][number]>['name'], ReturnType<InstanceType<typeof TextboxController>['fnsForCreatingUsedTextboxes'][number]>>)
 
     makeAutoObservable(this)
   }
@@ -45,21 +46,17 @@ export class TextboxController {
     this.sharedPlayMethods.playerCharacter.handleMovementKeys()
   }
 
-  currentTextbox: ReturnType<
-    InstanceType<typeof TextboxController>['fnsForCreatingUsedTextboxes'][number]
-  > | null = null
+  createTextbox = (name: TextboxName): void => {
+    this.list[name] = this.refList[name]({ gameScript: this.gameScript })
+  }
 
-  setCurrentTextbox = ({
-    name,
-    onOpen,
-    onClose,
-  }: {
-    name: ReturnType<
-      InstanceType<typeof TextboxController>['fnsForCreatingUsedTextboxes'][number]
-    >['name']
-    onOpen?: Callback
-    onClose?: Callback
-  }): void => {
+  currentTextbox: TextboxInController | null = null
+
+  setCurrentTextbox = ({ name, onOpen, onClose }: SetTextboxConfig): void => {
+    if (!this.list[name]) {
+      this.createTextbox(name)
+    }
+
     this.currentTextbox = this.list[name]
     this.internalOnOpen()
     this.currentTextbox.setCallbacks({ onOpen, onClose })
