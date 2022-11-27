@@ -1,6 +1,6 @@
 import { makeAutoObservable } from 'mobx'
 
-import { Callback, UnionProperties } from 'basic-utility-types'
+import { Callback, Properties } from 'basic-utility-types'
 
 import { GameScript } from 'content/text/get-parsed-game-script'
 
@@ -9,7 +9,7 @@ import { createWelcomeTextbox } from './list/welcome'
 
 type This = InstanceType<typeof TextboxController>
 
-type TextboxInController = ReturnType<UnionProperties<This['refList']>>
+type TextboxInController = ReturnType<Properties<This['refList']>>
 type List = Record<keyof This['refList'], TextboxInController>
 type TextboxName = keyof This['refList']
 

@@ -1,6 +1,6 @@
 import { makeAutoObservable } from 'mobx'
 
-import { UnionProperties } from 'basic-utility-types'
+import { Properties } from 'basic-utility-types'
 
 import { resolvedPromise } from 'lib/async'
 
@@ -10,9 +10,9 @@ import { createMarketMainScene } from './list/market'
 
 type This = InstanceType<typeof GameSceneController>
 
-type List = Record<keyof This['refList'], ReturnType<UnionProperties<This['refList']>>>
+type List = Record<keyof This['refList'], ReturnType<Properties<This['refList']>>>
 export type SceneName = keyof This['refList']
-type CurrentScene = ReturnType<UnionProperties<This['refList']>>
+type CurrentScene = ReturnType<Properties<This['refList']>>
 
 type GameSceneControllerConfig = {
   screen: GameScreen
