@@ -12,7 +12,7 @@ import { Market } from './market'
 import { GameMenuController } from './menu-controller'
 import { GamePauseController } from './pause-controller'
 import { Player } from './player'
-import { GameSceneController } from './scenes/controller'
+import { GameSceneController, SceneName } from './scenes/controller'
 import { GameScreen } from './screen'
 import { GameSettings } from './settings/settings'
 import { SharedPlayMethods } from './shared-methods/shared-methods'
@@ -95,11 +95,7 @@ export class GamePlayStore {
     screen: this.screen,
     characterList: this.charactersController.list,
   })
-  setScene = (
-    sceneName: ReturnType<
-      InstanceType<typeof GameSceneController>['fnsForCreatingUsedScenes'][number]
-    >['name'],
-  ): Promise<void> => {
+  setScene = (sceneName: SceneName): Promise<void> => {
     return this.sceneController.setScene(sceneName).then(() => {
       this.charactersController.clearActiveCharacters()
       this.collider.clear()
@@ -125,7 +121,7 @@ export class GamePlayStore {
     this.isGamePrepared = value
   }
   prepareGame = (): Promise<void> => {
-    return this.setScene('market').then(() => {
+    return this.setScene('marketMain').then(() => {
       return this.createPlayerCharacter().then(() => {
         if (this.player.character) {
           this.sharedMethods.playerCharacter.setPlayerCharacter(this.player.character)

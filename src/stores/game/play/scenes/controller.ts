@@ -1,53 +1,61 @@
 import { makeAutoObservable } from 'mobx'
 
+import { UnionProperties } from 'basic-utility-types'
+
 import { resolvedPromise } from 'lib/async'
 
 import { CharacterList } from '../characters/controller'
 import { GameScreen } from '../screen'
-import { createMainGameScene } from './list/market'
+import { createMarketMainScene } from './list/market'
+
+type This = InstanceType<typeof GameSceneController>
+
+type List = Record<keyof This['refList'], ReturnType<UnionProperties<This['refList']>>>
+
+export type SceneName = keyof This['refList']
+
+type CurrentScene = ReturnType<UnionProperties<This['refList']>>
 
 type GameSceneControllerConfig = {
   screen: GameScreen
   characterList: CharacterList
 }
+
 export class GameSceneController {
   private screen: GameScreen
   private characterList: CharacterList
 
-  private fnsForCreatingUsedScenes = [createMainGameScene] as const
+  private refList = { marketMain: createMarketMainScene }
 
-  list: Record<
-    ReturnType<InstanceType<typeof GameSceneController>['fnsForCreatingUsedScenes'][number]>['name'],
-    ReturnType<InstanceType<typeof GameSceneController>['fnsForCreatingUsedScenes'][number]>
-  >
+  list: List = {} as List
 
   constructor(config: GameSceneControllerConfig) {
     this.screen = config.screen
-
-    this.list = this.fnsForCreatingUsedScenes.reduce((acc, createScene) => {
-      const scene = createScene({ screen: this.screen, characterList: config.characterList })
-      acc[scene.name] = scene
-      return acc
-    }, {} as Record<ReturnType<InstanceType<typeof GameSceneController>['fnsForCreatingUsedScenes'][number]>['name'], ReturnType<InstanceType<typeof GameSceneController>['fnsForCreatingUsedScenes'][number]>>)
+    this.characterList = config.characterList
 
     makeAutoObservable(this)
   }
 
-  currentScene: ReturnType<
-    InstanceType<typeof GameSceneController>['fnsForCreatingUsedScenes'][number]
-  >
+  currentScene: CurrentScene
 
-  setScene = (
-    sceneName: ReturnType<
-      InstanceType<typeof GameSceneController>['fnsForCreatingUsedScenes'][number]
-    >['name'],
-  ): Promise<void> => {
+  createScene = (sceneName: SceneName): void => {
+    this.list[sceneName] = this.refList[sceneName]({
+      screen: this.screen,
+      characterList: this.characterList,
+    })
+  }
+
+  setScene = (sceneName: SceneName): Promise<void> => {
+    if (!this.list[sceneName]) {
+      this.createScene(sceneName)
+    }
+
+    this.currentScene = this.list[sceneName]
+
     const createAndDrawMap = (): void => {
       this.currentScene.createMap()
       this.currentScene.drawMap()
     }
-
-    this.currentScene = this.list[sceneName]
 
     if (!this.isAllCurrentSceneImagesLoaded) {
       return this.loadAllCurrentSceneImages().then(() => createAndDrawMap())

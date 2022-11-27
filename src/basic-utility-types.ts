@@ -22,3 +22,5 @@ export type Merge<A, B> = A | B extends AnyObject
   : B
 
 export type DeepPartial<T> = T extends AnyObject ? { [K in keyof T]?: DeepPartial<T[K]> } : T
+
+export type UnionProperties<T> = T[keyof T]
