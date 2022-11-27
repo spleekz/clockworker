@@ -18,7 +18,6 @@ type GameSceneControllerConfig = {
   screen: GameScreen
   characterList: CharacterList
 }
-
 export class GameSceneController {
   private screen: GameScreen
   private characterList: CharacterList

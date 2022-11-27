@@ -2,14 +2,14 @@ import { useEffect } from 'react'
 
 import { Callback } from 'basic-utility-types'
 
+const isWindow = (element: unknown): element is Window => {
+  return element === window
+}
+
 type UseKeyConfig = {
   element?: HTMLElement | Window | null
   key: string
   fn: Callback
-}
-
-const isWindow = (element: unknown): element is Window => {
-  return element === window
 }
 
 export const useKey = ({ element = window, key, fn }: UseKeyConfig, deps?: Array<any>): void => {

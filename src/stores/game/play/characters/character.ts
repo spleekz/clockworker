@@ -18,7 +18,6 @@ type CharacterConfig<InitialImageList extends CharacterInitialImageList> = {
   screen: GameScreen
   initialSpriteScale?: number
 }
-
 export class Character<InitialImageList extends CharacterInitialImageList> extends Body {
   imageContainer: ImageContainer<InitialImageList>
   spriteSheet: SpriteSheet

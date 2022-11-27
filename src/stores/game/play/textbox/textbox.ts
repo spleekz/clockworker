@@ -6,7 +6,6 @@ type TextboxConfig<Name extends string> = {
   onOpen?: Callback
   onClose?: Callback
 }
-
 export class Textbox<TextboxName extends string> {
   name: TextboxName
   text: string

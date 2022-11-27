@@ -10,7 +10,6 @@ export type PlayerCharacterConfig = {
   settings: GameSettings
   screen: GameScreen
 }
-
 export class PlayerCharacter extends Character<{ spriteSheet: typeof playerCharacterSpriteSheetSrc }> {
   name: string
   private settings: GameSettings

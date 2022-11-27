@@ -10,7 +10,6 @@ type GameScreen = 'preGameForm' | 'play'
 type GameStoreConfig = {
   keyboard: KeyboardStore
 }
-
 export class GameStore {
   protected keyboard: KeyboardStore
 

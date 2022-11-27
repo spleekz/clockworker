@@ -68,7 +68,6 @@ type PlayerCharacterMovementConfig = {
   settings: GameSettings
   animation: CharacterAnimation
 }
-
 export class PlayerCharacterMovement {
   private position: Position
   private settings: GameSettings

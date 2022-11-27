@@ -23,7 +23,6 @@ type TextboxControllerConfig = {
   gameScript: GameScript
   sharedPlayMethods: SharedPlayMethods
 }
-
 export class TextboxController {
   private gameScript: GameScript
   private sharedPlayMethods: SharedPlayMethods

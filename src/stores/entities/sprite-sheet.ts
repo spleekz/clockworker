@@ -1,5 +1,9 @@
 import { Sprite } from './sprite'
 
+type GetSpriteConfig = {
+  scale?: number
+}
+
 export type SpriteSheetConfig = {
   image: HTMLImageElement
   spriteWidth: number
@@ -9,11 +13,6 @@ export type SpriteSheetConfig = {
   skipX: number
   skipY: number
 }
-
-type GetSpriteConfig = {
-  scale?: number
-}
-
 export class SpriteSheet {
   image: HTMLImageElement
   spriteWidth: number

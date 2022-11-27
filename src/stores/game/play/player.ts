@@ -5,7 +5,6 @@ type CreatePlayerCharacterConfig = {
   charactersController: CharactersController
   characterConfig: PlayerCharacterConfig
 }
-
 export class Player {
   character: PlayerCharacter | null = null
   createCharacter = async (config: CreatePlayerCharacterConfig): Promise<void> => {
