@@ -13,7 +13,7 @@ export class CharactersController {
     makeAutoObservable(this, { refList: observable.shallow })
   }
 
-  //Список всех персонажей, использующихся в контроллере
+  //Список персонажей, использующихся в контроллере
   refList = { playerCharacter: PlayerCharacter }
 
   //Список созданных персонажей

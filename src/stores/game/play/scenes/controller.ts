@@ -11,9 +11,7 @@ import { createMarketMainScene } from './list/market'
 type This = InstanceType<typeof GameSceneController>
 
 type List = Record<keyof This['refList'], ReturnType<UnionProperties<This['refList']>>>
-
 export type SceneName = keyof This['refList']
-
 type CurrentScene = ReturnType<UnionProperties<This['refList']>>
 
 type GameSceneControllerConfig = {
@@ -25,8 +23,10 @@ export class GameSceneController {
   private screen: GameScreen
   private characterList: CharacterList
 
+  //Список сцен, использующихся в контроллере
   private refList = { marketMain: createMarketMainScene }
 
+  //Список созданных сцен
   list: List = {} as List
 
   constructor(config: GameSceneControllerConfig) {

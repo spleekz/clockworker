@@ -28,8 +28,10 @@ export class TextboxController {
   private gameScript: GameScript
   private sharedPlayMethods: SharedPlayMethods
 
+  //Список текстбоксов, использующихся в контроллере
   private refList = { welcome: createWelcomeTextbox }
 
+  //Список созданных текстбоксов
   list: List = {} as List
 
   constructor(config: TextboxControllerConfig) {
