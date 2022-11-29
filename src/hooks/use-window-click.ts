@@ -4,7 +4,7 @@ import { Callback } from 'basic-utility-types'
 
 export const useWindowClick = (fn: Callback): void => {
   useEffect(() => {
-    window.addEventListener('click', fn)
-    return () => window.removeEventListener('click', fn)
+    window.addEventListener('click', fn, true)
+    return () => window.removeEventListener('click', fn, true)
   }, [fn])
 }
