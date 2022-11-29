@@ -70,6 +70,9 @@ export class GamePlayStore {
     })
   }
 
+  //!Общие методы
+  sharedMethods = new SharedPlayMethods()
+
   //!Контроллер персонажей
   charactersController = new CharactersController()
   addActiveCharacter = (characterName: CharacterName): void => {
@@ -103,16 +106,13 @@ export class GamePlayStore {
   }
 
   //!Контроллер паузы
-  pauseController = new GamePauseController()
+  pauseController = new GamePauseController({ sharedMethods: this.sharedMethods })
 
   //!Контроллер меню
   menuController = new GameMenuController()
 
   //!Коллайдер
   collider = new Collider({ screen: this.screen })
-
-  //!Общие методы
-  sharedMethods = new SharedPlayMethods()
 
   //!Подготовка игры
   isGamePrepared = false
@@ -171,18 +171,6 @@ export class GamePlayStore {
     if (!this.pauseController.isGamePaused) {
       this.gameInPlayLoop()
     }
-
-    if (this.player.character) {
-      if (this.player.character.movement.isAutomoving) {
-        //Во время паузы останавливать автомув и возобновлять его после отжатия паузы
-        if (this.pauseController.isGamePaused) {
-          this.player.character.movement.pauseAutomove()
-        } else {
-          this.player.character.movement.resumeAutomove()
-        }
-      }
-    }
-
     this.update()
   }
 
