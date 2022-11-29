@@ -327,10 +327,17 @@ export class PlayerCharacterMovement {
   }
 
   //!Обработка клавиш движения
-  isHandleMovementKeys = true
-  setIsHandleMovementKeys = (value: boolean): void => {
-    this.isHandleMovementKeys = value
+  movementKeysProhibitors: Array<string> = []
+  addMovementKeysProhibitor = (prohibitor: string): void => {
+    this.movementKeysProhibitors.push(prohibitor)
   }
+  removeMovementKeysProhibitor = (prohibitor: string): void => {
+    this.movementKeysProhibitors = this.movementKeysProhibitors.filter((p) => p !== prohibitor)
+  }
+  get isHandleMovementKeys(): boolean {
+    return this.movementKeysProhibitors.length === 0
+  }
+
   handleMovementKeys = (keyboard: KeyboardStore): void => {
     if (this.isHandleMovementKeys) {
       this.setPressedKeys(keyboard.pressedKeysArray)
@@ -416,12 +423,12 @@ export class PlayerCharacterMovement {
       const startAutoMoving = (): void => {
         this.setIsAutomoving(true)
         //Запрещаем во время автомува управлять персонажем клавишами
-        this.setIsHandleMovementKeys(false)
+        this.addMovementKeysProhibitor('automove')
       }
       const stopAutomoving = (): void => {
         this.stop()
         this.setIsAutomoving(false)
-        this.setIsHandleMovementKeys(true)
+        this.removeMovementKeysProhibitor('automove')
       }
 
       startAutoMoving()

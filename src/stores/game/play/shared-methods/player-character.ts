@@ -6,10 +6,10 @@ export class PlayerCharacterSharedMethods {
     this.playerCharacter = playerCharacter
   }
 
-  handleMovementKeys = (): void => {
-    this.playerCharacter?.movement.setIsHandleMovementKeys(true)
+  addMovementKeysProhibitor = (prohibitorName: string): void => {
+    this.playerCharacter?.movement.addMovementKeysProhibitor(prohibitorName)
   }
-  stopHandlingMovementKeys = (): void => {
-    this.playerCharacter?.movement.setIsHandleMovementKeys(false)
+  removeMovementKeysProhibitor = (prohibitorName: string): void => {
+    this.playerCharacter?.movement.removeMovementKeysProhibitor(prohibitorName)
   }
 }

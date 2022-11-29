@@ -31,14 +31,14 @@ export class TransitionScreen {
 
   isOpened = false
   open = async (): Promise<void> => {
-    this.sharedPlayMethods.playerCharacter.stopHandlingMovementKeys()
+    this.sharedPlayMethods.playerCharacter.addMovementKeysProhibitor('transitionScreen')
     this.isOpened = true
     await delay(this.appearanceMs)
   }
   close = async (): Promise<void> => {
     await delay(this.disappearanceMs)
     this.isOpened = false
-    this.sharedPlayMethods.playerCharacter.handleMovementKeys()
+    this.sharedPlayMethods.playerCharacter.removeMovementKeysProhibitor('transitionScreen')
   }
 
   run = async (): Promise<void> => {
