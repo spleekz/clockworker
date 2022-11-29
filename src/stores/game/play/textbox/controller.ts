@@ -42,9 +42,11 @@ export class TextboxController {
 
   internalOnOpen = (): void => {
     this.sharedPlayMethods.playerCharacter.addMovementKeysProhibitor('textbox')
+    this.sharedPlayMethods.playerCharacter.pauseAutomove()
   }
   internalOnClose = (): void => {
     this.sharedPlayMethods.playerCharacter.removeMovementKeysProhibitor('textbox')
+    this.sharedPlayMethods.playerCharacter.resumeAutomove()
   }
 
   createTextbox = (name: TextboxName): void => {
