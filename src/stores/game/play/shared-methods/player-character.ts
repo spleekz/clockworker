@@ -7,10 +7,10 @@ export class PlayerCharacterSharedMethods {
   }
 
   addMovementKeysProhibitor = (prohibitorName: string): void => {
-    this.playerCharacter?.movement.addMovementKeysProhibitor(prohibitorName)
+    this.playerCharacter?.movement.movementKeysAccessController.addProhibitor(prohibitorName)
   }
   removeMovementKeysProhibitor = (prohibitorName: string): void => {
-    this.playerCharacter?.movement.removeMovementKeysProhibitor(prohibitorName)
+    this.playerCharacter?.movement.movementKeysAccessController.removeProhibitor(prohibitorName)
   }
 
   pauseAutomove = (): void => {

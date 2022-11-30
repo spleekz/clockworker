@@ -2,6 +2,7 @@ import { makeAutoObservable } from 'mobx'
 
 import { ExpandedMovementDirection, PrimitiveMovementDirection, XY } from 'project-utility-types'
 
+import { AccessController } from 'stores/entities/access-controller'
 import { Position } from 'stores/entities/position'
 import { KeyboardStore } from 'stores/keyboard.store'
 
@@ -327,19 +328,10 @@ export class PlayerCharacterMovement {
   }
 
   //!Обработка клавиш движения
-  movementKeysProhibitors: Array<string> = []
-  addMovementKeysProhibitor = (prohibitor: string): void => {
-    this.movementKeysProhibitors.push(prohibitor)
-  }
-  removeMovementKeysProhibitor = (prohibitor: string): void => {
-    this.movementKeysProhibitors = this.movementKeysProhibitors.filter((p) => p !== prohibitor)
-  }
-  get isHandleMovementKeys(): boolean {
-    return this.movementKeysProhibitors.length === 0
-  }
+  movementKeysAccessController = new AccessController()
 
   handleMovementKeys = (keyboard: KeyboardStore): void => {
-    if (this.isHandleMovementKeys) {
+    if (!this.movementKeysAccessController.isProhibited) {
       this.setPressedKeys(keyboard.pressedKeysArray)
 
       if (this.isMovementControllerPressed) {
@@ -423,12 +415,12 @@ export class PlayerCharacterMovement {
       const startAutoMoving = (): void => {
         this.setIsAutomoving(true)
         //Запрещаем во время автомува управлять персонажем клавишами
-        this.addMovementKeysProhibitor('automove')
+        this.movementKeysAccessController.addProhibitor('automove')
       }
       const stopAutomoving = (): void => {
         this.stop()
         this.setIsAutomoving(false)
-        this.removeMovementKeysProhibitor('automove')
+        this.movementKeysAccessController.removeProhibitor('automove')
       }
 
       startAutoMoving()
