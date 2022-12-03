@@ -1,8 +1,7 @@
 import { observer } from 'mobx-react-lite'
-import React, { useCallback, useRef, useState } from 'react'
-import styled from 'styled-components'
+import React, { useEffect, useRef, useState } from 'react'
+import styled, { css, keyframes } from 'styled-components'
 
-import { animated, useTransition } from '@react-spring/web'
 import { FC } from 'basic-utility-types'
 
 import { useWindowClick } from 'hooks/use-window-click'
@@ -15,85 +14,104 @@ import { useGamePlayStore } from 'screens/game/play/screen'
 
 import { CrossIcon } from 'assets/icons/cross'
 
+type AutoprintStatus = 'none' | 'inProgress' | 'end'
+
 type Props = {
   text: string
   isOpened: boolean
 }
-
 export const Textbox: FC<Props> = observer(({ isOpened, text }) => {
   const gamePlayStore = useGamePlayStore()
+
+  const [autoprintStatus, setAutoprintStatus] = useState<AutoprintStatus>('none')
+
+  useEffect(() => {
+    setAutoprintStatus('none')
+  }, [isOpened])
+
+  const containerRef = useRef<HTMLDivElement>(null)
+  useEffect(() => {
+    const onAnimationEnd = (): void => {
+      setAutoprintStatus('inProgress')
+    }
+    if (containerRef.current) {
+      containerRef.current.addEventListener('animationend', onAnimationEnd)
+    }
+    return () => containerRef.current?.removeEventListener('animationend', onAnimationEnd)
+  }, [containerRef.current])
+
+  const [isAutoprintSkipped, setIsAutoprintSkipped] = useState(false)
+
+  const onAutoprintEnd = (): void => {
+    setAutoprintStatus('end')
+  }
 
   const close = (): void => {
     gamePlayStore.textboxController.closeCurrentTextbox()
   }
 
-  const [isTextboxEnteringEnds, setIsTextboxEnteringEnds] = useState(false)
-  const transition = useTransition(isOpened, {
-    from: { bottom: -20, scale: 0 },
-    enter: { bottom: 15, scale: 1 },
-    config: {
-      duration: 230,
-    },
-    onRest: () => {
-      //Установить значение только в момент окончания анимации появления
-      if (isTextboxEnteringEnds === false) {
-        setIsTextboxEnteringEnds(true)
-      }
-    },
-  })
-
-  const [isTextboxAutoPrint, setIsTextboxAutoPrint] = useState(true)
-
-  const onTextboxPrintEnds = useCallback(() => {
-    setIsTextboxAutoPrint(false)
-  }, [])
-
-  const containerRef = useRef<HTMLDivElement | null>(null)
   useWindowClick(() => {
-    //Игнорировать клики после закрытия текстбокса
-    if (!isTextboxAutoPrint && isOpened) {
-      close()
+    if (isOpened) {
+      if (autoprintStatus === 'end') {
+        close()
+      }
+      if (autoprintStatus === 'inProgress') {
+        setIsAutoprintSkipped(true)
+      }
     }
   })
 
   return (
-    <>
-      {transition(
-        (styles, item) =>
-          item && (
-            <Container ref={containerRef} style={styles}>
-              <Box>
-                {
-                  <AutoPrintedText
-                    text={text}
-                    printPrevented={!isTextboxEnteringEnds}
-                    onPrintEnds={onTextboxPrintEnds}
-                  />
-                }
-                {/* Показывать крестик только после того, как текст напечатался */}
-                {!isTextboxAutoPrint && (
-                  <CloseButton onClick={close}>
-                    <CrossIcon size={17.5} />
-                  </CloseButton>
-                )}
-              </Box>
-            </Container>
-          ),
-      )}
-    </>
+    <Wrapper>
+      <Container ref={containerRef} isOpened={isOpened}>
+        {isOpened && (
+          <Box>
+            <AutoPrintedText
+              text={text}
+              printPrevented={autoprintStatus === 'none'}
+              onPrintEnds={onAutoprintEnd}
+              isPrintSkipped={isAutoprintSkipped}
+            />
+            {autoprintStatus === 'end' && (
+              <CloseButton onClick={close}>
+                <CrossIcon size={17.5} />
+              </CloseButton>
+            )}
+          </Box>
+        )}
+      </Container>
+    </Wrapper>
   )
 })
 
-const Container = styled(animated.div)`
+const Wrapper = styled.div`
+  width: 100%;
+`
+const textboxOpening = keyframes`
+  from {
+    bottom:-20px;
+    transform:scale(0)
+  }
+  to {
+    bottom:15px;
+    transform:scale(1)
+  }
+`
+const Container = styled.div<{ isOpened: boolean }>`
+  width: 100%;
   position: absolute;
   z-index: 999;
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  bottom: 15px;
   left: 0;
   right: 0;
+  display: flex;
+  justify-content: center;
   margin: 0 auto;
+  pointer-events: ${(props) => (props.isOpened ? 'all' : 'none')};
+  animation: ${(props) =>
+    props.isOpened &&
+    css`
+      ${textboxOpening} 230ms forwards
+    `};
 `
 const CloseButton = styled(PixelatedButton).attrs({
   pixelsSize: 'small',
