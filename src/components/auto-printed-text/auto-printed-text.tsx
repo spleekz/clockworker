@@ -5,19 +5,18 @@ import styled from 'styled-components'
 import { Callback, FC } from 'basic-utility-types'
 import { nanoid } from 'nanoid'
 
-import { useWindowClick } from 'hooks/use-window-click'
-
 type Props = {
   text: string
   interval?: number
   printPrevented?: boolean
   onPrintEnds?: Callback
+  isPrintSkipped?: boolean
 }
 
 type TextSymbols = Array<{ id: string; value: string; isVisible: boolean }>
 
 export const AutoPrintedText: FC<Props> = observer(
-  ({ text, interval = 50, printPrevented = false, onPrintEnds }) => {
+  ({ text, interval = 50, printPrevented = false, onPrintEnds, isPrintSkipped = false }) => {
     const [textSymbols, setTextSymbols] = useState<TextSymbols>(() => {
       return text.split('').map((symbol) => ({ id: nanoid(), value: symbol, isVisible: false }))
     })
@@ -45,28 +44,30 @@ export const AutoPrintedText: FC<Props> = observer(
       onPrintEnds?.()
     }
 
-    const stopPrintAndShowEntireText = (): void => {
+    const skipPrintAndShowEntireText = (): void => {
       setTextSymbols((prev) => prev.map((textSymbol) => ({ ...textSymbol, isVisible: true })))
       setPrintEnds()
     }
 
     useEffect(() => {
       if (!printPrevented) {
-        var currentSymbolIndex = 0
-        intervalIdRef.current = setInterval(() => {
-          if (currentSymbolIndex <= text.length - 1) {
-            makeSymbolVisible(currentSymbolIndex)
-            currentSymbolIndex += 1
-          } else {
-            setPrintEnds()
-          }
-        }, interval)
+        if (!isPrintSkipped) {
+          var currentSymbolIndex = 0
+          intervalIdRef.current = setInterval(() => {
+            if (currentSymbolIndex <= text.length - 1) {
+              makeSymbolVisible(currentSymbolIndex)
+              currentSymbolIndex += 1
+            } else {
+              setPrintEnds()
+            }
+          }, interval)
+        } else {
+          skipPrintAndShowEntireText()
+        }
       } else {
         clearInterval(intervalIdRef.current)
       }
-    }, [printPrevented])
-
-    useWindowClick(stopPrintAndShowEntireText)
+    }, [printPrevented, isPrintSkipped])
 
     return (
       <Text>
