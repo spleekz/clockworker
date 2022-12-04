@@ -4,7 +4,7 @@ import styled from 'styled-components'
 
 import { FC } from 'basic-utility-types'
 
-import { Textbox } from 'components/textbox/textbox'
+import { GameTextbox } from 'components/textbox/game-textbox'
 
 import { useGamePlayStore } from './screen'
 
@@ -21,10 +21,7 @@ export const PlayCanvas: FC = observer(() => {
 
   return (
     <Container ref={containerRef}>
-      <Textbox
-        isOpened={gamePlayStore.textboxController.isTextboxOpened}
-        text={gamePlayStore.textboxController.currentTextbox?.text ?? ''}
-      />
+      <GameTextbox />
     </Container>
   )
 })
