@@ -18,7 +18,7 @@ export const QuitGameConfirm: FC<Props> = observer(({ isOpened }) => {
 
   return (
     <ConfirmPopup
-      width={'580px'}
+      width={'550px'}
       height={'300px'}
       styles={{
         backgroundColor: colors.mainLight,

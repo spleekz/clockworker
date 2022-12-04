@@ -3,10 +3,9 @@ import React, { CSSProperties, useEffect } from 'react'
 import styled from 'styled-components'
 
 import { Callback, FC, RequiredBy } from 'basic-utility-types'
+import { doubleBorderStyle } from 'shared-styles'
 
 import { useStore } from 'stores/root-store/context'
-
-import { theme } from 'lib/theme'
 
 import { PortalToBody } from 'components/utility/portal-to-body'
 
@@ -98,9 +97,8 @@ const Block = styled.div<{ width: string; height: string; color?: string }>`
   height: ${(props) => props.height};
   position: relative;
   padding: 20px;
-  border-radius: ${theme.borderRadius}px;
-  background-color: #ffffff;
   box-shadow: 0px 0px 25px 8px rgba(34, 60, 80, 0.2);
+  ${doubleBorderStyle}
 `
 const Heading = styled.div`
   min-height: 32px;

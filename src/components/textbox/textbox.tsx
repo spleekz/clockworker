@@ -3,10 +3,11 @@ import React, { useEffect, useRef, useState } from 'react'
 import styled, { css, keyframes } from 'styled-components'
 
 import { FC } from 'basic-utility-types'
+import { doubleBorderStyle } from 'shared-styles'
 
 import { useWindowClick } from 'hooks/use-window-click'
 
-import { colors, theme } from 'lib/theme'
+import { colors } from 'lib/theme'
 
 import { AutoPrintedText } from 'components/auto-printed-text/auto-printed-text'
 import { PixelatedButton } from 'components/pixelated/pixelated-components'
@@ -146,7 +147,7 @@ const Box = styled.div`
   padding: 18px 60px 18px 18px;
   font-size: 24px;
   background-color: ${colors.mainLight};
-  border-radius: ${theme.borderRadius}px;
+  ${doubleBorderStyle}
 `
 const InvisibleText = styled.div`
   opacity: 0;

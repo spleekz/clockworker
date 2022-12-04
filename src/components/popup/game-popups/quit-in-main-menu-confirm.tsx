@@ -19,7 +19,7 @@ export const QuitInMainMenuConfirm: FC<Props> = observer(({ isOpened, question }
 
   return (
     <ConfirmPopup
-      width={'580px'}
+      width={'550px'}
       height={'300px'}
       styles={{
         backgroundColor: colors.mainLight,
