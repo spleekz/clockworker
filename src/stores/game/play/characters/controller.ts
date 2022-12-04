@@ -1,4 +1,4 @@
-import { makeAutoObservable, observable } from 'mobx'
+import { computed, makeObservable, observable } from 'mobx'
 
 import { PlayerCharacter } from './player/player-character'
 
@@ -10,11 +10,15 @@ export type CharacterList = { [P in CharacterName]: InstanceType<This['refList']
 
 export class CharactersController {
   constructor() {
-    makeAutoObservable(this, { refList: observable.shallow })
+    makeObservable(this, {
+      list: observable,
+      activeCharactersNames: observable,
+      isAllActiveCharactersImagesLoaded: computed,
+    })
   }
 
   //Список персонажей, использующихся в контроллере
-  refList = { player: PlayerCharacter }
+  private refList = { player: PlayerCharacter }
 
   //Список созданных персонажей
   list: CharacterList = {} as CharacterList

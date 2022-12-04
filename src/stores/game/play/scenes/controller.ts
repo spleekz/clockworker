@@ -1,4 +1,4 @@
-import { makeAutoObservable, observable } from 'mobx'
+import { computed, makeObservable, observable } from 'mobx'
 
 import { Properties } from 'basic-utility-types'
 
@@ -22,20 +22,24 @@ export class GameSceneController {
   private screen: GameScreen
   private characterList: CharacterList
 
-  //Список сцен, использующихся в контроллере
-  refList = { marketMain: MarketMainScene }
-
-  //Список созданных сцен
-  list: List = {} as List
-
   constructor(config: GameSceneControllerConfig) {
     this.screen = config.screen
     this.characterList = config.characterList
 
-    makeAutoObservable(this, { refList: observable.shallow })
+    makeObservable(this, {
+      list: observable,
+      currentScene: observable,
+      isAllCurrentSceneImagesLoaded: computed,
+    })
   }
 
-  currentScene: Scene
+  //Список сцен, использующихся в контроллере
+  private refList = { marketMain: MarketMainScene }
+
+  //Список созданных сцен
+  list: List = {} as List
+
+  currentScene: Scene = {} as Scene
 
   createScene = (sceneName: SceneName): void => {
     this.list[sceneName] = new this.refList[sceneName]({

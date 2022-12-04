@@ -1,4 +1,4 @@
-import { makeAutoObservable, observable } from 'mobx'
+import { computed, makeObservable, observable } from 'mobx'
 
 import { Callback, Properties } from 'basic-utility-types'
 
@@ -27,15 +27,15 @@ export class TextboxController {
   private gameScript: GameScript
   private sharedPlayMethods: SharedPlayMethods
 
-  //Список текстбоксов, использующихся в контроллере
-  refList = { welcome: WelcomeTextbox }
-
   constructor(config: TextboxControllerConfig) {
     this.gameScript = config.gameScript
     this.sharedPlayMethods = config.sharedPlayMethods
 
-    makeAutoObservable(this, { refList: observable.shallow })
+    makeObservable(this, { list: observable, currentTextbox: observable, isTextboxOpened: computed })
   }
+
+  //Список текстбоксов, использующихся в контроллере
+  private refList = { welcome: WelcomeTextbox }
 
   //Список созданных текстбоксов
   list: List = {} as List
