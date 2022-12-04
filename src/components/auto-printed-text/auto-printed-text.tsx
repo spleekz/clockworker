@@ -8,7 +8,6 @@ import { nanoid } from 'nanoid'
 type Props = {
   text: string
   interval?: number
-  printPrevented?: boolean
   onPrintEnds?: Callback
   isPrintSkipped?: boolean
 }
@@ -16,7 +15,7 @@ type Props = {
 type TextSymbols = Array<{ id: string; value: string; isVisible: boolean }>
 
 export const AutoPrintedText: FC<Props> = observer(
-  ({ text, interval = 50, printPrevented = false, onPrintEnds, isPrintSkipped = false }) => {
+  ({ text, interval = 50, onPrintEnds, isPrintSkipped = false }) => {
     const [textSymbols, setTextSymbols] = useState<TextSymbols>(() => {
       return text.split('').map((symbol) => ({ id: nanoid(), value: symbol, isVisible: false }))
     })
@@ -50,24 +49,20 @@ export const AutoPrintedText: FC<Props> = observer(
     }
 
     useEffect(() => {
-      if (!printPrevented) {
-        if (!isPrintSkipped) {
-          var currentSymbolIndex = 0
-          intervalIdRef.current = setInterval(() => {
-            if (currentSymbolIndex <= text.length - 1) {
-              makeSymbolVisible(currentSymbolIndex)
-              currentSymbolIndex += 1
-            } else {
-              setPrintEnds()
-            }
-          }, interval)
-        } else {
-          skipPrintAndShowEntireText()
-        }
+      if (!isPrintSkipped) {
+        var currentSymbolIndex = 0
+        intervalIdRef.current = setInterval(() => {
+          if (currentSymbolIndex <= text.length - 1) {
+            makeSymbolVisible(currentSymbolIndex)
+            currentSymbolIndex += 1
+          } else {
+            setPrintEnds()
+          }
+        }, interval)
       } else {
-        clearInterval(intervalIdRef.current)
+        skipPrintAndShowEntireText()
       }
-    }, [printPrevented, isPrintSkipped])
+    }, [isPrintSkipped])
 
     return (
       <Text>

@@ -77,12 +77,15 @@ export const Textbox: FC<Props> = observer(({ isOpened, text }) => {
       >
         {isOpened && (
           <Box>
-            <AutoPrintedText
-              text={text}
-              printPrevented={autoprintStatus === 'none'}
-              onPrintEnds={onAutoprintEnd}
-              isPrintSkipped={isAutoprintSkipped}
-            />
+            {autoprintStatus !== 'none' ? (
+              <AutoPrintedText
+                text={text}
+                onPrintEnds={onAutoprintEnd}
+                isPrintSkipped={isAutoprintSkipped}
+              />
+            ) : (
+              <InvisibleText>{text}</InvisibleText>
+            )}
             {autoprintStatus === 'end' && (
               <CloseButton onClick={close}>
                 <CrossIcon size={17.5} />
@@ -144,4 +147,7 @@ const Box = styled.div`
   font-size: 24px;
   background-color: ${colors.mainLight};
   border-radius: ${theme.borderRadius}px;
+`
+const InvisibleText = styled.div`
+  opacity: 0;
 `
