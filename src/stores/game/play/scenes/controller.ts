@@ -1,4 +1,4 @@
-import { makeAutoObservable } from 'mobx'
+import { makeAutoObservable, observable } from 'mobx'
 
 import { Properties } from 'basic-utility-types'
 
@@ -6,13 +6,13 @@ import { resolvedPromise } from 'lib/async'
 
 import { CharacterList } from '../characters/controller'
 import { GameScreen } from '../screen'
-import { createMarketMainScene } from './list/market'
+import { MarketMainScene } from './list/market'
 
 type This = InstanceType<typeof GameSceneController>
 
-type List = Record<keyof This['refList'], ReturnType<Properties<This['refList']>>>
+type Scene = InstanceType<Properties<This['refList']>>
 export type SceneName = keyof This['refList']
-type CurrentScene = ReturnType<Properties<This['refList']>>
+type List = Record<SceneName, Scene>
 
 type GameSceneControllerConfig = {
   screen: GameScreen
@@ -23,7 +23,7 @@ export class GameSceneController {
   private characterList: CharacterList
 
   //Список сцен, использующихся в контроллере
-  private refList = { marketMain: createMarketMainScene }
+  refList = { marketMain: MarketMainScene }
 
   //Список созданных сцен
   list: List = {} as List
@@ -32,13 +32,13 @@ export class GameSceneController {
     this.screen = config.screen
     this.characterList = config.characterList
 
-    makeAutoObservable(this)
+    makeAutoObservable(this, { refList: observable.shallow })
   }
 
-  currentScene: CurrentScene
+  currentScene: Scene
 
   createScene = (sceneName: SceneName): void => {
-    this.list[sceneName] = this.refList[sceneName]({
+    this.list[sceneName] = new this.refList[sceneName]({
       screen: this.screen,
       characterList: this.characterList,
     })

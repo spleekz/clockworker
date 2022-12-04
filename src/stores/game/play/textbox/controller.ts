@@ -1,15 +1,15 @@
-import { makeAutoObservable } from 'mobx'
+import { makeAutoObservable, observable } from 'mobx'
 
 import { Callback, Properties } from 'basic-utility-types'
 
 import { GameScript } from 'content/text/get-parsed-game-script'
 
 import { SharedPlayMethods } from '../shared-methods/shared-methods'
-import { createWelcomeTextbox } from './list/welcome'
+import { WelcomeTextbox } from './list/welcome'
 
 type This = InstanceType<typeof TextboxController>
 
-type TextboxInController = ReturnType<Properties<This['refList']>>
+type TextboxInController = InstanceType<Properties<This['refList']>>
 type List = Record<keyof This['refList'], TextboxInController>
 type TextboxName = keyof This['refList']
 
@@ -28,17 +28,17 @@ export class TextboxController {
   private sharedPlayMethods: SharedPlayMethods
 
   //Список текстбоксов, использующихся в контроллере
-  private refList = { welcome: createWelcomeTextbox }
-
-  //Список созданных текстбоксов
-  list: List = {} as List
+  refList = { welcome: WelcomeTextbox }
 
   constructor(config: TextboxControllerConfig) {
     this.gameScript = config.gameScript
     this.sharedPlayMethods = config.sharedPlayMethods
 
-    makeAutoObservable(this)
+    makeAutoObservable(this, { refList: observable.shallow })
   }
+
+  //Список созданных текстбоксов
+  list: List = {} as List
 
   internalOnOpen = (): void => {
     this.sharedPlayMethods.playerCharacter.addMovementKeysProhibitor('textbox')
@@ -50,7 +50,7 @@ export class TextboxController {
   }
 
   createTextbox = (name: TextboxName): void => {
-    this.list[name] = this.refList[name]({ gameScript: this.gameScript })
+    this.list[name] = new this.refList[name]({ gameScript: this.gameScript })
   }
 
   currentTextbox: TextboxInController | null = null
