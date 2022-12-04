@@ -8,14 +8,14 @@ import { nanoid } from 'nanoid'
 type Props = {
   text: string
   interval?: number
-  onPrintEnds?: Callback
+  onPrintEnd?: Callback
   isPrintSkipped?: boolean
 }
 
 type TextSymbols = Array<{ id: string; value: string; isVisible: boolean }>
 
 export const AutoPrintedText: FC<Props> = observer(
-  ({ text, interval = 50, onPrintEnds, isPrintSkipped = false }) => {
+  ({ text, interval = 50, onPrintEnd, isPrintSkipped = false }) => {
     const [textSymbols, setTextSymbols] = useState<TextSymbols>(() => {
       return text.split('').map((symbol) => ({ id: nanoid(), value: symbol, isVisible: false }))
     })
@@ -40,7 +40,7 @@ export const AutoPrintedText: FC<Props> = observer(
 
     const setPrintEnds = (): void => {
       clearInterval(intervalIdRef.current)
-      onPrintEnds?.()
+      onPrintEnd?.()
     }
 
     const skipPrintAndShowEntireText = (): void => {

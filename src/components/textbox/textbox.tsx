@@ -80,7 +80,7 @@ export const Textbox: FC<Props> = observer(({ isOpened, text }) => {
             {autoprintStatus !== 'none' ? (
               <AutoPrintedText
                 text={text}
-                onPrintEnds={onAutoprintEnd}
+                onPrintEnd={onAutoprintEnd}
                 isPrintSkipped={isAutoprintSkipped}
               />
             ) : (
