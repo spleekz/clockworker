@@ -1,4 +1,4 @@
-export class AccessController {
+export class UsageController {
   prohibitors: Array<string> = []
 
   addProhibitor = (prohibitor: string): void => {

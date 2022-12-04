@@ -2,8 +2,8 @@ import { makeAutoObservable } from 'mobx'
 
 import { ExpandedMovementDirection, PrimitiveMovementDirection, XY } from 'project-utility-types'
 
-import { AccessController } from 'stores/entities/access-controller'
 import { Position } from 'stores/entities/position'
+import { UsageController } from 'stores/entities/usage-controller'
 import { KeyboardStore } from 'stores/keyboard.store'
 
 import { areEquivalent } from 'lib/are-equivalent'
@@ -328,7 +328,7 @@ export class PlayerCharacterMovement {
   }
 
   //!Обработка клавиш движения
-  movementKeysAccessController = new AccessController()
+  movementKeysAccessController = new UsageController()
 
   handleMovementKeys = (keyboard: KeyboardStore): void => {
     if (!this.movementKeysAccessController.isProhibited) {
