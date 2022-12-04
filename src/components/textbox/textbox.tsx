@@ -25,9 +25,7 @@ export const Textbox: FC<Props> = observer(({ isOpened, text }) => {
 
   const [autoprintStatus, setAutoprintStatus] = useState<AutoprintStatus>('none')
 
-  useEffect(() => {
-    setAutoprintStatus('none')
-  }, [isOpened])
+  const [isOpeningAnimationSkipped, setIsOpeningAnimationSkipped] = useState(false)
 
   const containerRef = useRef<HTMLDivElement>(null)
   useEffect(() => {
@@ -52,18 +50,31 @@ export const Textbox: FC<Props> = observer(({ isOpened, text }) => {
 
   useWindowClick(() => {
     if (isOpened) {
-      if (autoprintStatus === 'end') {
-        close()
+      if (autoprintStatus === 'none') {
+        setIsOpeningAnimationSkipped(true)
       }
       if (autoprintStatus === 'inProgress') {
         setIsAutoprintSkipped(true)
       }
+      if (autoprintStatus === 'end') {
+        close()
+      }
     }
   })
 
+  useEffect(() => {
+    setAutoprintStatus('none')
+    setIsOpeningAnimationSkipped(false)
+    setIsAutoprintSkipped(false)
+  }, [isOpened])
+
   return (
     <Wrapper>
-      <Container ref={containerRef} isOpened={isOpened}>
+      <Container
+        ref={containerRef}
+        isOpened={isOpened}
+        isOpeningAnimationSkipped={isOpeningAnimationSkipped}
+      >
         {isOpened && (
           <Box>
             <AutoPrintedText
@@ -97,7 +108,7 @@ const textboxOpening = keyframes`
     transform:scale(1)
   }
 `
-const Container = styled.div<{ isOpened: boolean }>`
+const Container = styled.div<{ isOpened: boolean; isOpeningAnimationSkipped: boolean }>`
   width: 100%;
   position: absolute;
   z-index: 999;
@@ -110,7 +121,7 @@ const Container = styled.div<{ isOpened: boolean }>`
   animation: ${(props) =>
     props.isOpened &&
     css`
-      ${textboxOpening} 230ms forwards
+      ${textboxOpening} ${props.isOpeningAnimationSkipped ? 0 : 230}ms forwards
     `};
 `
 const CloseButton = styled(PixelatedButton).attrs({
