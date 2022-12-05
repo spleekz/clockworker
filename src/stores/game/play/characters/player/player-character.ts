@@ -3,7 +3,7 @@ import playerCharacterSpriteSheetSrc from 'content/sprites/characters/Player.png
 import { GameScreen } from '../../screen'
 import { GameSettings } from '../../settings/settings'
 import { Character } from '../character'
-import { PlayerCharacterMovement } from './movement'
+import { PlayerCharacterMovement } from './movement/movement'
 
 export type PlayerCharacterConfig = {
   name: string
