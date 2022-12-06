@@ -5,6 +5,7 @@ import { SpriteSheet, SpriteSheetConfig } from 'stores/entities/sprite-sheet'
 import { Body } from '../body'
 import { GameScreen } from '../screen'
 import { CharacterAnimation } from './animation'
+import { CharacterMovement } from './movement'
 
 type CharacterInitialImageList = ImageSrcs & { spriteSheet: string }
 
@@ -44,6 +45,8 @@ export class Character<InitialImageList extends CharacterInitialImageList> exten
   }
 
   animation = new CharacterAnimation()
+
+  movement = new CharacterMovement({ position: this.position, animation: this.animation })
 
   spriteScale = 1
   setSpriteScale = (scale: number): void => {
