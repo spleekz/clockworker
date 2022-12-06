@@ -4,15 +4,23 @@ import { areEquivalent } from 'lib/are-equivalent'
 import { checkIntersection, getDistanceBetweenPoints } from 'lib/coords'
 
 import { Body } from './body'
+import { Character } from './characters/character'
+import { PlayerCharacter } from './characters/player/player-character'
 import { GameScreen } from './screen'
 
-type BodyWithHitbox = Body & { hitbox: PointPair }
+type ColliderBody = Body | Character<any> | PlayerCharacter
+type ColliderBodyWithHitbox = ColliderBody & { hitbox: PointPair }
+
+const isCharacter = (body: ColliderBody): body is Character<any> => {
+  return (body as Character<any>).movement !== undefined
+}
+
 export type HitboxWithId = { hitbox: PointPair; id: string }
 
 type IntersectionPoint = { obstacleId: string; side: Side; point: XY }
 type IntersectionPointWithDeltaLineLength = IntersectionPoint & { deltaLineLength: number }
 
-type SetBodyToObstacleFn = (body: BodyWithHitbox, obstacle: PointPair) => void
+type SetBodyToObstacleFn = (body: ColliderBodyWithHitbox, obstacle: PointPair) => void
 
 type ColliderConfig = {
   screen: GameScreen
@@ -24,9 +32,9 @@ export class Collider {
     this.screen = config.screen
   }
 
-  private bodies: Array<BodyWithHitbox> = []
+  private bodies: Array<ColliderBodyWithHitbox> = []
   addBody = (body: Body): void => {
-    const bodyWithHitbox: BodyWithHitbox = { ...body, hitbox: this.getBodyHitbox(body) }
+    const bodyWithHitbox: ColliderBodyWithHitbox = { ...body, hitbox: this.getBodyHitbox(body) }
     this.bodies.push(bodyWithHitbox)
   }
   addBodies = (bodies: Array<Body>): void => {
@@ -59,7 +67,7 @@ export class Collider {
   }
 
   //!Вспомогательные функции
-  private getBodyHitbox = (body: Body): PointPair => {
+  private getBodyHitbox = (body: ColliderBody): PointPair => {
     return {
       x1: body.position.x,
       y1: body.position.y,
@@ -462,7 +470,7 @@ export class Collider {
   }
 
   private handleIntersectionPoint = (
-    body: BodyWithHitbox,
+    body: ColliderBodyWithHitbox,
     intersectionPoint: IntersectionPoint,
   ): void => {
     const obstacle = this.staticObstacles.find(({ id }) => id === intersectionPoint.obstacleId)!
@@ -482,21 +490,21 @@ export class Collider {
   }
 
   //!Обработка точек пересечения
-  private setBodyToObstacleBottom = (body: BodyWithHitbox, obstacle: PointPair): void => {
+  private setBodyToObstacleBottom = (body: ColliderBodyWithHitbox, obstacle: PointPair): void => {
     body.position.setY(obstacle.y2)
   }
-  private setBodyToObstacleRight = (body: BodyWithHitbox, obstacle: PointPair): void => {
+  private setBodyToObstacleRight = (body: ColliderBodyWithHitbox, obstacle: PointPair): void => {
     body.position.setX(obstacle.x2)
   }
-  private setBodyToObstacleTop = (body: BodyWithHitbox, obstacle: PointPair): void => {
+  private setBodyToObstacleTop = (body: ColliderBodyWithHitbox, obstacle: PointPair): void => {
     body.position.setY(obstacle.y1 - body.size.height)
   }
-  private setBodyToObstacleLeft = (body: BodyWithHitbox, obstacle: PointPair): void => {
+  private setBodyToObstacleLeft = (body: ColliderBodyWithHitbox, obstacle: PointPair): void => {
     body.position.setX(obstacle.x1 - body.size.width)
   }
 
   private handleYIntersectionOfBodyAndObstacle = (
-    body: BodyWithHitbox,
+    body: ColliderBodyWithHitbox,
     obstacle: PointPair,
     actionToChangeBodyPosition: SetBodyToObstacleFn,
   ): void => {
@@ -524,7 +532,7 @@ export class Collider {
     actionToChangeBodyPosition(body, obstacle)
   }
   private handleXIntersectionPointOfBodyAndObstacle = (
-    body: BodyWithHitbox,
+    body: ColliderBodyWithHitbox,
     obstacle: PointPair,
     actionToChangeBodyPosition: SetBodyToObstacleFn,
   ): void => {
@@ -553,7 +561,7 @@ export class Collider {
   }
 
   //!Работа коллайдера
-  private handleBodyAndStaticObstaclesCollision = (body: BodyWithHitbox): void => {
+  private handleBodyAndStaticObstaclesCollision = (body: ColliderBodyWithHitbox): void => {
     const bodyPrevToCurrentIntersectionPointsWithObstacles =
       this.getIntersectionPointsOfBodyAndObstacles({
         from: this.bodiesPrevHitboxes[body.id],
@@ -562,9 +570,16 @@ export class Collider {
       })
 
     if (bodyPrevToCurrentIntersectionPointsWithObstacles) {
+      if (isCharacter(body)) {
+        body.movement.setIsStuck(true)
+      }
       bodyPrevToCurrentIntersectionPointsWithObstacles.forEach((intersectionPoint) => {
         this.handleIntersectionPoint(body, intersectionPoint)
       })
+    } else {
+      if (isCharacter(body)) {
+        body.movement.setIsStuck(false)
+      }
     }
   }
 

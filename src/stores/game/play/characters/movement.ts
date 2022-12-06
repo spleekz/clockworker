@@ -197,12 +197,17 @@ export class CharacterMovement {
     return { stepSize, framesPerStep }
   }
 
+  //!Движение
   isMoving = false
   setIsMoving = (value: boolean): void => {
     this.isMoving = value
   }
 
-  //!Движение
+  isStuck = false
+  setIsStuck = (value: boolean): void => {
+    this.isStuck = value
+  }
+
   //Отвечает за анимацию движения и за перемещение персонажа
   move = ({ direction }: MoveConfig): void => {
     this.setMovementDirection(direction)
@@ -293,7 +298,11 @@ export class CharacterMovement {
 
       //Двигаемся в текущем направлении, пока не дойдём до конечной позиции
       const automoveInDirection = (): void => {
-        if (!areEquivalent(this.position.value, end)) {
+        if (this.isStuck) {
+          this.isAutomoving = false
+        }
+
+        if (this.isAutomoving && !areEquivalent(this.position.value, end)) {
           if (!this.isAutomovePaused) {
             //Остановка на конечной позиции, если следующим шагом уходим дальше
             const setPositionToEndAndStopAutomoving = (x: number, y: number): void => {
