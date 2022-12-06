@@ -1,6 +1,6 @@
 import { Ctx, XY } from 'project-utility-types'
 
-import { drawImage } from 'lib/draw-image'
+import { drawImage } from 'stores/game/lib/draw-image'
 
 type SpriteConfig = {
   image: HTMLImageElement
