@@ -70,7 +70,7 @@ export class Collider {
   }
 
   //!Вспомогательные функции
-  private getBodyHitbox = (body: ColliderBody): PointPair => {
+  getBodyHitbox = (body: ColliderBody): PointPair => {
     return {
       x1: body.position.x,
       y1: body.position.y,
