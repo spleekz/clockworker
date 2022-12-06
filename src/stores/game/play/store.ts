@@ -6,7 +6,7 @@ import { GameScript, getParsedGameScript } from 'content/text/get-parsed-game-sc
 
 import { PreGameForm } from '../pre-game-form'
 import { CharacterName, CharactersController } from './characters/controller'
-import { PlayerCharacterConfig } from './characters/player/player-character'
+import { PlayerCharacterConfig } from './characters/player/character'
 import { Collider } from './collider'
 import { Market } from './market'
 import { GameMenuController } from './menu-controller'

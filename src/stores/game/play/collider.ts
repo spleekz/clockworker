@@ -6,7 +6,7 @@ import { checkIntersection, getDistanceBetweenPoints } from 'lib/coords'
 
 import { Body } from './body'
 import { Character } from './characters/character'
-import { PlayerCharacter } from './characters/player/player-character'
+import { PlayerCharacter } from './characters/player/character'
 import { GameScreen } from './screen'
 
 type ColliderBody = Body | Character<any> | PlayerCharacter

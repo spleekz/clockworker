@@ -1,6 +1,6 @@
 import { computed, makeObservable, observable } from 'mobx'
 
-import { PlayerCharacter } from './player/player-character'
+import { PlayerCharacter } from './player/character'
 
 type This = InstanceType<typeof CharactersController>
 

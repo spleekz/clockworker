@@ -1,4 +1,4 @@
-import { PlayerCharacter } from '../characters/player/player-character'
+import { PlayerCharacter } from '../characters/player/character'
 
 export class PlayerCharacterSharedMethods {
   private playerCharacter: PlayerCharacter | null = null
