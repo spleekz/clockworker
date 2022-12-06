@@ -4,6 +4,7 @@ import { areEquivalent } from 'lib/are-equivalent'
 import { removeOnce } from 'lib/arrays'
 import { checkIntersection, getDistanceBetweenPoints } from 'lib/coords'
 
+import { getMovementDirection } from '../lib/movement'
 import { Body } from './body'
 import { Character } from './characters/character'
 import { PlayerCharacter } from './characters/player/character'
@@ -88,31 +89,14 @@ export class Collider {
     this.bodiesPrevHitboxes[id] = hitbox
   }
 
-  private getHitboxMovementDirection = (
+  private getMovementDirectionByHitbox = (
     prevHitbox: PointPair,
     currentHitbox: PointPair,
-  ): ExpandedMovementDirection | null => {
-    const prevPosition: XY = { x: prevHitbox.x1, y: prevHitbox.y1 }
-    const currentPosition: XY = { x: currentHitbox.x1, y: currentHitbox.y1 }
+  ): ExpandedMovementDirection => {
+    const start: XY = { x: prevHitbox.x1, y: prevHitbox.y1 }
+    const end: XY = { x: currentHitbox.x1, y: currentHitbox.y1 }
 
-    if (!prevPosition) {
-      return null
-    }
-
-    var movementDirection: ExpandedMovementDirection = '' as ExpandedMovementDirection
-    if (currentPosition.y > prevPosition.y) {
-      movementDirection += 'down'
-    }
-    if (currentPosition.x > prevPosition.x) {
-      movementDirection += 'right'
-    }
-    if (currentPosition.y < prevPosition.y) {
-      movementDirection += 'up'
-    }
-    if (currentPosition.x < prevPosition.x) {
-      movementDirection += 'left'
-    }
-    return movementDirection as ExpandedMovementDirection
+    return getMovementDirection(start, end)
   }
 
   private getBottomHitboxLine = (hitbox: PointPair): PointPair => {
@@ -449,7 +433,7 @@ export class Collider {
     }
 
     if (closestIntersectionPoints.length > 1) {
-      const bodyMovementDirection = this.getHitboxMovementDirection(prevHitbox, currentHitbox)!
+      const bodyMovementDirection = this.getMovementDirectionByHitbox(prevHitbox, currentHitbox)
       const intersectionPointsOfBodyDeltaLinesAndObstacles = this.getClosestPointsToBody({
         intersectionPoints: closestIntersectionPoints,
         bodyMovementDirection,
@@ -597,9 +581,8 @@ export class Collider {
     }
     body.hitbox = this.getBodyHitbox(body)
     const prevBodyHitbox = this.bodiesPrevHitboxes[body.id]
-    const bodyMovementDirection = this.getHitboxMovementDirection(prevBodyHitbox, body.hitbox)
 
-    if (bodyMovementDirection) {
+    if (prevBodyHitbox) {
       this.handleBodyAndStaticObstaclesCollision(body)
     }
 

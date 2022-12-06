@@ -1,5 +1,6 @@
 import { ExpandedMovementDirection } from 'project-utility-types'
 
+import { getReversedPrimitiveDirection } from 'stores/game/lib/movement'
 import { KeyboardStore } from 'stores/keyboard.store'
 
 import { GameSettings } from '../../../settings/settings'
@@ -47,7 +48,7 @@ export class PlayerCharacterMovement extends CharacterMovement {
           const filteredPressedMovementDirections = this.movementKeys.pressedDirections.filter(
             (pressedDirection) => {
               return this.movementKeys.pressedDirections.every(
-                (d) => d !== this.getReversedPrimitiveDirection(pressedDirection),
+                (d) => d !== getReversedPrimitiveDirection(pressedDirection),
               )
             },
           )

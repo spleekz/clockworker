@@ -1,6 +1,7 @@
-import { ExpandedMovementDirection, PrimitiveMovementDirection, XY } from 'project-utility-types'
+import { ExpandedMovementDirection, XY } from 'project-utility-types'
 
 import { Position } from 'stores/entities/position'
+import { getMovementDirection } from 'stores/game/lib/movement'
 
 import { areEquivalent } from 'lib/are-equivalent'
 
@@ -90,23 +91,6 @@ export class CharacterMovement {
   }
 
   //!Направление движения
-  getMovementDirection = (start: XY, end: XY): ExpandedMovementDirection => {
-    var direction: ExpandedMovementDirection = '' as ExpandedMovementDirection
-    if (start.y < end.y) {
-      direction += 'down'
-    } else if (start.y > end.y) {
-      direction += 'up'
-    }
-
-    if (start.x < end.x) {
-      direction += 'right'
-    } else if (start.x > end.x) {
-      direction += 'left'
-    }
-
-    return direction as ExpandedMovementDirection
-  }
-
   //Существует только в момент движения персонажа
   movementDirection: ExpandedMovementDirection | null = null
   setMovementDirection = (direction: ExpandedMovementDirection | null): void => {
@@ -130,21 +114,6 @@ export class CharacterMovement {
     }
     this.movementDirection = direction
   }
-
-  getReversedPrimitiveDirection = (
-    direction: PrimitiveMovementDirection,
-  ): PrimitiveMovementDirection => {
-    if (direction === 'down') {
-      return 'up'
-    } else if (direction === 'right') {
-      return 'left'
-    } else if (direction === 'up') {
-      return 'down'
-    } else {
-      return 'right'
-    }
-  }
-
   //^@Позиция
 
   //@Обработка движения
@@ -291,7 +260,7 @@ export class CharacterMovement {
       //Перемещаем героя в стартовую позицию
       this.position.setXY(start.x, start.y)
 
-      const movementDirection = this.getMovementDirection(start, end)
+      const movementDirection = getMovementDirection(start, end)
 
       //Нужна, чтобы не вызывать move(), после того, как встали на конечную позицию
       var shouldMove = true
