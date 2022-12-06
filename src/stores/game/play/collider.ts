@@ -1,6 +1,7 @@
 import { ExpandedMovementDirection, PointPair, Side, XY } from 'project-utility-types'
 
 import { areEquivalent } from 'lib/are-equivalent'
+import { removeOnce } from 'lib/arrays'
 import { checkIntersection, getDistanceBetweenPoints } from 'lib/coords'
 
 import { Body } from './body'
@@ -10,6 +11,8 @@ import { GameScreen } from './screen'
 
 type ColliderBody = Body | Character<any> | PlayerCharacter
 type ColliderBodyWithHitbox = ColliderBody & { hitbox: PointPair }
+
+type ColliderBodyWithHitboxAndStuckPlaces = ColliderBodyWithHitbox & { stuckPlaces: Array<string> }
 
 const isCharacter = (body: ColliderBody): body is Character<any> => {
   return (body as Character<any>).movement !== undefined
@@ -169,6 +172,13 @@ export class Collider {
       { x: obstacle.x1, y: obstacle.y2 },
     ]
     return cornerPoints.some((cornerPoint) => areEquivalent(point, cornerPoint))
+  }
+
+  private addBodyStuckPlace = (body: ColliderBodyWithHitboxAndStuckPlaces, place: string): void => {
+    body.stuckPlaces.push(place)
+  }
+  private removeBodyStuckPlace = (body: ColliderBodyWithHitboxAndStuckPlaces, place: string): void => {
+    body.stuckPlaces = removeOnce(body.stuckPlaces, place)
   }
 
   //!Получение дельта-линий
@@ -561,7 +571,9 @@ export class Collider {
   }
 
   //!Работа коллайдера
-  private handleBodyAndStaticObstaclesCollision = (body: ColliderBodyWithHitbox): void => {
+  private handleBodyAndStaticObstaclesCollision = (
+    body: ColliderBodyWithHitboxAndStuckPlaces,
+  ): void => {
     const bodyPrevToCurrentIntersectionPointsWithObstacles =
       this.getIntersectionPointsOfBodyAndObstacles({
         from: this.bodiesPrevHitboxes[body.id],
@@ -570,61 +582,81 @@ export class Collider {
       })
 
     if (bodyPrevToCurrentIntersectionPointsWithObstacles) {
-      if (isCharacter(body)) {
-        body.movement.setIsStuck(true)
-      }
+      this.addBodyStuckPlace(body, 'obstacle')
       bodyPrevToCurrentIntersectionPointsWithObstacles.forEach((intersectionPoint) => {
         this.handleIntersectionPoint(body, intersectionPoint)
       })
     } else {
-      if (isCharacter(body)) {
-        body.movement.setIsStuck(false)
-      }
+      this.removeBodyStuckPlace(body, 'obstacle')
     }
   }
 
-  private handleCollision = (): void => {
-    this.bodies.forEach((body) => {
-      if (!this.bodiesPrevHitboxes[body.id]) {
-        this.setBodyPrevHitbox(body.id, this.getBodyHitbox(body))
-      }
-      body.hitbox = this.getBodyHitbox(body)
-      const prevBodyHitbox = this.bodiesPrevHitboxes[body.id]
-      const bodyMovementDirection = this.getHitboxMovementDirection(prevBodyHitbox, body.hitbox)
-
-      if (bodyMovementDirection) {
-        this.handleBodyAndStaticObstaclesCollision(body)
-      }
-
+  private handleBodyCollision = (body: ColliderBodyWithHitboxAndStuckPlaces): void => {
+    if (!this.bodiesPrevHitboxes[body.id]) {
       this.setBodyPrevHitbox(body.id, this.getBodyHitbox(body))
-    })
+    }
+    body.hitbox = this.getBodyHitbox(body)
+    const prevBodyHitbox = this.bodiesPrevHitboxes[body.id]
+    const bodyMovementDirection = this.getHitboxMovementDirection(prevBodyHitbox, body.hitbox)
+
+    if (bodyMovementDirection) {
+      this.handleBodyAndStaticObstaclesCollision(body)
+    }
+
+    this.setBodyPrevHitbox(body.id, this.getBodyHitbox(body))
   }
 
   //?Пока что не разрешаем выходить персонажам за ЭКРАН
-  private keepBodiesInMap = (): void => {
-    this.bodies.forEach((body) => {
-      const bodyMinX = 0
-      const bodyMinY = 0
-      const bodyMaxX = this.screen.width - body.size.width
-      const bodyMaxY = this.screen.height - body.size.height
+  private keepBodyInMap = (body: ColliderBodyWithHitboxAndStuckPlaces): void => {
+    const bodyMinX = 0
+    const bodyMinY = 0
+    const bodyMaxX = this.screen.width - body.size.width
+    const bodyMaxY = this.screen.height - body.size.height
 
-      if (body.position.x < bodyMinX) {
-        body.position.setX(bodyMinX)
-      }
-      if (body.position.y < bodyMinY) {
-        body.position.setY(bodyMinY)
-      }
-      if (body.position.x > bodyMaxX) {
-        body.position.setX(bodyMaxX)
-      }
-      if (body.position.y > bodyMaxY) {
+    const isOutOfDownMapBorder = body.position.y > bodyMaxY
+    const isOutOfRightMapBorder = body.position.x > bodyMaxX
+    const isOutOfTopMapBorder = body.position.y < bodyMinY
+    const isOutOfLeftMapBorder = body.position.x < bodyMinX
+
+    const isOutOfMap =
+      isOutOfDownMapBorder || isOutOfRightMapBorder || isOutOfTopMapBorder || isOutOfLeftMapBorder
+
+    if (isOutOfMap) {
+      this.addBodyStuckPlace(body, 'mapBorder')
+
+      if (isOutOfDownMapBorder) {
         body.position.setY(bodyMaxY)
       }
-    })
+      if (isOutOfRightMapBorder) {
+        body.position.setX(bodyMaxX)
+      }
+      if (isOutOfTopMapBorder) {
+        body.position.setY(bodyMinY)
+      }
+      if (isOutOfLeftMapBorder) {
+        body.position.setX(bodyMinX)
+      }
+    } else {
+      this.removeBodyStuckPlace(body, 'mapBorder')
+    }
   }
 
   update = (): void => {
-    this.handleCollision()
-    this.keepBodiesInMap()
+    this.bodies.forEach((body) => {
+      const bodyWithHitboxAndStuckPlaces: ColliderBodyWithHitboxAndStuckPlaces = {
+        ...body,
+        stuckPlaces: [],
+      }
+      this.handleBodyCollision(bodyWithHitboxAndStuckPlaces)
+      this.keepBodyInMap(bodyWithHitboxAndStuckPlaces)
+
+      if (isCharacter(body)) {
+        if (bodyWithHitboxAndStuckPlaces.stuckPlaces.length > 0) {
+          body.movement.setIsStuck(true)
+        } else {
+          body.movement.setIsStuck(false)
+        }
+      }
+    })
   }
 }
