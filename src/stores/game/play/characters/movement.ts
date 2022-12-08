@@ -217,14 +217,6 @@ export class CharacterMovement {
     this.isAutomoving = value
   }
 
-  isAutomovePaused = false
-  pauseAutomove = (): void => {
-    this.isAutomovePaused = true
-  }
-  resumeAutomove = (): void => {
-    this.isAutomovePaused = false
-  }
-
   //Перемещает персонажа из стартовой позиции в конечную
   automove(config: AutomoveFromTo): Promise<boolean>
   automove(config: AutomoveDeltaX): Promise<boolean>
@@ -280,35 +272,33 @@ export class CharacterMovement {
         }
 
         if (this.isAutomoving && !areEquivalent(this.position.value, end)) {
-          if (!this.isAutomovePaused) {
-            //Остановка на конечной позиции, если следующим шагом уходим дальше
-            const setPositionToEndAndStopAutomoving = (x: number, y: number): void => {
-              this.position.setXY(x, y)
-              shouldMove = false
-            }
+          //Остановка на конечной позиции, если следующим шагом уходим дальше
+          const setPositionToEndAndStopAutomoving = (x: number, y: number): void => {
+            this.position.setXY(x, y)
+            shouldMove = false
+          }
 
-            const positionOnNextStep = this.getPositionOnNextStep()
+          const positionOnNextStep = this.getPositionOnNextStep()
 
-            if (movementDirection === 'down') {
-              if (positionOnNextStep.y > end.y) {
-                setPositionToEndAndStopAutomoving(this.position.x, end.y)
-              }
-            } else if (movementDirection === 'right') {
-              if (positionOnNextStep.x > end.x) {
-                setPositionToEndAndStopAutomoving(end.x, this.position.y)
-              }
-            } else if (movementDirection === 'up') {
-              if (positionOnNextStep.y < end.y) {
-                setPositionToEndAndStopAutomoving(this.position.x, end.y)
-              }
-            } else if (movementDirection === 'left') {
-              if (positionOnNextStep.x < end.x) {
-                setPositionToEndAndStopAutomoving(end.x, this.position.y)
-              }
+          if (movementDirection === 'down') {
+            if (positionOnNextStep.y > end.y) {
+              setPositionToEndAndStopAutomoving(this.position.x, end.y)
             }
-            if (shouldMove) {
-              this.move({ direction: movementDirection })
+          } else if (movementDirection === 'right') {
+            if (positionOnNextStep.x > end.x) {
+              setPositionToEndAndStopAutomoving(end.x, this.position.y)
             }
+          } else if (movementDirection === 'up') {
+            if (positionOnNextStep.y < end.y) {
+              setPositionToEndAndStopAutomoving(this.position.x, end.y)
+            }
+          } else if (movementDirection === 'left') {
+            if (positionOnNextStep.x < end.x) {
+              setPositionToEndAndStopAutomoving(end.x, this.position.y)
+            }
+          }
+          if (shouldMove) {
+            this.move({ direction: movementDirection })
           }
 
           window.requestAnimationFrame(automoveInDirection)
