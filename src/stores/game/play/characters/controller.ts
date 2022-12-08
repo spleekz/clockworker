@@ -1,5 +1,7 @@
 import { computed, makeObservable, observable } from 'mobx'
 
+import { Properties } from 'basic-utility-types'
+
 import { PlayerCharacter } from './player/character'
 
 type This = InstanceType<typeof CharactersController>
@@ -58,6 +60,12 @@ export class CharactersController {
 
   clearActiveCharacters = (): void => {
     this.activeCharactersNames = []
+  }
+
+  get activeCharacters(): Array<Properties<CharacterList>> {
+    return this.activeCharactersNames.map((characterName) => {
+      return this.list[characterName]
+    })
   }
 
   get isAllActiveCharactersImagesLoaded(): boolean {

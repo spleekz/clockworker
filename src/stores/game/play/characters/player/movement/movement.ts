@@ -17,63 +17,61 @@ type PlayerCharacterMovementConfig = CharacterMovementConfig & { settings: GameS
 export class PlayerCharacterMovement extends CharacterMovement {
   private settings: GameSettings
 
-  movementKeys: PlayerCharacterMovementKeys
+  keys: PlayerCharacterMovementKeys
 
   constructor(config: PlayerCharacterMovementConfig) {
     super({ animation: config.animation, position: config.position })
     this.settings = config.settings
 
     //Клавиши управления
-    this.movementKeys = new PlayerCharacterMovementKeys({ settings: this.settings })
+    this.keys = new PlayerCharacterMovementKeys({ settings: this.settings })
   }
 
   //!Обработка клавиш управления
   handleMovementKeys = (keyboard: KeyboardStore): void => {
-    if (!this.movementKeys.usageController.isProhibited) {
-      this.movementKeys.setPressedKeys(keyboard.pressedKeysArray)
-      if (this.movementKeys.isControllerPressed) {
-        //Проверка на нажатие регуляторов
-        if (this.movementKeys.isRegulatorKeysPressed) {
-          if (this.movementKeys.isSprintKeyPressed) {
-            this.setCurrentMovementRegulator('sprint')
-          }
-        } else {
-          this.setCurrentMovementRegulator(null)
-        }
-
-        const getMovementDirection = (): ExpandedMovementDirection | null => {
-          var movementDirection: ExpandedMovementDirection | null = null
-
-          //Убираем направления, компенсирующие друг друга (пример: вверх-вниз)
-          const filteredPressedMovementDirections = this.movementKeys.pressedDirections.filter(
-            (pressedDirection) => {
-              return this.movementKeys.pressedDirections.every(
-                (d) => d !== getReversedPrimitiveDirection(pressedDirection),
-              )
-            },
-          )
-
-          //Если длина массива 0, значит, все направления скомпенсировали друг друга - персонаж стоит на месте
-          if (filteredPressedMovementDirections.length) {
-            movementDirection = filteredPressedMovementDirections
-              //Сортируем, чтобы названия направлений получались в едином формате
-              .sort((_, b) => (b === 'down' || b === 'up' ? 1 : -1))
-              .join('') as ExpandedMovementDirection
-          } else {
-            this.stop()
-          }
-
-          return movementDirection
-        }
-
-        const movementDirection = getMovementDirection()
-
-        if (movementDirection) {
-          this.move({ direction: movementDirection })
+    this.keys.setPressedKeys(keyboard.pressedKeysArray)
+    if (this.keys.isControllerPressed) {
+      //Проверка на нажатие регуляторов
+      if (this.keys.isRegulatorKeysPressed) {
+        if (this.keys.isSprintKeyPressed) {
+          this.setCurrentMovementRegulator('sprint')
         }
       } else {
-        this.stop()
+        this.setCurrentMovementRegulator(null)
       }
+
+      const getMovementDirection = (): ExpandedMovementDirection | null => {
+        var movementDirection: ExpandedMovementDirection | null = null
+
+        //Убираем направления, компенсирующие друг друга (пример: вверх-вниз)
+        const filteredPressedMovementDirections = this.keys.pressedDirections.filter(
+          (pressedDirection) => {
+            return this.keys.pressedDirections.every(
+              (d) => d !== getReversedPrimitiveDirection(pressedDirection),
+            )
+          },
+        )
+
+        //Если длина массива 0, значит, все направления скомпенсировали друг друга - персонаж стоит на месте
+        if (filteredPressedMovementDirections.length) {
+          movementDirection = filteredPressedMovementDirections
+            //Сортируем, чтобы названия направлений получались в едином формате
+            .sort((_, b) => (b === 'down' || b === 'up' ? 1 : -1))
+            .join('') as ExpandedMovementDirection
+        } else {
+          this.stop()
+        }
+
+        return movementDirection
+      }
+
+      const movementDirection = getMovementDirection()
+
+      if (movementDirection) {
+        this.move({ direction: movementDirection })
+      }
+    } else {
+      this.stop()
     }
   }
 
@@ -82,9 +80,9 @@ export class PlayerCharacterMovement extends CharacterMovement {
   automove(config: AutomoveDeltaX): Promise<boolean>
   automove(config: AutomoveDeltaY): Promise<boolean>
   override automove(config: any): Promise<boolean> {
-    this.movementKeys.usageController.addProhibitor('automove')
+    this.keys.usageController.addProhibitor('automove')
     return super.automove(config).then((response) => {
-      this.movementKeys.usageController.removeProhibitor('automove')
+      this.keys.usageController.removeProhibitor('automove')
       return response
     })
   }

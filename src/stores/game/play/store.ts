@@ -106,7 +106,10 @@ export class GamePlayStore {
   }
 
   //!Контроллер паузы
-  pauseController = new GamePauseController({ sharedMethods: this.sharedMethods })
+  pauseController = new GamePauseController({
+    charactersController: this.charactersController,
+    sharedMethods: this.sharedMethods,
+  })
 
   //!Контроллер меню
   menuController = new GameMenuController()
@@ -161,16 +164,14 @@ export class GamePlayStore {
     }
   }
 
-  private gameInPlayLoop = (): void => {
-    if (this.player.character) {
-      this.player.character.movement.handleMovementKeys(this.keyboard)
+  private handlePlayerCharacterMovementKeys = (): void => {
+    if (!this.player.character?.movement.keys.usageController.isProhibited) {
+      this.player.character?.movement.handleMovementKeys(this.keyboard)
     }
   }
 
   private gameLoop = (): void => {
-    if (!this.pauseController.isGamePaused) {
-      this.gameInPlayLoop()
-    }
+    this.handlePlayerCharacterMovementKeys()
     this.update()
   }
 

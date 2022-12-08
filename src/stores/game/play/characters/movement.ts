@@ -1,6 +1,7 @@
 import { ExpandedMovementDirection, XY } from 'project-utility-types'
 
 import { Position } from 'stores/entities/position'
+import { UsageController } from 'stores/entities/usage-controller'
 import { getMovementDirection } from 'stores/game/lib/movement'
 
 import { areEquivalent } from 'lib/are-equivalent'
@@ -167,6 +168,11 @@ export class CharacterMovement {
   }
 
   //!Движение
+  movementUsageController = new UsageController()
+  get isAllowedToMove(): boolean {
+    return this.movementUsageController.prohibitors.length === 0
+  }
+
   isMoving = false
   setIsMoving = (value: boolean): void => {
     this.isMoving = value
@@ -179,18 +185,20 @@ export class CharacterMovement {
 
   //Отвечает за анимацию движения и за перемещение персонажа
   move = ({ direction }: MoveConfig): void => {
-    this.setMovementDirection(direction)
+    if (this.isAllowedToMove) {
+      this.setMovementDirection(direction)
 
-    if (this.currentMovementConfig) {
-      const positionOnNextStep = this.getPositionOnNextStep()
-      this.position.setXY(positionOnNextStep.x, positionOnNextStep.y)
+      if (this.currentMovementConfig) {
+        const positionOnNextStep = this.getPositionOnNextStep()
+        this.position.setXY(positionOnNextStep.x, positionOnNextStep.y)
 
-      //Обновление счётчика кадров и анимации ходьбы
-      const { framesPerStep } = this.currentMovementConfig
-      this.animation.increaseMovementFramesCount()
-      if (this.animation.movementFramesCount >= framesPerStep) {
-        this.animation.setMovementFramesCount(0)
-        this.animation.increaseMovementLoopIndex()
+        //Обновление счётчика кадров и анимации ходьбы
+        const { framesPerStep } = this.currentMovementConfig
+        this.animation.increaseMovementFramesCount()
+        if (this.animation.movementFramesCount >= framesPerStep) {
+          this.animation.setMovementFramesCount(0)
+          this.animation.increaseMovementLoopIndex()
+        }
       }
     }
   }
