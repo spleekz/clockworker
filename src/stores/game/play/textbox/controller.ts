@@ -10,8 +10,8 @@ import { WelcomeTextbox } from './list/welcome'
 type This = InstanceType<typeof TextboxController>
 
 type TextboxInController = InstanceType<Properties<This['refList']>>
-type List = Record<keyof This['refList'], TextboxInController>
 type TextboxName = keyof This['refList']
+type List = Record<TextboxName, TextboxInController>
 
 type SetTextboxConfig = {
   name: TextboxName
