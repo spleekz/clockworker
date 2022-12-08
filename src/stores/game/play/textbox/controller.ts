@@ -4,7 +4,7 @@ import { Callback, Properties } from 'basic-utility-types'
 
 import { GameScript } from 'content/text/get-parsed-game-script'
 
-import { SharedPlayMethods } from '../shared-methods/shared-methods'
+import { GamePauseController } from '../pause-controller'
 import { WelcomeTextbox } from './list/welcome'
 
 type This = InstanceType<typeof TextboxController>
@@ -21,15 +21,21 @@ type SetTextboxConfig = {
 
 type TextboxControllerConfig = {
   gameScript: GameScript
-  sharedPlayMethods: SharedPlayMethods
+  pauseController: GamePauseController
 }
 export class TextboxController {
   private gameScript: GameScript
-  private sharedPlayMethods: SharedPlayMethods
+  private pauseController: GamePauseController
+
+  internalOnOpen: Callback
+  internalOnClose: Callback
 
   constructor(config: TextboxControllerConfig) {
     this.gameScript = config.gameScript
-    this.sharedPlayMethods = config.sharedPlayMethods
+    this.pauseController = config.pauseController
+
+    this.internalOnOpen = this.pauseController.onPause
+    this.internalOnClose = this.pauseController.onResume
 
     makeObservable(this, { list: observable, currentTextbox: observable, isTextboxOpened: computed })
   }
@@ -39,15 +45,6 @@ export class TextboxController {
 
   //Список созданных текстбоксов
   list: List = {} as List
-
-  internalOnOpen = (): void => {
-    this.sharedPlayMethods.playerCharacter.addMovementKeysProhibitor('textbox')
-    this.sharedPlayMethods.playerCharacter.pauseAutomove()
-  }
-  internalOnClose = (): void => {
-    this.sharedPlayMethods.playerCharacter.removeMovementKeysProhibitor('textbox')
-    this.sharedPlayMethods.playerCharacter.resumeAutomove()
-  }
 
   createTextbox = (name: TextboxName): void => {
     this.list[name] = new this.refList[name]({ gameScript: this.gameScript })

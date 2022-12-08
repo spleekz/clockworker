@@ -49,7 +49,7 @@ export class GamePlayStore {
     //!Контроллер текстбоксов
     this.textboxController = new TextboxController({
       gameScript: this.script,
-      sharedPlayMethods: this.sharedMethods,
+      pauseController: this.pauseController,
     })
 
     makeAutoObservable(this)
