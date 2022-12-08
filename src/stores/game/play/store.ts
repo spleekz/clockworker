@@ -5,7 +5,7 @@ import { KeyboardStore } from 'stores/keyboard.store'
 import { GameScript, getParsedGameScript } from 'content/text/get-parsed-game-script'
 
 import { PreGameForm } from '../pre-game-form'
-import { CharacterName, CharactersController } from './characters/controller'
+import { CharacterController, CharacterName } from './characters/controller'
 import { PlayerCharacterConfig } from './characters/player/character'
 import { Collider } from './collider'
 import { Market } from './market'
@@ -65,7 +65,7 @@ export class GamePlayStore {
     }
 
     return this.player.createCharacter({
-      charactersController: this.charactersController,
+      characterController: this.characterController,
       characterConfig: playerCharacterConfig,
     })
   }
@@ -74,16 +74,16 @@ export class GamePlayStore {
   sharedMethods = new SharedPlayMethods()
 
   //!Контроллер персонажей
-  charactersController = new CharactersController()
+  characterController = new CharacterController()
   addActiveCharacter = (characterName: CharacterName): void => {
-    this.charactersController.addActiveCharacter(characterName)
-    const character = this.charactersController.list[characterName]
+    this.characterController.addActiveCharacter(characterName)
+    const character = this.characterController.list[characterName]
     this.collider.addBody(character)
   }
   removeActiveCharacter = (characterName: CharacterName): void => {
-    const character = this.charactersController.list[characterName]
+    const character = this.characterController.list[characterName]
     this.collider.removeBody(character.id)
-    this.charactersController.removeActiveCharacter(characterName)
+    this.characterController.removeActiveCharacter(characterName)
   }
 
   //!Настройки
@@ -95,11 +95,11 @@ export class GamePlayStore {
   //!Контроллер сцен
   sceneController = new GameSceneController({
     screen: this.screen,
-    characterList: this.charactersController.list,
+    characterList: this.characterController.list,
   })
   setScene = (sceneName: SceneName): Promise<void> => {
     return this.sceneController.setScene(sceneName).then(() => {
-      this.charactersController.clearActiveCharacters()
+      this.characterController.clearActiveCharacters()
       this.collider.clear()
       this.collider.addStaticObstacles(this.sceneController.currentScene.map.hitboxes)
     })
@@ -107,7 +107,7 @@ export class GamePlayStore {
 
   //!Контроллер паузы
   pauseController = new GamePauseController({
-    charactersController: this.charactersController,
+    characterController: this.characterController,
     sharedMethods: this.sharedMethods,
   })
 
@@ -149,8 +149,8 @@ export class GamePlayStore {
 
   //!Игровые циклы
   updateActiveCharacters = (): void => {
-    this.charactersController.activeCharactersNames.forEach((activeCharacterName) => {
-      const activeCharacter = this.charactersController.list[activeCharacterName]
+    this.characterController.activeCharactersNames.forEach((activeCharacterName) => {
+      const activeCharacter = this.characterController.list[activeCharacterName]
       activeCharacter.update()
     })
   }

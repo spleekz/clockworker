@@ -1,14 +1,14 @@
-import { CharactersController } from './characters/controller'
+import { CharacterController } from './characters/controller'
 import { PlayerCharacter, PlayerCharacterConfig } from './characters/player/character'
 
 type CreatePlayerCharacterConfig = {
-  charactersController: CharactersController
+  characterController: CharacterController
   characterConfig: PlayerCharacterConfig
 }
 export class Player {
   character: PlayerCharacter | null = null
   createCharacter = async (config: CreatePlayerCharacterConfig): Promise<void> => {
-    await config.charactersController.createCharacter('player', config.characterConfig)
-    this.character = config.charactersController.list.player
+    await config.characterController.createCharacter('player', config.characterConfig)
+    this.character = config.characterController.list.player
   }
 }
