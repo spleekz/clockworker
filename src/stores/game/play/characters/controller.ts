@@ -7,8 +7,8 @@ import { PlayerCharacter } from './player/character'
 type This = InstanceType<typeof CharactersController>
 
 export type CharacterName = keyof This['refList']
-
-export type CharacterList = { [P in CharacterName]: InstanceType<This['refList'][P]> }
+type Character = InstanceType<Properties<This['refList']>>
+export type CharacterList = Record<CharacterName, Character>
 
 export class CharactersController {
   constructor() {
@@ -62,7 +62,7 @@ export class CharactersController {
     this.activeCharactersNames = []
   }
 
-  get activeCharacters(): Array<Properties<CharacterList>> {
+  get activeCharacters(): Array<Character> {
     return this.activeCharactersNames.map((characterName) => {
       return this.list[characterName]
     })
