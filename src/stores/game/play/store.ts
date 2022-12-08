@@ -159,9 +159,7 @@ export class GamePlayStore {
     this.screen.clear()
     this.collider.update()
     this.sceneController.updateCurrentScene()
-    if (this.player.character) {
-      this.player.character.update()
-    }
+    this.updateActiveCharacters()
   }
 
   private handlePlayerCharacterMovementKeys = (): void => {
