@@ -148,10 +148,13 @@ export class GamePlayStore {
   })
 
   //!Игровые циклы
+  private handlePlayerCharacterMovementKeys = (): void => {
+    this.player.character?.movement.handleMovementKeys(this.keyboard)
+  }
+
   updateActiveCharacters = (): void => {
-    this.characterController.activeCharactersNames.forEach((activeCharacterName) => {
-      const activeCharacter = this.characterController.list[activeCharacterName]
-      activeCharacter.update()
+    this.characterController.activeCharacters.forEach((character) => {
+      character.update()
     })
   }
 
@@ -160,12 +163,6 @@ export class GamePlayStore {
     this.collider.update()
     this.sceneController.updateCurrentScene()
     this.updateActiveCharacters()
-  }
-
-  private handlePlayerCharacterMovementKeys = (): void => {
-    if (!this.player.character?.movement.keys.usageController.isProhibited) {
-      this.player.character?.movement.handleMovementKeys(this.keyboard)
-    }
   }
 
   private gameLoop = (): void => {

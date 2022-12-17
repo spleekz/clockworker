@@ -3,7 +3,7 @@ import { Size } from 'project-utility-types'
 
 import { Position } from 'stores/entities/position'
 
-type BodyConfig = {
+export type BodyConfig = {
   is: string
 }
 export class Body {

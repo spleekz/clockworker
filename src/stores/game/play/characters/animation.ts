@@ -1,39 +1,40 @@
-type MovementLoopFrame = 0 | 1 | 2 | 3
+import { AnimationSequence } from 'stores/entities/animation'
+import {
+  AnimationConfigNoNameNoSpriteSheet,
+  AnimationList,
+  ViewDirections,
+} from 'stores/entities/animation-controller'
+import { getRowSequence } from 'stores/game/lib/animation'
 
-export enum ViewDirections {
-  DOWN = 0,
-  RIGHT = 1,
-  UP = 2,
-  LEFT = 3,
+export type CharacterMovementAnimationName = 'walkDown' | 'walkRight' | 'walkUp' | 'walkLeft'
+
+export type GetCharacterMovementAnimationConfig = Omit<
+  AnimationConfigNoNameNoSpriteSheet,
+  'sequence' | 'startFrom'
+>
+
+const getCharacterMovementAnimationSequence = (direction: ViewDirections): AnimationSequence => {
+  return getRowSequence(direction, 4)
 }
 
-export class CharacterAnimation {
-  movementLoop: Array<MovementLoopFrame> = [0, 1, 2, 3]
-  movementLoopIndex = 0
-  setMovementLoopIndex = (index: number): void => {
-    this.movementLoopIndex = index
-  }
-  increaseMovementLoopIndex = (): void => {
-    if (this.movementLoopIndex === this.movementLoop.length - 1) {
-      this.setMovementLoopIndex(0)
-    } else {
-      this.movementLoopIndex += 1
-    }
-  }
-  get movementLoopFrame(): MovementLoopFrame {
-    return this.movementLoop[this.movementLoopIndex]
-  }
+const getCharacterMovementAnimationConfig = (
+  direction: ViewDirections,
+  template: GetCharacterMovementAnimationConfig,
+): AnimationConfigNoNameNoSpriteSheet => {
+  const sequence: AnimationSequence = getCharacterMovementAnimationSequence(direction)
 
-  movementFramesCount = 0
-  setMovementFramesCount = (value: number): void => {
-    this.movementFramesCount = value
-  }
-  increaseMovementFramesCount = (): void => {
-    this.movementFramesCount += 1
-  }
+  //Начинаем со 2-го спрайта, чтобы сразу после начала движения была анимация шага
+  return { ...template, sequence, startFrom: 1 }
+}
 
-  viewDirection: ViewDirections = ViewDirections.DOWN
-  setViewDirection = (direction: ViewDirections): void => {
-    this.viewDirection = direction
+//Возвращает список с анимациями движения, одинаковыми для всех персонажей
+export const getCharacterMovementAnimationList = (
+  config: GetCharacterMovementAnimationConfig,
+): AnimationList<CharacterMovementAnimationName> => {
+  return {
+    walkDown: getCharacterMovementAnimationConfig(ViewDirections.DOWN, config),
+    walkRight: getCharacterMovementAnimationConfig(ViewDirections.RIGHT, config),
+    walkUp: getCharacterMovementAnimationConfig(ViewDirections.UP, config),
+    walkLeft: getCharacterMovementAnimationConfig(ViewDirections.LEFT, config),
   }
 }

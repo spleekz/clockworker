@@ -1,30 +1,50 @@
+import { AnimationController, AnimationList } from 'stores/entities/animation-controller'
 import { ImageContainer, ImageContainerOptions, ImageSrcs } from 'stores/entities/image-container'
 import { Sprite } from 'stores/entities/sprite'
 import { SpriteSheet, SpriteSheetConfig } from 'stores/entities/sprite-sheet'
 
-import { Body } from '../body'
+import { Body, BodyConfig } from '../body'
 import { GameScreen } from '../screen'
-import { CharacterAnimation } from './animation'
-import { CharacterMovement } from './movement'
+import { CharacterMovementAnimationName } from './animation'
+import { CharacterMovement, CharacterMovementConfig } from './movement'
 
-type CharacterInitialImageList = ImageSrcs & { spriteSheet: string }
+export type CharacterInitialImageList = ImageSrcs & { spriteSheet: string }
 
-type CharacterConfig<InitialImageList extends CharacterInitialImageList> = {
-  is: string
+export type CharacterConfig<
+  InitialImageList extends CharacterInitialImageList,
+  AnimationName extends CharacterMovementAnimationName,
+  MovementTypeName extends string,
+  MovementRegulatorName extends string,
+> = BodyConfig & {
   imageContainerConfig: {
     initialImageList: InitialImageList
     options?: ImageContainerOptions
   }
+  initialScale: number
   spriteSheetConfig: Omit<SpriteSheetConfig, 'image'>
   screen: GameScreen
-  initialSpriteScale?: number
-}
-export class Character<InitialImageList extends CharacterInitialImageList> extends Body {
+  animationList: AnimationList<AnimationName>
+} & Omit<
+    CharacterMovementConfig<MovementTypeName, MovementRegulatorName>,
+    'position' | 'animationController'
+  >
+
+export class Character<
+  InitialImageList extends CharacterInitialImageList,
+  AnimationName extends CharacterMovementAnimationName,
+  MovementTypeName extends string,
+  MovementRegulatorName extends string,
+> extends Body {
   imageContainer: ImageContainer<InitialImageList>
   spriteSheet: SpriteSheet
   screen: GameScreen
 
-  constructor(config: CharacterConfig<InitialImageList>) {
+  animationController: AnimationController<AnimationName>
+  movement: CharacterMovement<MovementTypeName, MovementRegulatorName>
+
+  constructor(
+    config: CharacterConfig<InitialImageList, AnimationName, MovementTypeName, MovementRegulatorName>,
+  ) {
     super({ is: config.is })
 
     this.imageContainer = new ImageContainer(
@@ -39,14 +59,24 @@ export class Character<InitialImageList extends CharacterInitialImageList> exten
 
     this.screen = config.screen
 
-    if (config.initialSpriteScale) {
-      this.setSpriteScale(config.initialSpriteScale)
+    if (config.initialScale) {
+      this.setSpriteScale(config.initialScale)
     }
+
+    this.animationController = new AnimationController({
+      spriteSheet: this.spriteSheet,
+      animationList: config.animationList,
+      initialValue: 'walkDown' as AnimationName,
+    })
+
+    this.movement = new CharacterMovement({
+      position: this.position,
+      animationController: this.animationController,
+      movementTypes: config.movementTypes,
+      regulators: config.regulators,
+      initialMovementType: config.initialMovementType,
+    })
   }
-
-  animation = new CharacterAnimation()
-
-  movement = new CharacterMovement({ position: this.position, animation: this.animation })
 
   spriteScale = 1
   setSpriteScale = (scale: number): void => {
@@ -59,12 +89,11 @@ export class Character<InitialImageList extends CharacterInitialImageList> exten
   }
 
   get currentSprite(): Sprite {
-    return this.spriteSheet.getSprite(this.animation.viewDirection, this.animation.movementLoopFrame, {
-      scale: this.spriteScale,
-    })
+    return this.animationController.currentSprite
   }
 
   update = (): void => {
+    this.animationController.current.update()
     this.screen.drawSprite(this.currentSprite, this.position)
   }
 }

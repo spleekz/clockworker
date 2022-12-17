@@ -10,13 +10,13 @@ import { Character } from './characters/character'
 import { PlayerCharacter } from './characters/player/character'
 import { GameScreen } from './screen'
 
-type ColliderBody = Body | Character<any> | PlayerCharacter
+type ColliderBody = Body | Character<any, any, any, any> | PlayerCharacter
 type ColliderBodyWithHitbox = ColliderBody & { hitbox: PointPair }
 
 type ColliderBodyWithHitboxAndStuckPlaces = ColliderBodyWithHitbox & { stuckPlaces: Array<string> }
 
-const isCharacter = (body: ColliderBody): body is Character<any> => {
-  return (body as Character<any>).movement !== undefined
+const isCharacter = (body: ColliderBody): body is Character<any, any, any, any> => {
+  return (body as Character<any, any, any, any>).movement !== undefined
 }
 
 export type HitboxWithId = { hitbox: PointPair; id: string }

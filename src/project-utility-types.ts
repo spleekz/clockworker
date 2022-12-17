@@ -26,3 +26,5 @@ export type PointPair = {
   x2: number
   y2: number
 }
+
+export type Indexes = [number, number]

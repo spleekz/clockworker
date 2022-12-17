@@ -3,14 +3,31 @@ import playerCharacterSpriteSheetSrc from 'content/sprites/characters/Player.png
 import { GameScreen } from '../../screen'
 import { GameSettings } from '../../settings/settings'
 import { Character } from '../character'
-import { PlayerCharacterMovement } from './movement/movement'
+import { PlayerCharacterAnimationName, getPlayerCharacterAnimationList } from './animation'
+import {
+  PlayerCharacterMovement,
+  PlayerCharacterMovementRegulatorName,
+  PlayerCharacterMovementTypeName,
+  playerCharacterInitialMovementType,
+  playerCharacterMovementRegulators,
+  playerCharacterMovementTypes,
+} from './movement/movement'
+
+type InitialImageList = { spriteSheet: typeof playerCharacterSpriteSheetSrc }
+
+const initialSpriteScale = 2.5
 
 export type PlayerCharacterConfig = {
   name: string
   settings: GameSettings
   screen: GameScreen
 }
-export class PlayerCharacter extends Character<{ spriteSheet: typeof playerCharacterSpriteSheetSrc }> {
+export class PlayerCharacter extends Character<
+  InitialImageList,
+  PlayerCharacterAnimationName,
+  PlayerCharacterMovementTypeName,
+  PlayerCharacterMovementRegulatorName
+> {
   name: string
   private settings: GameSettings
 
@@ -35,9 +52,14 @@ export class PlayerCharacter extends Character<{ spriteSheet: typeof playerChara
         skipX: 2,
         skipY: 5,
       },
+      initialScale: initialSpriteScale,
       screen: config.screen,
-      initialSpriteScale: 2.5,
+      animationList: getPlayerCharacterAnimationList({ scale: initialSpriteScale }),
+      movementTypes: playerCharacterMovementTypes,
+      regulators: playerCharacterMovementRegulators,
+      initialMovementType: playerCharacterInitialMovementType,
     })
+
     this.name = config.name
     this.settings = config.settings
 
@@ -45,7 +67,10 @@ export class PlayerCharacter extends Character<{ spriteSheet: typeof playerChara
     this.movement = new PlayerCharacterMovement({
       position: this.position,
       settings: this.settings,
-      animation: this.animation,
+      animationController: this.animationController,
+      movementTypes: playerCharacterMovementTypes,
+      regulators: playerCharacterMovementRegulators,
+      initialMovementType: playerCharacterInitialMovementType,
     })
 
     this.size = {
