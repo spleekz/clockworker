@@ -52,7 +52,7 @@ export class PlayerCharacter extends Character<
         skipX: 2,
         skipY: 5,
       },
-      initialScale: initialSpriteScale,
+      initialSpriteScale,
       screen: config.screen,
       animationList: getPlayerCharacterAnimationList({ scale: initialSpriteScale }),
       movementTypes: playerCharacterMovementTypes,

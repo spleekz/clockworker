@@ -20,7 +20,7 @@ export type CharacterConfig<
     initialImageList: InitialImageList
     options?: ImageContainerOptions
   }
-  initialScale: number
+  initialSpriteScale: number
   spriteSheetConfig: Omit<SpriteSheetConfig, 'image'>
   screen: GameScreen
   animationList: AnimationList<AnimationName>
@@ -59,8 +59,8 @@ export class Character<
 
     this.screen = config.screen
 
-    if (config.initialScale) {
-      this.setSpriteScale(config.initialScale)
+    if (config.initialSpriteScale) {
+      this.setSpriteScale(config.initialSpriteScale)
     }
 
     this.animationController = new AnimationController({
