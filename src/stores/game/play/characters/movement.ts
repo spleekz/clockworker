@@ -1,10 +1,10 @@
-import { ExpandedMovementDirection, XY } from 'project-utility-types'
+import { ExpandedDirection, XY } from 'project-utility-types'
 
 import { AnimationController } from 'stores/entities/animation-controller'
 import { Position } from 'stores/entities/position'
 import { UsageController } from 'stores/entities/usage-controller'
 import {
-  convertExpandedMovementDirectionToPrimitive,
+  convertExpandedDirectionToPrimitiveDirection,
   getMovementDirection,
 } from 'stores/game/lib/movement'
 
@@ -34,7 +34,7 @@ type MovementConfigParameters = {
 export type MovementTypes<MovementTypeName extends string> = Record<MovementTypeName, MovementConfig>
 export type MovementRegulators<RegulatorName extends string> = Record<RegulatorName, MovementRegulator>
 
-type MoveConfig = { direction: ExpandedMovementDirection }
+type MoveConfig = { direction: ExpandedDirection }
 
 export type AutomoveFromTo = { from?: XY; to: XY }
 export type AutomoveDeltaX = { deltaX: number }
@@ -111,8 +111,8 @@ export class CharacterMovement<MovementTypeName extends string, RegulatorName ex
 
   //!Направление движения
   //Существует только в момент движения персонажа
-  direction: ExpandedMovementDirection | null = null
-  setDirection = (direction: ExpandedMovementDirection | null): void => {
+  direction: ExpandedDirection | null = null
+  setDirection = (direction: ExpandedDirection | null): void => {
     this.direction = direction
   }
   //^@Позиция
@@ -177,7 +177,7 @@ export class CharacterMovement<MovementTypeName extends string, RegulatorName ex
     if (this.direction) {
       const animationName: CharacterMovementAnimationName = ('walk' +
         capitalizeFirstSymbol(
-          convertExpandedMovementDirectionToPrimitive(this.direction),
+          convertExpandedDirectionToPrimitiveDirection(this.direction),
         )) as CharacterMovementAnimationName
 
       //Обновляем скорость анимации в соответствие с текущим конфигом движения

@@ -1,4 +1,4 @@
-import { AnyCharacter, ExpandedMovementDirection, PointPair, Side, XY } from 'project-utility-types'
+import { AnyCharacter, ExpandedDirection, PointPair, Side, XY } from 'project-utility-types'
 
 import { areEquivalent } from 'lib/are-equivalent'
 import { removeOnce } from 'lib/arrays'
@@ -91,7 +91,7 @@ export class Collider {
   private getMovementDirectionByHitbox = (
     prevHitbox: PointPair,
     currentHitbox: PointPair,
-  ): ExpandedMovementDirection => {
+  ): ExpandedDirection => {
     const start: XY = { x: prevHitbox.x1, y: prevHitbox.y1 }
     const end: XY = { x: currentHitbox.x1, y: currentHitbox.y1 }
 
@@ -319,7 +319,7 @@ export class Collider {
     bodyMovementDirection,
   }: {
     intersectionPoints: Array<IntersectionPoint>
-    bodyMovementDirection: ExpandedMovementDirection
+    bodyMovementDirection: ExpandedDirection
   }): Array<IntersectionPoint> | null => {
     const closestPoints: Array<IntersectionPoint> = []
 

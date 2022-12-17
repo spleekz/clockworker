@@ -4,7 +4,7 @@ export type Canvas = HTMLCanvasElement
 export type Ctx = CanvasRenderingContext2D
 
 export type PrimitiveDirection = 'down' | 'right' | 'up' | 'left'
-export type ExpandedMovementDirection =
+export type ExpandedDirection =
   | PrimitiveDirection
   | 'downright'
   | 'upright'

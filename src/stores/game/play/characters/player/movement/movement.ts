@@ -1,4 +1,4 @@
-import { ExpandedMovementDirection } from 'project-utility-types'
+import { ExpandedDirection } from 'project-utility-types'
 
 import { getReversedPrimitiveDirection } from 'stores/game/lib/movement'
 import { GameSettings } from 'stores/game/play/settings/settings'
@@ -78,8 +78,8 @@ export class PlayerCharacterMovement extends CharacterMovement<
             this.setCurrentMovementRegulator(null)
           }
 
-          const getMovementDirection = (): ExpandedMovementDirection | null => {
-            var movementDirection: ExpandedMovementDirection | null = null
+          const getMovementDirection = (): ExpandedDirection | null => {
+            var movementDirection: ExpandedDirection | null = null
 
             //Убираем направления, компенсирующие друг друга (пример: вверх-вниз)
             const filteredPressedMovementDirections = this.keys.pressedDirections.filter(
@@ -95,7 +95,7 @@ export class PlayerCharacterMovement extends CharacterMovement<
               movementDirection = filteredPressedMovementDirections
                 //Сортируем, чтобы названия направлений получались в едином формате
                 .sort((_, b) => (b === 'down' || b === 'up' ? 1 : -1))
-                .join('') as ExpandedMovementDirection
+                .join('') as ExpandedDirection
             }
 
             return movementDirection
