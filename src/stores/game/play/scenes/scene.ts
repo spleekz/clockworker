@@ -88,6 +88,7 @@ export class GameScene<SceneName extends string> {
         skipY: 0,
         spriteWidth: this.mapConfig.scheme.tilewidth,
         spriteHeight: this.mapConfig.scheme.tileheight,
+        defaultScale: 1,
       }),
       scheme: this.mapConfig.scheme,
       hitboxes: this.getMapHitboxes(),

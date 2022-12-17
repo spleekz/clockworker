@@ -51,6 +51,7 @@ export class PlayerCharacter extends Character<
         firstSkipY: 5,
         skipX: 2,
         skipY: 5,
+        defaultScale: initialSpriteScale,
       },
       initialSpriteScale,
       screen: config.screen,

@@ -12,6 +12,7 @@ export type SpriteSheetConfig = {
   firstSkipY: number
   skipX: number
   skipY: number
+  defaultScale?: number
 }
 export class SpriteSheet {
   image: HTMLImageElement
@@ -21,6 +22,7 @@ export class SpriteSheet {
   firstSkipY: number
   skipX: number
   skipY: number
+  defaultScale?: number
 
   constructor(config: SpriteSheetConfig) {
     this.image = config.image
@@ -30,12 +32,13 @@ export class SpriteSheet {
     this.firstSkipY = config.firstSkipY
     this.skipX = config.skipX
     this.skipY = config.skipY
+    this.defaultScale = config.defaultScale
   }
 
   getSprite = (row: number, column: number, config?: GetSpriteConfig): Sprite => {
     const spriteSourceX = this.firstSkipX + (this.spriteWidth + this.skipX) * column
     const spriteSourceY = this.firstSkipY + (this.spriteHeight + this.skipY) * row
-    const spriteScale = config?.scale ?? 1
+    const spriteScale = config?.scale ?? this.defaultScale ?? 1
 
     return new Sprite({
       image: this.image,
