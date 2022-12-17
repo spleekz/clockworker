@@ -1,4 +1,4 @@
-import { ExpandedMovementDirection, PrimitiveMovementDirection, XY } from 'project-utility-types'
+import { ExpandedMovementDirection, PrimitiveDirection, XY } from 'project-utility-types'
 
 import { ViewDirections } from 'stores/entities/animation-controller'
 
@@ -20,8 +20,8 @@ export const getMovementDirection = (start: XY, end: XY): ExpandedMovementDirect
 }
 
 export const getReversedPrimitiveDirection = (
-  direction: PrimitiveMovementDirection,
-): PrimitiveMovementDirection => {
+  direction: PrimitiveDirection,
+): PrimitiveDirection => {
   if (direction === 'down') {
     return 'up'
   } else if (direction === 'right') {
@@ -47,7 +47,7 @@ export const convertMovementDirectionToViewDirection = (
 
 export const convertExpandedMovementDirectionToPrimitive = (
   direction: ExpandedMovementDirection,
-): PrimitiveMovementDirection => {
+): PrimitiveDirection => {
   return direction.includes('right')
     ? 'right'
     : direction.includes('left')

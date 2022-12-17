@@ -1,4 +1,4 @@
-import { PrimitiveMovementDirection } from 'project-utility-types'
+import { PrimitiveDirection } from 'project-utility-types'
 
 import { UsageController } from 'stores/entities/usage-controller'
 import {
@@ -42,7 +42,7 @@ export class PlayerCharacterMovementKeys {
   get pressedControllers(): Array<string> {
     return this.pressedKeys.slice().reverse().filter(this.isControllerKey)
   }
-  get pressedDirections(): Array<PrimitiveMovementDirection> {
+  get pressedDirections(): Array<PrimitiveDirection> {
     return this.pressedControllers.map((controller) =>
       controller === this.controllerKeys.down
         ? 'down'

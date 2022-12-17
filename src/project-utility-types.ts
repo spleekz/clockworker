@@ -3,9 +3,9 @@ import { Character } from 'stores/game/play/characters/character'
 export type Canvas = HTMLCanvasElement
 export type Ctx = CanvasRenderingContext2D
 
-export type PrimitiveMovementDirection = 'down' | 'right' | 'up' | 'left'
+export type PrimitiveDirection = 'down' | 'right' | 'up' | 'left'
 export type ExpandedMovementDirection =
-  | PrimitiveMovementDirection
+  | PrimitiveDirection
   | 'downright'
   | 'upright'
   | 'upleft'
