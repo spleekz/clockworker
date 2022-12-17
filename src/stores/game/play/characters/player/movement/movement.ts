@@ -18,7 +18,7 @@ import { PlayerCharacterMovementKeys } from './keys'
 export type PlayerCharacterMovementTypeName = 'walk'
 export const playerCharacterMovementTypes: MovementTypes<PlayerCharacterMovementTypeName> = {
   walk: {
-    stepSize: 1.8,
+    step: 1.8,
     framesPerStep: 11,
   },
 }
@@ -26,7 +26,7 @@ export const playerCharacterMovementTypes: MovementTypes<PlayerCharacterMovement
 export type PlayerCharacterMovementRegulatorName = 'sprint'
 export const playerCharacterMovementRegulators: MovementRegulators<PlayerCharacterMovementRegulatorName> =
   {
-    sprint: { stepSizeMultiplier: 1.88, framesPerStepMultiplier: 0.72 },
+    sprint: { stepMultiplier: 1.88, framesPerStepMultiplier: 0.72 },
   }
 
 export const playerCharacterInitialMovementType: PlayerCharacterMovementTypeName = 'walk'

@@ -14,11 +14,11 @@ import { capitalizeFirstSymbol } from 'lib/strings'
 import { CharacterMovementAnimationName } from './animation'
 
 type MovementConfig = {
-  stepSize: number
+  step: number
   framesPerStep: number
 }
 type MovementRegulator = {
-  stepSizeMultiplier: number
+  stepMultiplier: number
   framesPerStepMultiplier: number
 }
 
@@ -82,30 +82,30 @@ export class CharacterMovement<MovementTypeName extends string, RegulatorName ex
   //@Позиция
   //!Позиция на следующий шаг
   getPositionOnNextStep = (): XY => {
-    const { stepSize } = this.currentMovementConfig
+    const { step } = this.currentMovementConfig
 
     //Длина шага по диагонали должна быть равна длине шага по прямой
-    const diagonalStepSize = Math.sqrt(Math.pow(stepSize, 2) / 2)
+    const diagonalStep = Math.sqrt(Math.pow(step, 2) / 2)
 
     const { x, y } = this.position
 
     if (this.direction === 'down') {
-      return { x, y: y + stepSize }
+      return { x, y: y + step }
     } else if (this.direction === 'downright') {
-      return { x: x + diagonalStepSize, y: y + diagonalStepSize }
+      return { x: x + diagonalStep, y: y + diagonalStep }
     } else if (this.direction === 'right') {
-      return { x: x + stepSize, y }
+      return { x: x + step, y }
     } else if (this.direction === 'upright') {
-      return { x: x + diagonalStepSize, y: y - diagonalStepSize }
+      return { x: x + diagonalStep, y: y - diagonalStep }
     } else if (this.direction === 'up') {
-      return { x, y: y - stepSize }
+      return { x, y: y - step }
     } else if (this.direction === 'upleft') {
-      return { x: x - diagonalStepSize, y: y - diagonalStepSize }
+      return { x: x - diagonalStep, y: y - diagonalStep }
     } else if (this.direction === 'left') {
-      return { x: x - stepSize, y }
+      return { x: x - step, y }
     } else {
       //downleft
-      return { x: x - diagonalStepSize, y: y + diagonalStepSize }
+      return { x: x - diagonalStep, y: y + diagonalStep }
     }
   }
 
@@ -137,13 +137,13 @@ export class CharacterMovement<MovementTypeName extends string, RegulatorName ex
 
   get currentMovementConfig(): MovementConfig {
     const { type, regulator } = this.currentMovementConfigParameters
-    const stepSizeMultiplier = regulator ? regulator.stepSizeMultiplier : 1
+    const stepMultiplier = regulator ? regulator.stepMultiplier : 1
     const framesPerStepMultiplier = regulator ? regulator.framesPerStepMultiplier : 1
 
-    const stepSize = type.stepSize * stepSizeMultiplier
+    const step = type.step * stepMultiplier
     const framesPerStep = Math.round(type.framesPerStep * framesPerStepMultiplier)
 
-    return { stepSize, framesPerStep }
+    return { step, framesPerStep }
   }
 
   //!Движение
