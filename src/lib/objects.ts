@@ -1,4 +1,4 @@
-import { AnyObject, Merge } from 'basic-utility-types'
+import { AnyObject, Merge, OverwriteProperties, Properties } from 'basic-utility-types'
 
 export const isObject = (value: any): boolean => {
   return typeof value === 'object' && !Array.isArray(value) && value !== null
@@ -27,4 +27,15 @@ export const merge = <T1 extends AnyObject, T2 extends AnyObject>(
   mergeObjects(merged, object2)
 
   return merged as Merge<T1, T2>
+}
+
+type ObjectMapCallback<T, R> = (value: Properties<T>) => R
+export const objectMap = <T extends AnyObject, R>(
+  object: T,
+  callback: ObjectMapCallback<T, R>,
+): OverwriteProperties<T, R> => {
+  return (Object.keys(object) as Array<keyof T>).reduce((result, key) => {
+    result[key] = callback(object[key])
+    return result
+  }, {} as OverwriteProperties<T, R>)
 }

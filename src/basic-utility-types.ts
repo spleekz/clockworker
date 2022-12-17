@@ -24,3 +24,5 @@ export type Merge<A, B> = A | B extends AnyObject
 export type DeepPartial<T> = T extends AnyObject ? { [K in keyof T]?: DeepPartial<T[K]> } : T
 
 export type Properties<T> = T[keyof T]
+
+export type OverwriteProperties<T, P> = Record<keyof T, P>
