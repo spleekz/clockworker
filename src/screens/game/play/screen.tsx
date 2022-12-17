@@ -11,7 +11,7 @@ import { QuitInMainMenuConfirm } from 'components/popup/game-popups/quit-in-main
 import { GameOpening } from '../opening'
 import { handleGamePlayScreenEsc } from './handle-esc'
 import { PauseMenu } from './pause-menu'
-import { PlayCanvas } from './play-canvas'
+import { PlayCanvas } from './play-canvas/canvas'
 import { GameSettingsMenu } from './settings/menu'
 
 const GamePlayStoreContext = createContext<GamePlayStore | null>(null)

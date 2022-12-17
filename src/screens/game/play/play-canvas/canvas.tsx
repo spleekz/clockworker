@@ -4,9 +4,8 @@ import styled from 'styled-components'
 
 import { FC } from 'basic-utility-types'
 
-import { GameTextbox } from 'components/textbox/game-textbox'
-
-import { useGamePlayStore } from './screen'
+import { useGamePlayStore } from '../screen'
+import { PlayCanvasOverlay } from './overlay'
 
 export const PlayCanvas: FC = observer(() => {
   const gamePlayStore = useGamePlayStore()
@@ -20,9 +19,11 @@ export const PlayCanvas: FC = observer(() => {
   }, [gamePlayStore.isGamePrepared])
 
   return (
-    <Container ref={containerRef}>
-      <GameTextbox />
-    </Container>
+    <>
+      <Container ref={containerRef}>
+        <PlayCanvasOverlay />
+      </Container>
+    </>
   )
 })
 
