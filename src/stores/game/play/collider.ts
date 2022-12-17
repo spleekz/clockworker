@@ -1,4 +1,4 @@
-import { ExpandedMovementDirection, PointPair, Side, XY } from 'project-utility-types'
+import { AnyCharacter, ExpandedMovementDirection, PointPair, Side, XY } from 'project-utility-types'
 
 import { areEquivalent } from 'lib/are-equivalent'
 import { removeOnce } from 'lib/arrays'
@@ -6,17 +6,16 @@ import { checkIntersection, getDistanceBetweenPoints } from 'lib/coords'
 
 import { getMovementDirection } from '../lib/movement'
 import { Body } from './body'
-import { Character } from './characters/character'
 import { PlayerCharacter } from './characters/player/character'
 import { GameScreen } from './screen'
 
-type ColliderBody = Body | Character<any, any, any, any> | PlayerCharacter
+type ColliderBody = Body | AnyCharacter | PlayerCharacter
 type ColliderBodyWithHitbox = ColliderBody & { hitbox: PointPair }
 
 type ColliderBodyWithHitboxAndStuckPlaces = ColliderBodyWithHitbox & { stuckPlaces: Array<string> }
 
-const isCharacter = (body: ColliderBody): body is Character<any, any, any, any> => {
-  return (body as Character<any, any, any, any>).movement !== undefined
+const isCharacter = (body: ColliderBody): body is AnyCharacter => {
+  return (body as AnyCharacter).movement !== undefined
 }
 
 export type HitboxWithId = { hitbox: PointPair; id: string }

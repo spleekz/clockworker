@@ -1,3 +1,5 @@
+import { Character } from 'stores/game/play/characters/character'
+
 export type Canvas = HTMLCanvasElement
 export type Ctx = CanvasRenderingContext2D
 
@@ -28,3 +30,5 @@ export type PointPair = {
 }
 
 export type Indexes = [number, number]
+
+export type AnyCharacter = Character<any, any, any, any>
