@@ -147,9 +147,10 @@ export class CharacterMovement<MovementTypeName extends string, RegulatorName ex
   }
 
   //!Движение
+  //Препятствия не запрещают движение, т.к. за ними следит коллайдер
   movementProhibitorsController = new ProhibitorsController()
-  get isAllowedToMove(): boolean {
-    return this.movementProhibitorsController.list.length === 0
+  get isMovementProhibited(): boolean {
+    return this.movementProhibitorsController.list.length > 0
   }
 
   isMoving = false
@@ -288,7 +289,7 @@ export class CharacterMovement<MovementTypeName extends string, RegulatorName ex
           }
 
           if (shouldMove) {
-            if (this.isAllowedToMove) {
+            if (!this.isMovementProhibited) {
               this.animationController.resume()
               this.moveWithAnimation({ direction })
             } else {
