@@ -34,8 +34,8 @@ export class TextboxController {
     this.gameScript = config.gameScript
     this.pauseController = config.pauseController
 
-    this.internalOnOpen = this.pauseController.onPause
-    this.internalOnClose = this.pauseController.onResume
+    this.internalOnOpen = () => this.pauseController.onPause({ prohibitorName: 'textbox' })
+    this.internalOnClose = () => this.pauseController.onResume({ prohibitorName: 'textbox' })
 
     makeObservable(this, { list: observable, currentTextbox: observable, isTextboxOpened: computed })
   }

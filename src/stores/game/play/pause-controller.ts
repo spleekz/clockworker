@@ -3,6 +3,8 @@ import { makeAutoObservable } from 'mobx'
 import { CharacterController } from './characters/controller'
 import { SharedPlayMethods } from './shared-methods/shared-methods'
 
+type PauseControlsConfig = { prohibitorName: string }
+
 type Config = {
   characterController: CharacterController
   sharedMethods: SharedPlayMethods
@@ -18,43 +20,43 @@ export class GamePauseController {
   }
 
   //!Пауза
-  pauseCharactersMovement = (): void => {
+  pauseCharactersMovement = (prohibitorName: string): void => {
     this.characterController.activeCharacters.forEach((character) => {
-      character.movement.movementUsageController.addProhibitor('pause')
+      character.movement.movementUsageController.addProhibitor(prohibitorName)
     })
   }
-  pauseHandlingPlayerCharacterMovementKeys = (): void => {
-    this.sharedMethods.playerCharacter.addMovementKeysProhibitor('pause')
+  pauseHandlingPlayerCharacterMovementKeys = (prohibitorName: string): void => {
+    this.sharedMethods.playerCharacter.addMovementKeysProhibitor(prohibitorName)
   }
 
-  onPause = (): void => {
-    this.pauseCharactersMovement()
-    this.pauseHandlingPlayerCharacterMovementKeys()
+  onPause = ({ prohibitorName }: PauseControlsConfig): void => {
+    this.pauseCharactersMovement(prohibitorName)
+    this.pauseHandlingPlayerCharacterMovementKeys(prohibitorName)
   }
 
   //!Возобновление
-  resumeCharactersMovement = (): void => {
+  resumeCharactersMovement = (prohibitorName: string): void => {
     this.characterController.activeCharacters.forEach((character) => {
-      character.movement.movementUsageController.removeProhibitor('pause')
+      character.movement.movementUsageController.removeProhibitor(prohibitorName)
     })
   }
-  resumeHandlingPlayerCharacterMovementKeys = (): void => {
-    this.sharedMethods.playerCharacter.removeMovementKeysProhibitor('pause')
+  resumeHandlingPlayerCharacterMovementKeys = (prohibitorName: string): void => {
+    this.sharedMethods.playerCharacter.removeMovementKeysProhibitor(prohibitorName)
   }
 
-  onResume = (): void => {
-    this.resumeCharactersMovement()
-    this.resumeHandlingPlayerCharacterMovementKeys()
+  onResume = ({ prohibitorName }: PauseControlsConfig): void => {
+    this.resumeCharactersMovement(prohibitorName)
+    this.resumeHandlingPlayerCharacterMovementKeys(prohibitorName)
   }
 
   isGamePaused = false
   pauseGame = (): void => {
     this.isGamePaused = true
-    this.onPause()
+    this.onPause({ prohibitorName: 'pause' })
   }
   resumeGame = (): void => {
     this.isGamePaused = false
-    this.onResume()
+    this.onResume({ prohibitorName: 'pause' })
   }
   toggleGamePause = (): void => {
     if (this.isGamePaused) {
