@@ -22,7 +22,7 @@ export class GamePauseController {
   //!Пауза
   pauseCharactersMovement = (prohibitorName: string): void => {
     this.characterController.activeCharacters.forEach((character) => {
-      character.movement.movementUsageController.addProhibitor(prohibitorName)
+      character.movement.movementProhibitorsController.add(prohibitorName)
     })
   }
   pauseHandlingPlayerCharacterMovementKeys = (prohibitorName: string): void => {
@@ -37,7 +37,7 @@ export class GamePauseController {
   //!Возобновление
   resumeCharactersMovement = (prohibitorName: string): void => {
     this.characterController.activeCharacters.forEach((character) => {
-      character.movement.movementUsageController.removeProhibitor(prohibitorName)
+      character.movement.movementProhibitorsController.remove(prohibitorName)
     })
   }
   resumeHandlingPlayerCharacterMovementKeys = (prohibitorName: string): void => {

@@ -1,6 +1,6 @@
 import { PrimitiveDirection } from 'project-utility-types'
 
-import { UsageController } from 'stores/entities/usage-controller'
+import { ProhibitorsController } from 'stores/entities/prohibitors-controller'
 import {
   GameSettings,
   GameSettingsMovementControls,
@@ -20,7 +20,7 @@ export class PlayerCharacterMovementKeys {
     this.settings = config.settings
   }
 
-  usageController = new UsageController()
+  prohibitorsController = new ProhibitorsController()
 
   pressedKeys: Array<string> = []
   setPressedKeys = (keys: Array<string>): void => {

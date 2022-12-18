@@ -7,9 +7,9 @@ export class PlayerCharacterSharedMethods {
   }
 
   addMovementKeysProhibitor = (prohibitorName: string): void => {
-    this.playerCharacter?.movement.keys.usageController.addProhibitor(prohibitorName)
+    this.playerCharacter?.movement.keys.prohibitorsController.add(prohibitorName)
   }
   removeMovementKeysProhibitor = (prohibitorName: string): void => {
-    this.playerCharacter?.movement.keys.usageController.removeProhibitor(prohibitorName)
+    this.playerCharacter?.movement.keys.prohibitorsController.remove(prohibitorName)
   }
 }

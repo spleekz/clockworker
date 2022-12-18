@@ -59,7 +59,7 @@ export class PlayerCharacterMovement extends CharacterMovement<
 
   //!Обработка клавиш управления
   handleMovementKeys = (keyboard: KeyboardStore): void => {
-    if (!this.keys.usageController.isProhibited) {
+    if (!this.keys.prohibitorsController.isProhibited) {
       const prevPressedControllersLength = this.keys.pressedControllers.length
 
       this.keys.setPressedKeys(keyboard.pressedKeysArray)
@@ -113,14 +113,14 @@ export class PlayerCharacterMovement extends CharacterMovement<
       }
     } else {
       if (
-        this.keys.usageController.prohibitors.every(
+        this.keys.prohibitorsController.list.every(
           (p) => p !== 'automove' && p !== 'pause' && p !== 'textbox',
         )
       ) {
         //Когда клавиши заблокированы автомувом - анимация продолжается
         //Всё, кроме паузы и открытого текстбокса полностью останавливает анимацию
         this.animationController.stop()
-      } else if (this.keys.usageController.prohibitors.some((p) => p === 'pause' || p === 'textbox')) {
+      } else if (this.keys.prohibitorsController.list.some((p) => p === 'pause' || p === 'textbox')) {
         //Когда игра на паузе или открыт текстбокс - анимация замирает
         this.animationController.pause()
       }
@@ -132,9 +132,9 @@ export class PlayerCharacterMovement extends CharacterMovement<
   automove(config: AutomoveDeltaX): Promise<boolean>
   automove(config: AutomoveDeltaY): Promise<boolean>
   override automove(config: any): Promise<boolean> {
-    this.keys.usageController.addProhibitor('automove')
+    this.keys.prohibitorsController.add('automove')
     return super.automove(config).then((response) => {
-      this.keys.usageController.removeProhibitor('automove')
+      this.keys.prohibitorsController.remove('automove')
       return response
     })
   }

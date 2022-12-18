@@ -2,7 +2,7 @@ import { ExpandedDirection, XY } from 'project-utility-types'
 
 import { AnimationController } from 'stores/entities/animation-controller'
 import { Position } from 'stores/entities/position'
-import { UsageController } from 'stores/entities/usage-controller'
+import { ProhibitorsController } from 'stores/entities/prohibitors-controller'
 import {
   convertExpandedDirectionToPrimitiveDirection,
   getMovementDirection,
@@ -147,9 +147,9 @@ export class CharacterMovement<MovementTypeName extends string, RegulatorName ex
   }
 
   //!Движение
-  movementUsageController = new UsageController()
+  movementProhibitorsController = new ProhibitorsController()
   get isAllowedToMove(): boolean {
-    return this.movementUsageController.prohibitors.length === 0
+    return this.movementProhibitorsController.list.length === 0
   }
 
   isMoving = false
@@ -293,7 +293,7 @@ export class CharacterMovement<MovementTypeName extends string, RegulatorName ex
               this.moveWithAnimation({ direction })
             } else {
               if (
-                this.movementUsageController.prohibitors.every((p) => p !== 'pause' && p !== 'textbox')
+                this.movementProhibitorsController.list.every((p) => p !== 'pause' && p !== 'textbox')
               ) {
                 //Всё, кроме паузы и текстбокса останавливает анимацию
                 this.animationController.stop()
