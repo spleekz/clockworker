@@ -122,7 +122,7 @@ export class GamePlayStore {
   setIsGamePrepared = (value: boolean): void => {
     this.isGamePrepared = value
   }
-  prepareGame = (): Promise<void> => {
+  initializeGame = (): Promise<void> => {
     return this.setScene('marketMain').then(() => {
       return this.createPlayerCharacter().then(() => {
         if (this.player.character) {
@@ -177,7 +177,7 @@ export class GamePlayStore {
 
   //!Запуск игры
   run = (): void => {
-    this.prepareGame().then(() => {
+    this.initializeGame().then(() => {
       this.mainLoop()
       this.opening.run().then(() => {
         this.textboxesController.setCurrentTextbox({ name: 'welcome' })
