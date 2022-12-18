@@ -7,7 +7,7 @@ import { GameScript } from 'content/text/get-parsed-game-script'
 import { GamePauseController } from '../pause-controller'
 import { WelcomeTextbox } from './list/welcome'
 
-type This = InstanceType<typeof TextboxController>
+type This = InstanceType<typeof TextboxesController>
 
 type TextboxInController = InstanceType<Properties<This['refList']>>
 type TextboxName = keyof This['refList']
@@ -19,18 +19,18 @@ type SetTextboxConfig = {
   onClose?: Callback
 }
 
-type TextboxControllerConfig = {
+type TextboxesControllerConfig = {
   gameScript: GameScript
   pauseController: GamePauseController
 }
-export class TextboxController {
+export class TextboxesController {
   private gameScript: GameScript
   private pauseController: GamePauseController
 
   internalOnOpen: Callback
   internalOnClose: Callback
 
-  constructor(config: TextboxControllerConfig) {
+  constructor(config: TextboxesControllerConfig) {
     this.gameScript = config.gameScript
     this.pauseController = config.pauseController
 

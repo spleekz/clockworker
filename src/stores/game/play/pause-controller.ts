@@ -1,27 +1,27 @@
 import { makeAutoObservable } from 'mobx'
 
-import { CharacterController } from './characters/controller'
+import { CharactersController } from './characters/controller'
 import { SharedPlayMethods } from './shared-methods/shared-methods'
 
 type PauseControlsConfig = { prohibitorName: string }
 
 type Config = {
-  characterController: CharacterController
+  characterController: CharactersController
   sharedMethods: SharedPlayMethods
 }
 export class GamePauseController {
-  private characterController: CharacterController
+  private charactersController: CharactersController
   private sharedMethods: SharedPlayMethods
 
   constructor(config: Config) {
-    this.characterController = config.characterController
+    this.charactersController = config.characterController
     this.sharedMethods = config.sharedMethods
     makeAutoObservable(this)
   }
 
   //!Пауза
   pauseCharactersMovement = (prohibitorName: string): void => {
-    this.characterController.activeCharacters.forEach((character) => {
+    this.charactersController.activeCharacters.forEach((character) => {
       character.movement.movementProhibitorsController.add(prohibitorName)
     })
   }
@@ -36,7 +36,7 @@ export class GamePauseController {
 
   //!Возобновление
   resumeCharactersMovement = (prohibitorName: string): void => {
-    this.characterController.activeCharacters.forEach((character) => {
+    this.charactersController.activeCharacters.forEach((character) => {
       character.movement.movementProhibitorsController.remove(prohibitorName)
     })
   }

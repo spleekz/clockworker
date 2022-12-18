@@ -14,17 +14,17 @@ export const handleGamePlayScreenEsc = ({ gamePlayStore }: Config): void => {
     key: 'Escape',
     fn: () => {
       if (!gamePlayStore.opening.isOpened) {
-        if (!gamePlayStore.textboxController.isTextboxOpened) {
+        if (!gamePlayStore.textboxesController.isTextboxOpened) {
           if (appStore.isQuitGameConfirmOpened) {
             appStore.closeQuitGameConfirm()
           } else if (appStore.isQuitInMainMenuConfirmOpened) {
             appStore.closeQuitInMainMenuConfirm()
-          } else if (gamePlayStore.menuController.isSettingsMenuOpened) {
-            gamePlayStore.menuController.closeCurrentMenu()
-            gamePlayStore.menuController.openMenu('pause')
+          } else if (gamePlayStore.menusController.isSettingsMenuOpened) {
+            gamePlayStore.menusController.closeCurrentMenu()
+            gamePlayStore.menusController.openMenu('pause')
           } else {
             gamePlayStore.pauseController.toggleGamePause()
-            gamePlayStore.menuController.toggle('pause')
+            gamePlayStore.menusController.toggle('pause')
           }
         }
       }

@@ -22,13 +22,13 @@ export const PauseMenu: FC<Props> = observer(({ isOpened }) => {
   const gamePlayStore = useGamePlayStore()
 
   const openSettings = (): void => {
-    gamePlayStore.menuController.closeCurrentMenu()
-    gamePlayStore.menuController.openMenu('settings')
+    gamePlayStore.menusController.closeCurrentMenu()
+    gamePlayStore.menusController.openMenu('settings')
   }
 
   const resumeGame = (): void => {
     gamePlayStore.pauseController.resumeGame()
-    gamePlayStore.menuController.closeCurrentMenu()
+    gamePlayStore.menusController.closeCurrentMenu()
   }
 
   return (

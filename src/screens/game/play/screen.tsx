@@ -34,11 +34,11 @@ export const GamePlayScreen: FC<Props> = observer(({ gamePlayStore }) => {
   return (
     <GamePlayStoreContext.Provider value={gamePlayStore}>
       <GameOpening />
-      <PauseMenu isOpened={gamePlayStore.menuController.isGamePauseMenuOpened} />
+      <PauseMenu isOpened={gamePlayStore.menusController.isGamePauseMenuOpened} />
       <GameSettingsMenu
-        isOpened={gamePlayStore.menuController.isSettingsMenuOpened}
-        onClose={gamePlayStore.menuController.closeCurrentMenu}
-        afterClose={() => gamePlayStore.menuController.openMenu('pause')}
+        isOpened={gamePlayStore.menusController.isSettingsMenuOpened}
+        onClose={gamePlayStore.menusController.closeCurrentMenu}
+        afterClose={() => gamePlayStore.menusController.openMenu('pause')}
       />
       <QuitInMainMenuConfirm isOpened={appStore.isQuitInMainMenuConfirmOpened} />
       <PlayCanvas />

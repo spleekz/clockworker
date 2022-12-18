@@ -4,13 +4,13 @@ import { Properties } from 'basic-utility-types'
 
 import { PlayerCharacter } from './player/character'
 
-type This = InstanceType<typeof CharacterController>
+type This = InstanceType<typeof CharactersController>
 
 export type CharacterName = keyof This['refList']
 type Character = InstanceType<Properties<This['refList']>>
 export type CharacterList = Record<CharacterName, Character>
 
-export class CharacterController {
+export class CharactersController {
   constructor() {
     makeObservable(this, {
       list: observable,

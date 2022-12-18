@@ -2,7 +2,7 @@ import { makeAutoObservable } from 'mobx'
 
 type GameMenuName = 'pause' | 'settings'
 
-export class GameMenuController {
+export class GameMenusController {
   constructor() {
     makeAutoObservable(this)
   }
