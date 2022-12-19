@@ -1,7 +1,7 @@
 import { observer } from 'mobx-react-lite'
 import React from 'react'
 
-import { FC } from 'basic-utility-types'
+import { Callback, FC } from 'basic-utility-types'
 
 import { useStore } from 'stores/root-store/context'
 
@@ -11,9 +11,10 @@ import { ConfirmPopup } from 'components/popup/confirm-popup'
 
 type Props = {
   isOpened: boolean
+  onAccept?: Callback
 }
 
-export const QuitGameConfirm: FC<Props> = observer(({ isOpened }) => {
+export const QuitGameConfirm: FC<Props> = observer(({ isOpened, onAccept }) => {
   const { appStore } = useStore()
 
   return (
@@ -26,7 +27,10 @@ export const QuitGameConfirm: FC<Props> = observer(({ isOpened }) => {
       isOpened={isOpened}
       question={'Выйти из игры?'}
       acceptText={'Да'}
-      onAccept={appStore.quitGame}
+      onAccept={() => {
+        onAccept?.()
+        appStore.quitGame()
+      }}
       rejectText={'Нет'}
       onReject={appStore.closeQuitGameConfirm}
       buttonsStyles={{

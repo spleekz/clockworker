@@ -8,7 +8,6 @@ import { useStore } from 'stores/root-store/context'
 
 import { colors } from 'lib/theme'
 
-import { QuitGameConfirm } from 'components/popup/game-popups/quit-game-confirm'
 import { UpdateNotification } from 'components/update-notification/update-notification'
 import { GameScreen } from 'screens/game/screen'
 import { MainScreen } from 'screens/main/screen'
@@ -19,8 +18,6 @@ export const App: FC = observer(() => {
   return (
     <>
       <GlobalStyles />
-
-      <QuitGameConfirm isOpened={appStore.isQuitGameConfirmOpened} />
 
       <Container>
         {appStore.screen === 'main' && <MainScreen />}

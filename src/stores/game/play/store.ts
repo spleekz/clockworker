@@ -55,6 +55,11 @@ export class GamePlayStore {
     makeAutoObservable(this)
   }
 
+  isPlay = true
+  setIsPlay = (value: boolean): void => {
+    this.isPlay = value
+  }
+
   //!Игрок
   player: Player = new Player()
   createPlayerCharacter = (): Promise<void> => {
@@ -172,7 +177,10 @@ export class GamePlayStore {
 
   mainLoop = (): void => {
     this.gameLoop()
-    window.requestAnimationFrame(this.mainLoop)
+    const id = window.requestAnimationFrame(this.mainLoop)
+    if (!this.isPlay) {
+      window.cancelAnimationFrame(id)
+    }
   }
 
   //!Запуск игры

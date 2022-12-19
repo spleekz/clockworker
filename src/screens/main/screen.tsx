@@ -9,6 +9,7 @@ import { useStore } from 'stores/root-store/context'
 import { colors } from 'lib/theme'
 
 import { PixelatedButton } from 'components/pixelated/pixelated-components'
+import { QuitGameConfirm } from 'components/popup/game-popups/quit-game-confirm'
 
 import { version } from '../../../package.json'
 import { handleMainScreenEsc } from './handle-esc'
@@ -20,14 +21,18 @@ export const MainScreen: FC = observer(() => {
   handleMainScreenEsc()
 
   return (
-    <Container>
-      <Title>clockworker</Title>
-      <Body>
-        <MainMenu />
-      </Body>
-      <QuitGameButton onClick={appStore.openQuitGameConfirm}>Выйти из игры</QuitGameButton>
-      <GameVersion>v{version}</GameVersion>
-    </Container>
+    <>
+      <QuitGameConfirm isOpened={appStore.isQuitGameConfirmOpened} />
+
+      <Container>
+        <Title>clockworker</Title>
+        <Body>
+          <MainMenu />
+        </Body>
+        <QuitGameButton onClick={appStore.openQuitGameConfirm}>Выйти из игры</QuitGameButton>
+        <GameVersion>v{version}</GameVersion>
+      </Container>
+    </>
   )
 })
 

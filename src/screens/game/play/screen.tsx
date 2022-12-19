@@ -6,9 +6,11 @@ import { FC } from 'basic-utility-types'
 import { GamePlayStore } from 'stores/game/play/store'
 import { useStore } from 'stores/root-store/context'
 
+import { QuitGameConfirm } from 'components/popup/game-popups/quit-game-confirm'
 import { QuitInMainMenuConfirm } from 'components/popup/game-popups/quit-in-main-menu-confirm'
 
 import { GameOpening } from '../opening'
+import { useGameStore } from '../screen'
 import { handleGamePlayScreenEsc } from './handle-esc'
 import { PauseMenu } from './pause-menu'
 import { PlayCanvas } from './play-canvas/canvas'
@@ -28,11 +30,18 @@ type Props = {
 }
 export const GamePlayScreen: FC<Props> = observer(({ gamePlayStore }) => {
   const { appStore } = useStore()
+  const gameStore = useGameStore()
 
   handleGamePlayScreenEsc({ gamePlayStore })
 
   return (
     <GamePlayStoreContext.Provider value={gamePlayStore}>
+      <QuitGameConfirm isOpened={appStore.isQuitGameConfirmOpened} onAccept={gameStore.endGame} />
+      <QuitInMainMenuConfirm
+        isOpened={appStore.isQuitInMainMenuConfirmOpened}
+        onAccept={gameStore.endGame}
+      />
+
       <GameOpening />
       <PauseMenu isOpened={gamePlayStore.menusController.isGamePauseMenuOpened} />
       <GameSettingsMenu
@@ -40,7 +49,6 @@ export const GamePlayScreen: FC<Props> = observer(({ gamePlayStore }) => {
         onClose={gamePlayStore.menusController.closeCurrentMenu}
         afterClose={() => gamePlayStore.menusController.openMenu('pause')}
       />
-      <QuitInMainMenuConfirm isOpened={appStore.isQuitInMainMenuConfirmOpened} />
       <PlayCanvas />
     </GamePlayStoreContext.Provider>
   )

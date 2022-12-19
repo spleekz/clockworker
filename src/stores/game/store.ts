@@ -52,4 +52,9 @@ export class GameStore {
       this.setScreen('play')
     }
   }
+
+  endGame = (): void => {
+    this.playStore?.setIsPlay(false)
+    this.playStore = null
+  }
 }
