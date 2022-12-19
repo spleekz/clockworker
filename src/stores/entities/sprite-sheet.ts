@@ -14,6 +14,7 @@ export type SpriteSheetConfig = {
   skipY: number
   defaultScale?: number
 }
+
 export class SpriteSheet {
   image: HTMLImageElement
   spriteWidth: number

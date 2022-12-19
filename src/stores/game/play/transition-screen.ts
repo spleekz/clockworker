@@ -11,6 +11,7 @@ export type TransitionScreenConfig = {
   background: string
   sharedPlayMethods: SharedPlayMethods
 }
+
 export class TransitionScreen {
   appearanceMs: number
   disappearanceMs: number

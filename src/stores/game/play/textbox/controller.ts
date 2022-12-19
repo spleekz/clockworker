@@ -23,6 +23,7 @@ type TextboxesControllerConfig = {
   gameScript: GameScript
   pauseController: GamePauseController
 }
+
 export class TextboxesController {
   private gameScript: GameScript
   private pauseController: GamePauseController

@@ -35,6 +35,7 @@ type PlayerCharacterMovementConfig = CharacterMovementConfig<
   PlayerCharacterMovementTypeName,
   PlayerCharacterMovementRegulatorName
 > & { settings: GameSettings }
+
 export class PlayerCharacterMovement extends CharacterMovement<
   PlayerCharacterMovementTypeName,
   PlayerCharacterMovementRegulatorName

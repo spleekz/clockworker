@@ -25,6 +25,7 @@ export type GamePlayStoreConfig = {
   keyboard: KeyboardStore
   dataFromPreGameForm: DataFromPreGameForm
 }
+
 export class GamePlayStore {
   private keyboard: KeyboardStore
   dataFromPreGameForm: DataFromPreGameForm

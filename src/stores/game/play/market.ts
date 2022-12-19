@@ -1,6 +1,7 @@
 type MarketConfig = {
   name: string
 }
+
 export class Market {
   name: string
 

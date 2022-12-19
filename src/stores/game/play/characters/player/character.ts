@@ -22,6 +22,7 @@ export type PlayerCharacterConfig = {
   settings: GameSettings
   screen: GameScreen
 }
+
 export class PlayerCharacter extends Character<
   InitialImageList,
   PlayerCharacterAnimationName,

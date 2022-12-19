@@ -6,6 +6,7 @@ import { Position } from 'stores/entities/position'
 export type BodyConfig = {
   is: string
 }
+
 export class Body {
   //Показывает, чем является тело
   is: string

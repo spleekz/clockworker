@@ -10,6 +10,7 @@ type SpriteConfig = {
   sourceY?: number
   scale: number
 }
+
 export class Sprite {
   image: HTMLImageElement
   width: number

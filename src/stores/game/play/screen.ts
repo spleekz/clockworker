@@ -6,6 +6,7 @@ type GameScreenConfig = {
   width: number
   height: number
 }
+
 export class GameScreen {
   width: number
   height: number

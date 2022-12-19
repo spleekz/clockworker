@@ -13,6 +13,7 @@ type SceneCharactersManipulatorConfig = {
   mapSize: Size
   characterList: CharacterList
 }
+
 export class SceneCharactersManipulator {
   private mapSize: Size
   private characterList: CharacterList

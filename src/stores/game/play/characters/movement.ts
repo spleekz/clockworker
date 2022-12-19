@@ -57,6 +57,7 @@ export type CharacterMovementConfig<MovementTypeName extends string, RegulatorNa
   regulators: MovementRegulators<RegulatorName>
   initialMovementType: MovementTypeName
 }
+
 export class CharacterMovement<MovementTypeName extends string, RegulatorName extends string> {
   private position: Position
   protected animationController: AnimationController<any>

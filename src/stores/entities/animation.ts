@@ -21,6 +21,7 @@ export type AnimationConfig = {
   scale: number
   startFrom?: number
 }
+
 export class Animation {
   name: string
   private spriteSheet: SpriteSheet

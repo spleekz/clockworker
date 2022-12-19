@@ -28,6 +28,7 @@ type SetBodyToObstacleFn = (body: ColliderBodyWithHitbox, obstacle: PointPair) =
 type ColliderConfig = {
   screen: GameScreen
 }
+
 export class Collider {
   private screen: GameScreen
 

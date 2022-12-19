@@ -2,7 +2,6 @@ import { Animation, AnimationConfig, RunAnimationOptions } from 'stores/entities
 import { Sprite } from 'stores/entities/sprite'
 import { SpriteSheet } from 'stores/entities/sprite-sheet'
 
-
 export enum ViewDirections {
   DOWN = 0,
   RIGHT = 1,
@@ -22,6 +21,7 @@ export type AnimationControllerConfig<AnimationName extends string> = {
   animationList: AnimationList<AnimationName>
   initialValue: AnimationName
 }
+
 export class AnimationController<AnimationName extends string> {
   private spriteSheet: SpriteSheet
   private list: AnimationList<AnimationName>

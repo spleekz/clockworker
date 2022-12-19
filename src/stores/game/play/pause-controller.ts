@@ -9,6 +9,7 @@ type Config = {
   characterController: CharactersController
   sharedMethods: SharedPlayMethods
 }
+
 export class GamePauseController {
   private charactersController: CharactersController
   private sharedMethods: SharedPlayMethods

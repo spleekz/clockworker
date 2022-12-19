@@ -13,6 +13,7 @@ import { last } from 'lib/arrays'
 type Config = {
   settings: GameSettings
 }
+
 export class PlayerCharacterMovementKeys {
   private settings: GameSettings
 

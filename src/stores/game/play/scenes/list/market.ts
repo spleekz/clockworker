@@ -11,6 +11,7 @@ type Config = {
   screen: GameScreen
   characterList: CharacterList
 }
+
 export class MarketMainScene extends GameScene<'marketMain'> {
   constructor(config: Config) {
     const mapScheme = JSON.parse(JSON.stringify(mapSchemeJSON)) as TiledMap

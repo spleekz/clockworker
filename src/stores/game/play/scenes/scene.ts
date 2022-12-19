@@ -29,6 +29,7 @@ type GameSceneConfig<Name extends string> = {
   screen: GameScreen
   characterList: CharacterList
 }
+
 export class GameScene<SceneName extends string> {
   private screen: GameScreen
   private characterList: CharacterList
