@@ -54,23 +54,23 @@ export class PlayerCharacterMovement extends CharacterMovement<
     })
     this.settings = config.settings
 
-    //Клавиши управления
+    // Клавиши управления
     this.keys = new PlayerCharacterMovementKeys({ settings: this.settings })
   }
 
-  //!Обработка клавиш управления
+  //! Обработка клавиш управления
   handleMovementKeys = (keyboard: KeyboardStore): void => {
     if (!this.keys.prohibitorsController.isProhibited) {
       const prevPressedControllersLength = this.keys.pressedControllers.length
 
       this.keys.setPressedKeys(keyboard.pressedKeysArray)
 
-      //Остановить движение только в момент, когда была отпущена последняя клавиша движения
+      // Остановить движение только в момент, когда была отпущена последняя клавиша движения
       if (this.keys.pressedControllers.length === 0 && prevPressedControllersLength > 0) {
         this.stopMove()
       } else {
         if (this.keys.isControllerPressed) {
-          //Проверка на нажатие регуляторов
+          // Проверка на нажатие регуляторов
           if (this.keys.isRegulatorKeysPressed) {
             if (this.keys.isSprintKeyPressed) {
               this.setCurrentMovementRegulator('sprint')
@@ -82,7 +82,7 @@ export class PlayerCharacterMovement extends CharacterMovement<
           const getMovementDirection = (): ExpandedDirection | null => {
             var movementDirection: ExpandedDirection | null = null
 
-            //Убираем направления, компенсирующие друг друга (пример: вверх-вниз)
+            // Убираем направления, компенсирующие друг друга (пример: вверх-вниз)
             const filteredPressedMovementDirections = this.keys.pressedDirections.filter(
               (pressedDirection) => {
                 return this.keys.pressedDirections.every(
@@ -91,10 +91,10 @@ export class PlayerCharacterMovement extends CharacterMovement<
               },
             )
 
-            //Если длина массива 0, значит, все направления скомпенсировали друг друга - персонаж стоит на месте
+            // Если длина массива 0, значит, все направления скомпенсировали друг друга - персонаж стоит на месте
             if (filteredPressedMovementDirections.length) {
               movementDirection = filteredPressedMovementDirections
-                //Сортируем, чтобы названия направлений получались в едином формате
+                // Сортируем, чтобы названия направлений получались в едином формате
                 .sort((_, b) => (b === 'down' || b === 'up' ? 1 : -1))
                 .join('') as ExpandedDirection
             }
@@ -118,17 +118,17 @@ export class PlayerCharacterMovement extends CharacterMovement<
           (p) => p !== 'automove' && p !== 'pause' && p !== 'textbox',
         )
       ) {
-        //Когда клавиши заблокированы автомувом - анимация продолжается
-        //Всё, кроме паузы и открытого текстбокса полностью останавливает анимацию
+        // Когда клавиши заблокированы автомувом - анимация продолжается
+        // Всё, кроме паузы и открытого текстбокса полностью останавливает анимацию
         this.animationController.stop()
       } else if (this.keys.prohibitorsController.list.some((p) => p === 'pause' || p === 'textbox')) {
-        //Когда игра на паузе или открыт текстбокс - анимация замирает
+        // Когда игра на паузе или открыт текстбокс - анимация замирает
         this.animationController.pause()
       }
     }
   }
 
-  //!Автомув
+  //! Автомув
   automove(config: AutomoveFromTo): Promise<boolean>
   automove(config: AutomoveDeltaX): Promise<boolean>
   automove(config: AutomoveDeltaY): Promise<boolean>

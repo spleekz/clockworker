@@ -8,7 +8,7 @@ export type BodyConfig = {
 }
 
 export class Body {
-  //Показывает, чем является тело
+  // Показывает, чем является тело
   is: string
 
   constructor(config: BodyConfig) {

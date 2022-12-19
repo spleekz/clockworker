@@ -32,7 +32,7 @@ export class PlayerCharacterMovementKeys {
     return this.settings.current.controls.movement
   }
 
-  //!Контроллеры
+  //! Контроллеры
   get controllerKeys(): MovementControllersKeys {
     return this.controls.controllers.value
   }
@@ -71,7 +71,7 @@ export class PlayerCharacterMovementKeys {
     return this.pressedControllers.includes(this.controllerKeys.left)
   }
 
-  //!Регуляторы
+  //! Регуляторы
   get regulatorKeys(): MovementRegulatorsKeys {
     return this.controls.regulators.value
   }

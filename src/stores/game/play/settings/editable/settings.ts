@@ -27,7 +27,7 @@ export type DeepPartialExcludeEditableGameSetting<T> = T extends AnyObject
     : { [K in keyof T]?: DeepPartialExcludeEditableGameSetting<T[K]> }
   : T
 
-//Настройки, которые могут изменяться пользователем
+// Настройки, которые могут изменяться пользователем
 export class EditableGameSettings implements PartialEditableGameSettingsValues {
   controls = new EditableGameSettingsControlsSection()
 }

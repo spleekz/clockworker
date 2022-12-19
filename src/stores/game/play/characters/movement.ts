@@ -80,12 +80,12 @@ export class CharacterMovement<MovementTypeName extends string, RegulatorName ex
     }
   }
 
-  //@Позиция
-  //!Позиция на следующий шаг
+  //@ Позиция
+  //! Позиция на следующий шаг
   getPositionOnNextStep = (): XY => {
     const { step } = this.currentMovementConfig
 
-    //Длина шага по диагонали должна быть равна длине шага по прямой
+    // Длина шага по диагонали должна быть равна длине шага по прямой
     const diagonalStep = Math.sqrt(Math.pow(step, 2) / 2)
 
     const { x, y } = this.position
@@ -105,13 +105,13 @@ export class CharacterMovement<MovementTypeName extends string, RegulatorName ex
     } else if (this.direction === 'left') {
       return { x: x - step, y }
     } else {
-      //downleft
+      // downleft
       return { x: x - diagonalStep, y: y + diagonalStep }
     }
   }
 
-  //!Направление движения
-  //Существует только в момент движения персонажа
+  //! Направление движения
+  // Существует только в момент движения персонажа
   direction: ExpandedDirection | null = null
   setDirection = (direction: ExpandedDirection | null): void => {
     this.direction = direction
@@ -147,8 +147,8 @@ export class CharacterMovement<MovementTypeName extends string, RegulatorName ex
     return { step, framesPerStep }
   }
 
-  //!Движение
-  //Препятствия не запрещают движение, т.к. за ними следит коллайдер
+  //! Движение
+  // Препятствия не запрещают движение, т.к. за ними следит коллайдер
   movementProhibitorsController = new ProhibitorsController()
   get isMovementProhibited(): boolean {
     return this.movementProhibitorsController.list.length > 0
@@ -182,7 +182,7 @@ export class CharacterMovement<MovementTypeName extends string, RegulatorName ex
           convertExpandedDirectionToPrimitiveDirection(this.direction),
         )) as CharacterMovementAnimationName
 
-      //Обновляем скорость анимации в соответствие с текущим конфигом движения
+      // Обновляем скорость анимации в соответствие с текущим конфигом движения
       if (
         this.currentMovementConfig.framesPerStep !== this.animationController.current.framesPerSprite
       ) {
@@ -195,20 +195,20 @@ export class CharacterMovement<MovementTypeName extends string, RegulatorName ex
     }
   }
 
-  //!Остановка
+  //! Остановка
   stopMove = (): void => {
     this.setIsMoving(false)
     this.setDirection(null)
     this.animationController.stop()
   }
 
-  //!Автомув
+  //! Автомув
   isAutomoving = false
   setIsAutomoving = (value: boolean): void => {
     this.isAutomoving = value
   }
 
-  //Перемещает персонажа из стартовой позиции в конечную
+  // Перемещает персонажа из стартовой позиции в конечную
   automove(config: AutomoveFromTo): Promise<boolean>
   automove(config: AutomoveDeltaX): Promise<boolean>
   automove(config: AutomoveDeltaY): Promise<boolean>
@@ -233,7 +233,7 @@ export class CharacterMovement<MovementTypeName extends string, RegulatorName ex
         end.y = start.y + deltaY
       }
 
-      //Если движение НЕ по прямой
+      // Если движение НЕ по прямой
       if ((start.x !== end.x && start.y !== end.y) || areEquivalent(start, end)) {
         return resolve(false)
       }
@@ -248,22 +248,22 @@ export class CharacterMovement<MovementTypeName extends string, RegulatorName ex
 
       startAutoMoving()
 
-      //Перемещаем героя в стартовую позицию
+      // Перемещаем героя в стартовую позицию
       this.position.setXY(start.x, start.y)
 
       const direction = getMovementDirection(start, end)
 
-      //Нужна, чтобы не вызывать move(), после того, как встали на конечную позицию
+      // Нужна, чтобы не вызывать move(), после того, как встали на конечную позицию
       var shouldMove = true
 
-      //Двигаемся в текущем направлении, пока не дойдём до конечной позиции
+      // Двигаемся в текущем направлении, пока не дойдём до конечной позиции
       const automoveInDirection = (): void => {
         if (this.isStuck) {
           this.setIsAutomoving(false)
         }
 
         if (this.isAutomoving && !areEquivalent(this.position.value, end)) {
-          //Остановка на конечной позиции, если следующим шагом уходим дальше
+          // Остановка на конечной позиции, если следующим шагом уходим дальше
           const setPositionToEndAndStopAutomoving = (x: number, y: number): void => {
             this.position.setXY(x, y)
             shouldMove = false
@@ -297,10 +297,10 @@ export class CharacterMovement<MovementTypeName extends string, RegulatorName ex
               if (
                 this.movementProhibitorsController.list.every((p) => p !== 'pause' && p !== 'textbox')
               ) {
-                //Всё, кроме паузы и текстбокса останавливает анимацию
+                // Всё, кроме паузы и текстбокса останавливает анимацию
                 this.animationController.stop()
               } else {
-                //Когда игра на паузе или открыт текстбокс - анимация замирает
+                // Когда игра на паузе или открыт текстбокс - анимация замирает
                 this.animationController.pause()
               }
             }
@@ -315,5 +315,5 @@ export class CharacterMovement<MovementTypeName extends string, RegulatorName ex
       automoveInDirection()
     })
   }
-  //^@Обработка движения
+  //^@ Обработка движения
 }

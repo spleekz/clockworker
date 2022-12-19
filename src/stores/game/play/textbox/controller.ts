@@ -41,10 +41,10 @@ export class TextboxesController {
     makeObservable(this, { list: observable, currentTextbox: observable, isTextboxOpened: computed })
   }
 
-  //Список текстбоксов, использующихся в контроллере
+  // Список текстбоксов, использующихся в контроллере
   private refList = { welcome: WelcomeTextbox }
 
-  //Список созданных текстбоксов
+  // Список созданных текстбоксов
   list: List = {} as List
 
   createTextbox = (name: TextboxName): void => {

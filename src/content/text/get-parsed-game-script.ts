@@ -15,9 +15,9 @@ export const getParsedGameScript = (config: GetParsedScriptConfig): GameScript =
   const { playerCharacterName, marketName } = config
 
   const replacers: Replacers = [
-    //@ - имя игрока
+    // @ - имя игрока
     { key: '@', value: playerCharacterName },
-    //# - название магазина
+    // # - название магазина
     { key: '#', value: marketName },
   ]
 

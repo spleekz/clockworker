@@ -20,16 +20,16 @@ export class GameStore {
     makeAutoObservable(this)
   }
 
-  //!Экран
+  //! Экран
   screen: GameScreen = 'preGameForm'
   setScreen = (screen: GameScreen): void => {
     this.screen = screen
   }
 
-  //!PreGameStore
+  //! PreGameStore
   preGameForm = new PreGameForm()
 
-  //!PlayStore
+  //! PlayStore
   playStore: GamePlayStore | null = null
 
   createGamePlayStore = (): void => {

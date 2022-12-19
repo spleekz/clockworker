@@ -81,7 +81,7 @@ export class Character<
   spriteScale = 1
   setSpriteScale = (scale: number): void => {
     this.spriteScale = scale
-    //Обновление размеров body в соответствии с новым масштабом спрайта
+    // Обновление размеров body в соответствии с новым масштабом спрайта
     this.setSize({
       width: this.spriteSheet.spriteWidth * scale,
       height: this.spriteSheet.spriteHeight * scale,
