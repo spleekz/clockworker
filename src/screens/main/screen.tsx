@@ -22,7 +22,7 @@ export const MainScreen: FC = observer(() => {
 
   return (
     <>
-      <QuitGameConfirm isOpened={appStore.isQuitGameConfirmOpened} />
+      <QuitGameConfirm />
 
       <Container>
         <Title>clockworker</Title>

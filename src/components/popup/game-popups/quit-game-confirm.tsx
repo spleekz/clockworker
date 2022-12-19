@@ -10,11 +10,10 @@ import { colors } from 'lib/theme'
 import { ConfirmPopup } from 'components/popup/confirm-popup'
 
 type Props = {
-  isOpened: boolean
   onAccept?: Callback
 }
 
-export const QuitGameConfirm: FC<Props> = observer(({ isOpened, onAccept }) => {
+export const QuitGameConfirm: FC<Props> = observer(({ onAccept }) => {
   const { appStore } = useStore()
 
   return (
@@ -24,7 +23,7 @@ export const QuitGameConfirm: FC<Props> = observer(({ isOpened, onAccept }) => {
       styles={{
         backgroundColor: colors.mainLight,
       }}
-      isOpened={isOpened}
+      isOpened={appStore.isQuitGameConfirmOpened}
       question={'Выйти из игры?'}
       acceptText={'Да'}
       onAccept={() => {

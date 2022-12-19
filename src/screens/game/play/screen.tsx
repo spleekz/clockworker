@@ -4,7 +4,6 @@ import React, { createContext, useContext } from 'react'
 import { FC } from 'basic-utility-types'
 
 import { GamePlayStore } from 'stores/game/play/store'
-import { useStore } from 'stores/root-store/context'
 
 import { QuitGameConfirm } from 'components/popup/game-popups/quit-game-confirm'
 import { QuitInMainMenuConfirm } from 'components/popup/game-popups/quit-in-main-menu-confirm'
@@ -29,18 +28,14 @@ type Props = {
   gamePlayStore: GamePlayStore
 }
 export const GamePlayScreen: FC<Props> = observer(({ gamePlayStore }) => {
-  const { appStore } = useStore()
   const gameStore = useGameStore()
 
   handleGamePlayScreenEsc({ gamePlayStore })
 
   return (
     <GamePlayStoreContext.Provider value={gamePlayStore}>
-      <QuitGameConfirm isOpened={appStore.isQuitGameConfirmOpened} onAccept={gameStore.endGame} />
-      <QuitInMainMenuConfirm
-        isOpened={appStore.isQuitInMainMenuConfirmOpened}
-        onAccept={gameStore.endGame}
-      />
+      <QuitGameConfirm onAccept={gameStore.endGame} />
+      <QuitInMainMenuConfirm onAccept={gameStore.endGame} />
 
       <GameOpening />
       <PauseMenu isOpened={gamePlayStore.menusController.isGamePauseMenuOpened} />

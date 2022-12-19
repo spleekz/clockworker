@@ -28,10 +28,7 @@ export const PreGameFormScreen: FC = observer(() => {
 
   return (
     <Container>
-      <QuitInMainMenuConfirm
-        isOpened={appStore.isQuitInMainMenuConfirmOpened}
-        question={'Вернуться в главное меню?'}
-      />
+      <QuitInMainMenuConfirm question={'Вернуться в главное меню?'} />
 
       <Title>Создайте персонажа</Title>
       <Body>
