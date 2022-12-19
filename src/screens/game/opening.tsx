@@ -7,7 +7,7 @@ import { FC } from 'basic-utility-types'
 
 import { colors } from 'lib/theme'
 
-import { useGamePlayStore } from './play/screen'
+import { useGamePlayStore } from './screen'
 
 export const GameOpening: FC = observer(() => {
   const gamePlayStore = useGamePlayStore()

@@ -4,7 +4,8 @@ import styled from 'styled-components'
 
 import { FC } from 'basic-utility-types'
 
-import { useGamePlayStore } from '../screen'
+import { useGamePlayStore } from 'screens/game/screen'
+
 import { PlayCanvasOverlay } from './overlay'
 
 export const PlayCanvas: FC = observer(() => {

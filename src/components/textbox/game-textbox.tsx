@@ -1,7 +1,7 @@
 import { observer } from 'mobx-react-lite'
 import React from 'react'
 
-import { useGamePlayStore } from 'screens/game/play/screen'
+import { useGamePlayStore } from 'screens/game/screen'
 
 import { Textbox } from './textbox'
 

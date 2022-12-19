@@ -1,14 +1,12 @@
-import { GamePlayStore } from 'stores/game/play/store'
 import { useStore } from 'stores/root-store/context'
 
 import { useKey } from 'hooks/use-key'
 
-type Config = {
-  gamePlayStore: GamePlayStore
-}
+import { useGamePlayStore } from '../screen'
 
-export const handleGamePlayScreenEsc = ({ gamePlayStore }: Config): void => {
+export const handleGamePlayScreenEsc = (): void => {
   const { appStore } = useStore()
+  const gamePlayStore = useGamePlayStore()
 
   useKey({
     key: 'Escape',

@@ -11,7 +11,7 @@ import { colors } from 'lib/theme'
 
 import { AutoPrintedText } from 'components/auto-printed-text/auto-printed-text'
 import { PixelatedButton } from 'components/pixelated/pixelated-components'
-import { useGamePlayStore } from 'screens/game/play/screen'
+import { useGamePlayStore } from 'screens/game/screen'
 
 import { CrossIcon } from 'assets/icons/cross'
 

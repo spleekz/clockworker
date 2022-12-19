@@ -5,12 +5,14 @@ import styled from 'styled-components'
 import { animated, useTransition } from '@react-spring/web'
 import { FC } from 'basic-utility-types'
 
+import { GamePlayStore } from 'stores/game/play/store'
 import { GameStore } from 'stores/game/store'
 import { useStore } from 'stores/root-store/context'
 
 import { GamePlayScreen } from './play/screen'
 import { PreGameFormScreen } from './pre-game-form/screen'
 
+//Контекст для GameStore
 const GameStoreContext = createContext<GameStore | null>(null)
 export const useGameStore = (): GameStore => {
   const gameStore = useContext(GameStoreContext)
@@ -18,6 +20,16 @@ export const useGameStore = (): GameStore => {
     throw new Error('You have forgotten to wrap game screen component with GameStoreProvider')
   }
   return gameStore
+}
+
+//Контекст для GamePlayStore
+const GamePlayStoreContext = createContext<GamePlayStore | null>(null)
+export const useGamePlayStore = (): GamePlayStore => {
+  const gamePlayStore = useContext(GamePlayStoreContext)
+  if (!gamePlayStore) {
+    throw new Error('You have forgotten to wrap game play screen component with GamePlayStoreProvider')
+  }
+  return gamePlayStore
 }
 
 export const GameScreen: FC = observer(() => {
@@ -49,7 +61,9 @@ export const GameScreen: FC = observer(() => {
         ) : (
           gameStore.playStore && (
             <GamePageContainer style={styles}>
-              <GamePlayScreen gamePlayStore={gameStore.playStore} />
+              <GamePlayStoreContext.Provider value={playStore}>
+                <GamePlayScreen />
+              </GamePlayStoreContext.Provider>
             </GamePageContainer>
           )
         )

@@ -11,7 +11,7 @@ import { colors } from 'lib/theme'
 import { PixelatedButton } from 'components/pixelated/pixelated-components'
 import { Popup } from 'components/popup/popup-template'
 
-import { useGamePlayStore } from './screen'
+import { useGamePlayStore } from '../screen'
 
 type Props = {
   isOpened: boolean

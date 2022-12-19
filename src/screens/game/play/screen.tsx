@@ -1,39 +1,26 @@
 import { observer } from 'mobx-react-lite'
-import React, { createContext, useContext } from 'react'
+import React from 'react'
 
 import { FC } from 'basic-utility-types'
-
-import { GamePlayStore } from 'stores/game/play/store'
 
 import { QuitGameConfirm } from 'components/popup/game-popups/quit-game-confirm'
 import { QuitInMainMenuConfirm } from 'components/popup/game-popups/quit-in-main-menu-confirm'
 
 import { GameOpening } from '../opening'
-import { useGameStore } from '../screen'
+import { useGamePlayStore, useGameStore } from '../screen'
 import { handleGamePlayScreenEsc } from './handle-esc'
 import { PauseMenu } from './pause-menu'
 import { PlayCanvas } from './play-canvas/canvas'
 import { GameSettingsMenu } from './settings/menu'
 
-const GamePlayStoreContext = createContext<GamePlayStore | null>(null)
-export const useGamePlayStore = (): GamePlayStore => {
-  const gamePlayStore = useContext(GamePlayStoreContext)
-  if (!gamePlayStore) {
-    throw new Error('You have forgotten to wrap game play screen component with GamePlayStoreProvider')
-  }
-  return gamePlayStore
-}
-
-type Props = {
-  gamePlayStore: GamePlayStore
-}
-export const GamePlayScreen: FC<Props> = observer(({ gamePlayStore }) => {
+export const GamePlayScreen: FC = observer(() => {
   const gameStore = useGameStore()
+  const gamePlayStore = useGamePlayStore()
 
-  handleGamePlayScreenEsc({ gamePlayStore })
+  handleGamePlayScreenEsc()
 
   return (
-    <GamePlayStoreContext.Provider value={gamePlayStore}>
+    <>
       <QuitGameConfirm onAccept={gameStore.endGame} />
       <QuitInMainMenuConfirm onAccept={gameStore.endGame} />
 
@@ -45,6 +32,6 @@ export const GamePlayScreen: FC<Props> = observer(({ gamePlayStore }) => {
         afterClose={() => gamePlayStore.menusController.openMenu('pause')}
       />
       <PlayCanvas />
-    </GamePlayStoreContext.Provider>
+    </>
   )
 })

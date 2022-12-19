@@ -7,7 +7,7 @@ import { FC } from 'basic-utility-types'
 import { colors } from 'lib/theme'
 
 import { PixelatedCheckbox } from 'components/checkbox/pixelated-checkbox'
-import { useGamePlayStore } from 'screens/game/play/screen'
+import { useGamePlayStore } from 'screens/game/screen'
 
 export const ControlsSettingsSection: FC = observer(() => {
   const { settings } = useGamePlayStore()
