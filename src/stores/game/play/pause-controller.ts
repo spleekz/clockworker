@@ -20,7 +20,7 @@ export class GamePauseController {
     makeAutoObservable(this)
   }
 
-  //! Пауза
+  //! пауза
   pauseCharactersMovement = (prohibitorName: string): void => {
     this.charactersController.activeCharacters.forEach((character) => {
       character.movement.movementProhibitorsController.add(prohibitorName)
@@ -35,7 +35,7 @@ export class GamePauseController {
     this.pauseHandlingPlayerCharacterMovementKeys(prohibitorName)
   }
 
-  //! Возобновление
+  //! возобновление
   resumeCharactersMovement = (prohibitorName: string): void => {
     this.charactersController.activeCharacters.forEach((character) => {
       character.movement.movementProhibitorsController.remove(prohibitorName)

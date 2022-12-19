@@ -12,7 +12,7 @@ import { useStore } from 'stores/root-store/context'
 import { GamePlayScreen } from './play/screen'
 import { PreGameFormScreen } from './pre-game-form/screen'
 
-// Контекст для GameStore
+// контекст для GameStore
 const GameStoreContext = createContext<GameStore | null>(null)
 export const useGameStore = (): GameStore => {
   const gameStore = useContext(GameStoreContext)
@@ -22,7 +22,7 @@ export const useGameStore = (): GameStore => {
   return gameStore
 }
 
-// Контекст для GamePlayStore
+// контекст для GamePlayStore
 const GamePlayStoreContext = createContext<GamePlayStore | null>(null)
 export const useGamePlayStore = (): GamePlayStore => {
   const gamePlayStore = useContext(GamePlayStoreContext)

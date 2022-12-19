@@ -103,7 +103,7 @@ export const PixelatedButton = React.forwardRef<HTMLButtonElement, PixelatedButt
 )
 PixelatedButton.displayName = 'PixelatedButton'
 
-// Для инпута не работают :before и :after
+// для инпута не работают :before и :after
 export const PixelatedInput = React.forwardRef<
   HTMLInputElement,
   PixelatedElementProps & { className?: string } & {

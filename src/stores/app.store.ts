@@ -7,13 +7,13 @@ export class AppStore {
     makeAutoObservable(this)
   }
 
-  //! Экран
+  //! экран
   screen: AppScreen = 'main'
   setScreen = (screen: AppScreen): void => {
     this.screen = screen
   }
 
-  //! Выход из игры
+  //! выход из игры
   quitGame = (): void => {
     window.close()
   }
@@ -32,7 +32,7 @@ export class AppStore {
     }
   }
 
-  //! Выход в главное меню
+  //! выход в главное меню
   isQuitInMainMenuConfirmOpened = false
   openQuitInMainMenuConfirm = (): void => {
     this.isQuitInMainMenuConfirmOpened = true
@@ -48,7 +48,7 @@ export class AppStore {
     }
   }
 
-  //! Открытые попапы
+  //! открытые попапы
   openedPopupsCount = 0
   increaseOpenedPopupsCount = (): void => {
     this.openedPopupsCount += 1

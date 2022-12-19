@@ -19,10 +19,10 @@ export class CharactersController {
     })
   }
 
-  // Список персонажей, использующихся в контроллере
+  // список персонажей, использующихся в контроллере
   private refList = { player: PlayerCharacter }
 
-  // Список созданных персонажей
+  // список созданных персонажей
   list: CharacterList = {} as CharacterList
 
   createCharacter = async <
@@ -37,7 +37,7 @@ export class CharactersController {
     await this.list[name].imageContainer.loadAll()
   }
 
-  // Список персонажей, активных в текущий момент
+  // список персонажей, активных в текущий момент
   activeCharactersNames: Array<CharacterName> = []
 
   addActiveCharacter = (characterName: CharacterName): void => {

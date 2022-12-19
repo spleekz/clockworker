@@ -34,10 +34,10 @@ export class GameScenesController {
     })
   }
 
-  // Список сцен, использующихся в контроллере
+  // список сцен, использующихся в контроллере
   private refList = { marketMain: MarketMainScene }
 
-  // Список созданных сцен
+  // список созданных сцен
   list: List = {} as List
 
   currentScene: Scene = {} as Scene

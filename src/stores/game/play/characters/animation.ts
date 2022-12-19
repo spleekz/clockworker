@@ -23,11 +23,11 @@ const getCharacterMovementAnimationConfig = (
 ): AnimationConfigNoNameNoSpriteSheet => {
   const sequence: AnimationSequence = getCharacterMovementAnimationSequence(direction)
 
-  // Начинаем со 2-го спрайта, чтобы сразу после начала движения была анимация шага
+  // начинаем со 2-го спрайта, чтобы сразу после начала движения была анимация шага
   return { ...template, sequence, startFrom: 1 }
 }
 
-// Возвращает список с анимациями движения, одинаковыми для всех персонажей
+// возвращает список с анимациями движения, одинаковыми для всех персонажей
 export const getCharacterMovementAnimationList = (
   config: GetCharacterMovementAnimationConfig,
 ): AnimationList<CharacterMovementAnimationName> => {

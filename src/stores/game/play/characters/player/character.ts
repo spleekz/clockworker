@@ -65,7 +65,7 @@ export class PlayerCharacter extends Character<
     this.name = config.name
     this.settings = config.settings
 
-    //! Движение
+    //! движение
     this.movement = new PlayerCharacterMovement({
       position: this.position,
       settings: this.settings,

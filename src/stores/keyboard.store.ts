@@ -8,7 +8,7 @@ export class KeyboardStore {
     window.addEventListener('keyup', (e) => {
       this.pressedKeys.delete(e.code)
     })
-    // Очищение нажатых клавиш при alt+tab/win+d/смене вкладки
+    // очищение нажатых клавиш при alt+tab/win+d/смене вкладки
     window.addEventListener('focus', () => {
       this.pressedKeys = new Set()
     })

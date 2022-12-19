@@ -44,7 +44,7 @@ export const Popup: FC<PopupTemplateProps> = observer(
       }
 
       return () => {
-        // Закрытие попапа
+        // закрытие попапа
         if (isOpened === true) {
           afterClose?.()
           appStore.decreaseOpenedPopupsCount()

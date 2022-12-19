@@ -38,16 +38,16 @@ export class GamePlayStore {
     this.keyboard = config.keyboard
     this.dataFromPreGameForm = config.dataFromPreGameForm
 
-    //! Сценарий
+    //! сценарий
     this.script = getParsedGameScript({
       playerCharacterName: this.dataFromPreGameForm.playerCharacterName,
       marketName: this.dataFromPreGameForm.marketName,
     })
 
-    //! Магазин
+    //! магазин
     this.market = new Market({ name: this.dataFromPreGameForm.marketName })
 
-    //! Контроллер текстбоксов
+    //! контроллер текстбоксов
     this.textboxesController = new TextboxesController({
       gameScript: this.script,
       pauseController: this.pauseController,
@@ -61,7 +61,7 @@ export class GamePlayStore {
     this.isPlay = value
   }
 
-  //! Игрок
+  //! игрок
   player: Player = new Player()
   createPlayerCharacter = (): Promise<void> => {
     const playerCharacterConfig: PlayerCharacterConfig = {
@@ -76,10 +76,10 @@ export class GamePlayStore {
     })
   }
 
-  //! Общие методы
+  //! общие методы
   sharedMethods = new SharedPlayMethods()
 
-  //! Контроллер персонажей
+  //! контроллер персонажей
   charactersController = new CharactersController()
   addActiveCharacter = (characterName: CharacterName): void => {
     this.charactersController.addActiveCharacter(characterName)
@@ -92,13 +92,13 @@ export class GamePlayStore {
     this.charactersController.removeActiveCharacter(characterName)
   }
 
-  //! Настройки
+  //! настройки
   settings = new GameSettings()
 
-  //! Экран
+  //! экран
   screen = new GameScreen({ width: screen.width, height: screen.height })
 
-  //! Контроллер сцен
+  //! контроллер сцен
   sceneController = new GameScenesController({
     screen: this.screen,
     characterList: this.charactersController.list,
@@ -111,19 +111,19 @@ export class GamePlayStore {
     })
   }
 
-  //! Контроллер паузы
+  //! контроллер паузы
   pauseController = new GamePauseController({
     characterController: this.charactersController,
     sharedMethods: this.sharedMethods,
   })
 
-  //! Контроллер меню
+  //! контроллер меню
   menusController = new GameMenusController()
 
-  //! Коллайдер
+  //! коллайдер
   collider = new Collider({ screen: this.screen })
 
-  //! Подготовка игры
+  //! подготовка игры
   isGamePrepared = false
   setIsGamePrepared = (value: boolean): void => {
     this.isGamePrepared = value
@@ -144,7 +144,7 @@ export class GamePlayStore {
     })
   }
 
-  //! Опенинг
+  //! опенинг
   opening = new TransitionScreen({
     sharedPlayMethods: this.sharedMethods,
     appearanceMs: 1500,
@@ -153,7 +153,7 @@ export class GamePlayStore {
     background: '#000000',
   })
 
-  //! Игровые циклы
+  //! игровые циклы
   private handlePlayerCharacterMovementKeys = (): void => {
     this.player.character?.movement.handleMovementKeys(this.keyboard)
   }
@@ -184,7 +184,7 @@ export class GamePlayStore {
     }
   }
 
-  //! Запуск игры
+  //! запуск игры
   run = (): void => {
     this.initializeGame().then(() => {
       this.mainLoop()

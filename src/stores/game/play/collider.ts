@@ -70,7 +70,7 @@ export class Collider {
     this.clearStaticObstacles()
   }
 
-  //! Вспомогательные функции
+  //! вспомогательные функции
   getBodyHitbox = (body: ColliderBody): PointPair => {
     return {
       x1: body.position.x,
@@ -165,7 +165,7 @@ export class Collider {
     body.stuckPlaces = removeOnce(body.stuckPlaces, place)
   }
 
-  //! Получение дельта-линий
+  //! получение дельта-линий
   private getDeltaLines = (
     prevHitbox: PointPair,
     currentHitbox: PointPair,
@@ -231,7 +231,7 @@ export class Collider {
     return deltaLines
   }
 
-  //! Определение точек пересечения
+  //! определение точек пересечения
   private getIntersectionPointOfTwoLines = (line1: PointPair, line2: PointPair): XY | null => {
     const intersectionCheckResult = checkIntersection(line1, line2)
     if (intersectionCheckResult.type !== 'intersecting') {
@@ -394,7 +394,7 @@ export class Collider {
           closestPoint = intersectionPointsWithObstacles[0]
         }
 
-        // Угловые точки игнорируются, т.к они не относятся ни к одной из 4 сторон однозначно
+        // угловые точки игнорируются, т.к они не относятся ни к одной из 4 сторон однозначно
         if (
           !this.isObstacleCornerPoint(
             this.getStaticObstacleById(closestPoint.obstacleId).hitbox,
@@ -483,7 +483,7 @@ export class Collider {
     }
   }
 
-  //! Обработка точек пересечения
+  //! обработка точек пересечения
   private setBodyToObstacleBottom = (body: ColliderBodyWithHitbox, obstacle: PointPair): void => {
     body.position.setY(obstacle.y2)
   }
@@ -554,7 +554,7 @@ export class Collider {
     actionToChangeBodyPosition(body, obstacle)
   }
 
-  //! Работа коллайдера
+  //! работа коллайдера
   private handleBodyAndStaticObstaclesCollision = (
     body: ColliderBodyWithHitboxAndStuckPlaces,
   ): void => {
@@ -589,7 +589,7 @@ export class Collider {
     this.setBodyPrevHitbox(body.id, this.getBodyHitbox(body))
   }
 
-  //? Пока что не разрешаем выходить персонажам за ЭКРАН
+  //? пока что не разрешаем выходить персонажам за ЭКРАН
   private keepBodyInMap = (body: ColliderBodyWithHitboxAndStuckPlaces): void => {
     const bodyMinX = 0
     const bodyMinY = 0
