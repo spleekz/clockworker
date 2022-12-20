@@ -114,7 +114,7 @@ export class GameScene<SceneName extends string> {
     }
 
     var spritePosition: XY = { x: 0, y: 0 }
-    const updateSpritePosition = (): void => {
+    const updatePositionForNextSprite = (): void => {
       const tileWidth = this.map.scheme.tileheight
       const tileHeight = this.map.scheme.tileheight
 
@@ -146,7 +146,7 @@ export class GameScene<SceneName extends string> {
               sourceSpritePosition.column,
             )
             this.screen.drawSprite(currentSprite, spritePosition)
-            updateSpritePosition()
+            updatePositionForNextSprite()
           })
         }
       }
