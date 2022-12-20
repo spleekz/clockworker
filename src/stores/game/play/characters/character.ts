@@ -45,36 +45,48 @@ export class Character<
   constructor(
     config: CharacterConfig<InitialImageList, AnimationName, MovementTypeName, MovementRegulatorName>,
   ) {
-    super({ is: config.is })
+    const {
+      is,
+      screen,
+      imageContainerConfig,
+      spriteSheetConfig,
+      initialSpriteScale,
+      animationList,
+      movementTypes,
+      regulators,
+      initialMovementType,
+    } = config
+
+    super({ is: is })
+
+    this.screen = screen
 
     this.imageContainer = new ImageContainer(
-      config.imageContainerConfig.initialImageList,
-      config.imageContainerConfig.options,
+      imageContainerConfig.initialImageList,
+      imageContainerConfig.options,
     )
 
     this.spriteSheet = new SpriteSheet({
-      ...config.spriteSheetConfig,
+      ...spriteSheetConfig,
       image: this.imageContainer.list.spriteSheet.imageElement,
     })
 
-    this.screen = config.screen
-
-    if (config.initialSpriteScale) {
-      this.setSpriteScale(config.initialSpriteScale)
+    if (initialSpriteScale) {
+      this.setSpriteScale(initialSpriteScale)
     }
 
     this.animationController = new AnimationController({
       spriteSheet: this.spriteSheet,
-      animationList: config.animationList,
+      animationList: animationList,
       initialValue: 'walkDown' as AnimationName,
     })
 
     this.movement = new CharacterMovement({
       position: this.position,
       animationController: this.animationController,
-      movementTypes: config.movementTypes,
-      regulators: config.regulators,
-      initialMovementType: config.initialMovementType,
+      movementTypes,
+      regulators,
+      initialMovementType,
     })
   }
 

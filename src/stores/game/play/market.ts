@@ -6,6 +6,7 @@ export class Market {
   name: string
 
   constructor(config: MarketConfig) {
-    this.name = config.name
+    const { name } = config
+    this.name = name
   }
 }

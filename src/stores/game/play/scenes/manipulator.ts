@@ -19,8 +19,10 @@ export class SceneCharactersManipulator {
   private characterList: CharacterList
 
   constructor(config: SceneCharactersManipulatorConfig) {
-    this.mapSize = config.mapSize
-    this.characterList = config.characterList
+    const { mapSize, characterList } = config
+
+    this.mapSize = mapSize
+    this.characterList = characterList
   }
 
   positionCharacter = (characterName: CharacterName, position: CharacterPositionOnMap): void => {

@@ -15,7 +15,9 @@ export class GameStore {
   protected keyboard: KeyboardStore
 
   constructor(config: GameStoreConfig) {
-    this.keyboard = config.keyboard
+    const { keyboard } = config
+
+    this.keyboard = keyboard
 
     makeAutoObservable(this)
   }

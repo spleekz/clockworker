@@ -24,8 +24,10 @@ export class GameScenesController {
   private characterList: CharacterList
 
   constructor(config: GameScenesControllerConfig) {
-    this.screen = config.screen
-    this.characterList = config.characterList
+    const { screen, characterList } = config
+
+    this.screen = screen
+    this.characterList = characterList
 
     makeObservable(this, {
       list: observable,

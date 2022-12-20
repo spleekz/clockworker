@@ -12,7 +12,8 @@ export class Body {
   is: string
 
   constructor(config: BodyConfig) {
-    this.is = config.is
+    const { is } = config
+    this.is = is
   }
 
   readonly id = nanoid(6)

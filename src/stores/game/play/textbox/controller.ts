@@ -32,8 +32,10 @@ export class TextboxesController {
   internalOnClose: Callback
 
   constructor(config: TextboxesControllerConfig) {
-    this.gameScript = config.gameScript
-    this.pauseController = config.pauseController
+    const { gameScript, pauseController } = config
+
+    this.gameScript = gameScript
+    this.pauseController = pauseController
 
     this.internalOnOpen = () => this.pauseController.onPause({ prohibitorName: 'textbox' })
     this.internalOnClose = () => this.pauseController.onResume({ prohibitorName: 'textbox' })

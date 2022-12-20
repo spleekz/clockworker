@@ -12,10 +12,12 @@ export class Textbox<TextboxName extends string> {
   text: string
 
   constructor(config: TextboxConfig<TextboxName>) {
-    this.name = config.name
-    this.text = config.text
+    const { name, text, onOpen, onClose } = config
 
-    this.setCallbacks({ onOpen: config.onOpen, onClose: config.onClose })
+    this.name = name
+    this.text = text
+
+    this.setCallbacks({ onOpen, onClose })
   }
 
   onOpen?: Callback

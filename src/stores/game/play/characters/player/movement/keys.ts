@@ -18,7 +18,8 @@ export class PlayerCharacterMovementKeys {
   private settings: GameSettings
 
   constructor(config: Config) {
-    this.settings = config.settings
+    const { settings } = config
+    this.settings = settings
   }
 
   prohibitorsController = new ProhibitorsController()

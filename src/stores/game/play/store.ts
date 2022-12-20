@@ -35,8 +35,10 @@ export class GamePlayStore {
   textboxesController: TextboxesController
 
   constructor(config: GamePlayStoreConfig) {
-    this.keyboard = config.keyboard
-    this.dataFromPreGameForm = config.dataFromPreGameForm
+    const { keyboard, dataFromPreGameForm } = config
+
+    this.keyboard = keyboard
+    this.dataFromPreGameForm = dataFromPreGameForm
 
     //! сценарий
     this.script = getParsedGameScript({

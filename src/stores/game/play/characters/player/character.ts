@@ -35,6 +35,8 @@ export class PlayerCharacter extends Character<
   movement: PlayerCharacterMovement
 
   constructor(config: PlayerCharacterConfig) {
+    const { screen, name, settings } = config
+
     super({
       is: 'player',
       imageContainerConfig: {
@@ -55,15 +57,15 @@ export class PlayerCharacter extends Character<
         defaultScale: initialSpriteScale,
       },
       initialSpriteScale,
-      screen: config.screen,
+      screen,
       animationList: getPlayerCharacterAnimationList({ scale: initialSpriteScale }),
       movementTypes: playerCharacterMovementTypes,
       regulators: playerCharacterMovementRegulators,
       initialMovementType: playerCharacterInitialMovementType,
     })
 
-    this.name = config.name
-    this.settings = config.settings
+    this.name = name
+    this.settings = settings
 
     //! движение
     this.movement = new PlayerCharacterMovement({

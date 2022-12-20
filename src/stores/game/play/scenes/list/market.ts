@@ -14,12 +14,15 @@ type Config = {
 
 export class MarketMainScene extends GameScene<'marketMain'> {
   constructor(config: Config) {
+    const { screen, characterList } = config
+
     const mapScheme = JSON.parse(JSON.stringify(mapSchemeJSON)) as TiledMap
+
     super({
       name: 'marketMain',
-      screen: config.screen,
+      screen,
       map: { tilesetSrc, scheme: mapScheme },
-      characterList: config.characterList,
+      characterList,
     })
   }
 }

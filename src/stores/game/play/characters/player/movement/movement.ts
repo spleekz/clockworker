@@ -45,14 +45,17 @@ export class PlayerCharacterMovement extends CharacterMovement<
   keys: PlayerCharacterMovementKeys
 
   constructor(config: PlayerCharacterMovementConfig) {
+    const { position, animationController, movementTypes, regulators, initialMovementType, settings } =
+      config
+
     super({
-      animationController: config.animationController,
-      position: config.position,
-      movementTypes: config.movementTypes,
-      regulators: config.regulators,
-      initialMovementType: config.initialMovementType,
+      position,
+      animationController,
+      movementTypes,
+      regulators,
+      initialMovementType,
     })
-    this.settings = config.settings
+    this.settings = settings
 
     // клавиши управления
     this.keys = new PlayerCharacterMovementKeys({ settings: this.settings })

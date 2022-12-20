@@ -8,9 +8,11 @@ type Config = {
 
 export class WelcomeTextbox extends Textbox<'welcome'> {
   constructor(config: Config) {
+    const { gameScript } = config
+
     super({
       name: 'welcome',
-      text: config.gameScript.content.welcome,
+      text: gameScript.content.welcome,
     })
   }
 }

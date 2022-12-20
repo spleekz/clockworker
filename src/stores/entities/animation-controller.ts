@@ -29,9 +29,11 @@ export class AnimationController<AnimationName extends string> {
   current: Animation
 
   constructor(config: AnimationControllerConfig<AnimationName>) {
-    this.spriteSheet = config.spriteSheet
-    this.list = config.animationList
-    this.current = this.getAnimation(config.initialValue)
+    const { spriteSheet, animationList, initialValue } = config
+
+    this.spriteSheet = spriteSheet
+    this.list = animationList
+    this.current = this.getAnimation(initialValue)
   }
 
   getAnimation = (animationName: AnimationName): Animation => {

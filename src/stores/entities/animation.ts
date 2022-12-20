@@ -33,13 +33,15 @@ export class Animation {
   currentSpriteIndex: number
 
   constructor(config: AnimationConfig) {
-    this.name = config.name
-    this.spriteSheet = config.spriteSheet
-    this.sequence = config.sequence
-    this.framesPerSprite = config.framesPerSprite
-    this.scale = config.scale
+    const { name, spriteSheet, sequence, framesPerSprite, scale, startFrom } = config
 
-    this.startFrom = config.startFrom ?? 0
+    this.name = name
+    this.spriteSheet = spriteSheet
+    this.sequence = sequence
+    this.framesPerSprite = framesPerSprite
+    this.scale = scale
+
+    this.startFrom = startFrom ?? 0
 
     this.currentSpriteIndex = this.startFrom
   }

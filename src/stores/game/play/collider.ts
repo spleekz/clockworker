@@ -33,7 +33,8 @@ export class Collider {
   private screen: GameScreen
 
   constructor(config: ColliderConfig) {
-    this.screen = config.screen
+    const { screen } = config
+    this.screen = screen
   }
 
   private bodies: Array<ColliderBodyWithHitbox> = []

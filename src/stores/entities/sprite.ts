@@ -20,12 +20,14 @@ export class Sprite {
   scale: number
 
   constructor(config: SpriteConfig) {
-    this.image = config.image
-    this.width = config.width
-    this.height = config.height
-    this.sourceX = config.sourceX ?? 0
-    this.sourceY = config.sourceY ?? 0
-    this.scale = config.scale
+    const { image, width, height, sourceX, sourceY, scale } = config
+
+    this.image = image
+    this.width = width
+    this.height = height
+    this.sourceX = sourceX ?? 0
+    this.sourceY = sourceY ?? 0
+    this.scale = scale
   }
 
   get scaledWidth(): number {

@@ -68,14 +68,16 @@ export class CharacterMovement<MovementTypeName extends string, RegulatorName ex
   currentMovementConfigParametersNames: MovementConfigParametersNames<MovementTypeName, RegulatorName>
 
   constructor(config: CharacterMovementConfig<MovementTypeName, RegulatorName>) {
-    this.position = config.position
-    this.animationController = config.animationController
+    const { position, animationController, movementTypes, regulators, initialMovementType } = config
 
-    this.movementTypes = config.movementTypes
-    this.regulators = config.regulators
+    this.position = position
+    this.animationController = animationController
+
+    this.movementTypes = movementTypes
+    this.regulators = regulators
 
     this.currentMovementConfigParametersNames = {
-      type: config.initialMovementType,
+      type: initialMovementType,
       regulator: null,
     }
   }

@@ -21,11 +21,13 @@ export class TransitionScreen {
   private sharedPlayMethods: SharedPlayMethods
 
   constructor(config: TransitionScreenConfig) {
-    this.appearanceMs = config.appearanceMs
-    this.disappearanceMs = config.disappearanceMs
-    this.durationMs = config.durationMs ?? 0
-    this.background = config.background
-    this.sharedPlayMethods = config.sharedPlayMethods
+    const { appearanceMs, disappearanceMs, durationMs, background, sharedPlayMethods } = config
+
+    this.appearanceMs = appearanceMs
+    this.disappearanceMs = disappearanceMs
+    this.durationMs = durationMs ?? 0
+    this.background = background
+    this.sharedPlayMethods = sharedPlayMethods
 
     makeAutoObservable(this)
   }

@@ -15,8 +15,10 @@ export class GamePauseController {
   private sharedMethods: SharedPlayMethods
 
   constructor(config: Config) {
-    this.charactersController = config.characterController
-    this.sharedMethods = config.sharedMethods
+    const { characterController, sharedMethods } = config
+
+    this.charactersController = characterController
+    this.sharedMethods = sharedMethods
     makeAutoObservable(this)
   }
 

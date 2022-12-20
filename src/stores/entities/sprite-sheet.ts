@@ -26,14 +26,17 @@ export class SpriteSheet {
   defaultScale?: number
 
   constructor(config: SpriteSheetConfig) {
-    this.image = config.image
-    this.spriteWidth = config.spriteWidth
-    this.spriteHeight = config.spriteHeight
-    this.firstSkipX = config.firstSkipX
-    this.firstSkipY = config.firstSkipY
-    this.skipX = config.skipX
-    this.skipY = config.skipY
-    this.defaultScale = config.defaultScale
+    const { image, spriteWidth, spriteHeight, firstSkipX, firstSkipY, skipX, skipY, defaultScale } =
+      config
+
+    this.image = image
+    this.spriteWidth = spriteWidth
+    this.spriteHeight = spriteHeight
+    this.firstSkipX = firstSkipX
+    this.firstSkipY = firstSkipY
+    this.skipX = skipX
+    this.skipY = skipY
+    this.defaultScale = defaultScale
   }
 
   getSprite = (row: number, column: number, config?: GetSpriteConfig): Sprite => {

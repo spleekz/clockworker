@@ -44,10 +44,12 @@ export class GameScene<SceneName extends string> {
   charactersManipulator: SceneCharactersManipulator
 
   constructor(config: GameSceneConfig<SceneName>) {
-    this.screen = config.screen
-    this.characterList = config.characterList
-    this.name = config.name
-    this.mapConfig = config.map
+    const { screen, characterList, name, map } = config
+
+    this.screen = screen
+    this.characterList = characterList
+    this.name = name
+    this.mapConfig = map
     this.mapSize = {
       width: this.mapConfig.scheme.width * this.mapConfig.scheme.tilewidth,
       height: this.mapConfig.scheme.height * this.mapConfig.scheme.tileheight,
