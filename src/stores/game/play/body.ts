@@ -1,5 +1,5 @@
 import { nanoid } from 'nanoid'
-import { Size } from 'project-utility-types'
+import { PointPair, Size } from 'project-utility-types'
 
 import { Position } from 'stores/entities/position'
 
@@ -24,4 +24,13 @@ export class Body {
   }
 
   position = new Position()
+
+  get hitbox(): PointPair {
+    return {
+      x1: this.position.x,
+      y1: this.position.y,
+      x2: this.position.x + this.size.width,
+      y2: this.position.y + this.size.height,
+    }
+  }
 }
