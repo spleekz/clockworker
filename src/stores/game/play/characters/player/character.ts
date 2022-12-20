@@ -13,7 +13,7 @@ import {
   playerCharacterMovementTypes,
 } from './movement/movement'
 
-type InitialImageList = { spriteSheet: typeof playerCharacterSpriteSheetSrc }
+type ImageSrcs = { spriteSheet: typeof playerCharacterSpriteSheetSrc }
 
 const initialSpriteScale = 2.5
 
@@ -24,7 +24,7 @@ export type PlayerCharacterConfig = {
 }
 
 export class PlayerCharacter extends Character<
-  InitialImageList,
+  ImageSrcs,
   PlayerCharacterAnimationName,
   PlayerCharacterMovementTypeName,
   PlayerCharacterMovementRegulatorName
@@ -40,7 +40,7 @@ export class PlayerCharacter extends Character<
     super({
       is: 'player',
       imageContainerConfig: {
-        initialImageList: {
+        imageSrcs: {
           spriteSheet: playerCharacterSpriteSheetSrc,
         },
         options: {

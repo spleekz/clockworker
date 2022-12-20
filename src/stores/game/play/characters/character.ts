@@ -8,16 +8,16 @@ import { GameScreen } from '../screen'
 import { CharacterMovementAnimationName } from './animation'
 import { CharacterMovement, CharacterMovementConfig } from './movement'
 
-export type CharacterInitialImageList = ImageSrcs & { spriteSheet: string }
+export type CharacterImageSrcsList = ImageSrcs & { spriteSheet: string }
 
 export type CharacterConfig<
-  InitialImageList extends CharacterInitialImageList,
+  ImageSrcs extends CharacterImageSrcsList,
   AnimationName extends CharacterMovementAnimationName,
   MovementTypeName extends string,
   MovementRegulatorName extends string,
 > = BodyConfig & {
   imageContainerConfig: {
-    initialImageList: InitialImageList
+    imageSrcs: ImageSrcs
     options?: ImageContainerOptions
   }
   initialSpriteScale: number
@@ -30,12 +30,12 @@ export type CharacterConfig<
   >
 
 export class Character<
-  InitialImageList extends CharacterInitialImageList,
+  ImageSrcs extends CharacterImageSrcsList,
   AnimationName extends CharacterMovementAnimationName,
   MovementTypeName extends string,
   MovementRegulatorName extends string,
 > extends Body {
-  imageContainer: ImageContainer<InitialImageList>
+  imageContainer: ImageContainer<ImageSrcs>
   spriteSheet: SpriteSheet
   screen: GameScreen
 
@@ -43,7 +43,7 @@ export class Character<
   movement: CharacterMovement<MovementTypeName, MovementRegulatorName>
 
   constructor(
-    config: CharacterConfig<InitialImageList, AnimationName, MovementTypeName, MovementRegulatorName>,
+    config: CharacterConfig<ImageSrcs, AnimationName, MovementTypeName, MovementRegulatorName>,
   ) {
     const {
       is,
@@ -62,7 +62,7 @@ export class Character<
     this.screen = screen
 
     this.imageContainer = new ImageContainer(
-      imageContainerConfig.initialImageList,
+      imageContainerConfig.imageSrcs,
       imageContainerConfig.options,
     )
 
