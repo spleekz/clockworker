@@ -87,6 +87,8 @@ export class PlayerCharacterMovement extends CharacterMovement<
               this.animationController.resume()
               this.moveWithAnimation({ direction: movementDirection })
             }
+          } else {
+            this.stopMove()
           }
         }
       }
