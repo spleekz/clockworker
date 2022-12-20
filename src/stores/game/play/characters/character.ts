@@ -8,6 +8,8 @@ import { GameScreen } from '../screen'
 import { CharacterMovementAnimationName } from './animation'
 import { CharacterMovement, CharacterMovementConfig } from './movement'
 
+export type AnyCharacter = Character<any, any, any, any>
+
 export type CharacterImageSrcsList = ImageSrcs & { spriteSheet: string }
 
 export type CharacterConfig<

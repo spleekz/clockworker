@@ -1,4 +1,4 @@
-import { AnyCharacter, ExpandedDirection, PointPair, Side, XY } from 'project-utility-types'
+import { ExpandedDirection, PointPair, Side, XY } from 'project-utility-types'
 
 import { areEquivalent } from 'lib/are-equivalent'
 import { removeOnce } from 'lib/arrays'
@@ -6,6 +6,7 @@ import { checkIntersection, getDistanceBetweenPoints } from 'lib/coords'
 
 import { getMovementDirection } from '../lib/movement'
 import { Body } from './body'
+import { AnyCharacter } from './characters/character'
 import { PlayerCharacter } from './characters/player/character'
 import { GameScreen } from './screen'
 
