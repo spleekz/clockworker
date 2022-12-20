@@ -1,5 +1,5 @@
 import { nanoid } from 'nanoid'
-import { PointPair, Size, XY } from 'project-utility-types'
+import { PointPair, SheetPosition, Size, XY } from 'project-utility-types'
 import { TiledMap } from 'tiled-types'
 
 import { ImageContainer } from 'stores/entities/image-container'
@@ -99,7 +99,7 @@ export class GameScene<SceneName extends string> {
   }
 
   drawMap = (): void => {
-    const getSourceSpritePositionByIndex = (index: number): { row: number; column: number } => {
+    const getSourceSpritePositionByIndex = (index: number): SheetPosition => {
       const tilesCountInTilesetRow = this.map.tileset.image.width / this.map.scheme.tilewidth
 
       const row = Math.floor((index - 1) / tilesCountInTilesetRow)
