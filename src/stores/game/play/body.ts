@@ -19,7 +19,7 @@ export class Body {
   readonly id = nanoid(6)
 
   size: Size = { width: 0, height: 0 }
-  setSize = (size: Size): void => {
+  protected setSize = (size: Size): void => {
     this.size = size
   }
 
