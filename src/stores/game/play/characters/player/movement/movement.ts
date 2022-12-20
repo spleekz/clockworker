@@ -1,6 +1,4 @@
-import { ExpandedDirection } from 'project-utility-types'
-
-import { getReversedPrimitiveDirection } from 'stores/game/lib/movement'
+import { getSingleMovementDirection } from 'stores/game/lib/movement'
 import { GameSettings } from 'stores/game/play/settings/settings'
 import { KeyboardStore } from 'stores/keyboard.store'
 
@@ -82,30 +80,7 @@ export class PlayerCharacterMovement extends CharacterMovement<
             this.setCurrentMovementRegulator(null)
           }
 
-          const getMovementDirection = (): ExpandedDirection | null => {
-            var movementDirection: ExpandedDirection | null = null
-
-            // убираем направления, компенсирующие друг друга (пример: вверх-вниз)
-            const filteredPressedMovementDirections = this.keys.pressedDirections.filter(
-              (pressedDirection) => {
-                return this.keys.pressedDirections.every(
-                  (d) => d !== getReversedPrimitiveDirection(pressedDirection),
-                )
-              },
-            )
-
-            // если длина массива 0, значит, все направления скомпенсировали друг друга - персонаж стоит на месте
-            if (filteredPressedMovementDirections.length) {
-              movementDirection = filteredPressedMovementDirections
-                // сортируем, чтобы названия направлений получались в едином формате
-                .sort((_, b) => (b === 'down' || b === 'up' ? 1 : -1))
-                .join('') as ExpandedDirection
-            }
-
-            return movementDirection
-          }
-
-          const movementDirection = getMovementDirection()
+          const movementDirection = getSingleMovementDirection(this.keys.pressedDirections)
 
           if (movementDirection) {
             if (!this.isMovementProhibited) {

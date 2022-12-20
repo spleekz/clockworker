@@ -54,3 +54,29 @@ export const convertExpandedDirectionToPrimitiveDirection = (
     ? 'down'
     : 'up'
 }
+
+// убирает направления, компенсирующие друг друга (пример: вверх-вниз)
+export const compensatePrimitiveMovementDirections = (
+  directions: Array<PrimitiveDirection>,
+): Array<PrimitiveDirection> => {
+  return directions.filter((direction) => {
+    return directions.every((d) => d !== getReversedPrimitiveDirection(direction))
+  })
+}
+
+export const getSingleMovementDirection = (
+  directions: Array<PrimitiveDirection>,
+): ExpandedDirection | null => {
+  const filteredDirections = compensatePrimitiveMovementDirections(directions)
+
+  if (filteredDirections.length) {
+    const movementDirection: ExpandedDirection = filteredDirections
+      // сортируем, чтобы названия направлений получались в едином формате
+      .sort((_, b) => (b === 'down' || b === 'up' ? 1 : -1))
+      .join('') as ExpandedDirection
+
+    return movementDirection
+  }
+
+  return null
+}
