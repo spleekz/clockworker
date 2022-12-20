@@ -9,15 +9,11 @@ import { CharacterMovementAnimationName } from './animation'
 import { CharacterMovement, CharacterMovementConfig } from './movement'
 
 export type AnyCharacter = Character<any, any, any, any>
+export type AnyCharacterConfig = CharacterConfig<any, any, any, any>
 
-export type CharacterImageSrcsList = ImageSrcs & { spriteSheet: string }
+type CharacterImageSrcs = ImageSrcs & { spriteSheet: string }
 
-export type CharacterConfig<
-  ImageSrcs extends CharacterImageSrcsList,
-  AnimationName extends CharacterMovementAnimationName,
-  MovementTypeName extends string,
-  MovementRegulatorName extends string,
-> = BodyConfig & {
+type ConfigForCharacter<ImageSrcs extends CharacterImageSrcs, AnimationName extends string> = {
   name: string
   imageContainerConfig: {
     imageSrcs: ImageSrcs
@@ -27,13 +23,24 @@ export type CharacterConfig<
   spriteSheetConfig: Omit<SpriteSheetConfig, 'image'>
   screen: GameScreen
   animationList: AnimationList<AnimationName>
-} & Omit<
-    CharacterMovementConfig<MovementTypeName, MovementRegulatorName>,
-    'position' | 'animationController'
-  >
+}
+
+type ConfigForMovement<MovementTypeName extends string, MovementRegulatorName extends string> = Omit<
+  CharacterMovementConfig<MovementTypeName, MovementRegulatorName>,
+  'position' | 'animationController'
+>
+
+export type CharacterConfig<
+  ImageSrcs extends CharacterImageSrcs,
+  AnimationName extends CharacterMovementAnimationName,
+  MovementTypeName extends string,
+  MovementRegulatorName extends string,
+> = BodyConfig &
+  ConfigForCharacter<ImageSrcs, AnimationName> &
+  ConfigForMovement<MovementTypeName, MovementRegulatorName>
 
 export class Character<
-  ImageSrcs extends CharacterImageSrcsList,
+  ImageSrcs extends CharacterImageSrcs,
   AnimationName extends CharacterMovementAnimationName,
   MovementTypeName extends string,
   MovementRegulatorName extends string,

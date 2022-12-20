@@ -1,8 +1,7 @@
 import playerCharacterSpriteSheetSrc from 'content/sprites/characters/Player.png'
 
-import { GameScreen } from '../../screen'
 import { GameSettings } from '../../settings/settings'
-import { Character } from '../character'
+import { AnyCharacterConfig, Character } from '../character'
 import { PlayerCharacterAnimationName, getPlayerCharacterAnimationList } from './animation'
 import {
   PlayerCharacterMovement,
@@ -17,10 +16,8 @@ type ImageSrcs = { spriteSheet: typeof playerCharacterSpriteSheetSrc }
 
 const initialSpriteScale = 2.5
 
-export type PlayerCharacterConfig = {
-  name: string
+export type PlayerCharacterConfig = Pick<AnyCharacterConfig, 'name' | 'screen'> & {
   settings: GameSettings
-  screen: GameScreen
 }
 
 export class PlayerCharacter extends Character<
