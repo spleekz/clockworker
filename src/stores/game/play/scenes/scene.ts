@@ -99,6 +99,7 @@ export class GameScene<SceneName extends string> {
   }
 
   drawMap = (): void => {
+    // возвращает позицию тайла в тайлсете (строка и столбец)
     const getSourceSpritePositionByIndex = (index: number): SheetPosition => {
       const tilesCountInTilesetRow = this.map.tileset.image.width / this.map.scheme.tilewidth
 
@@ -114,7 +115,9 @@ export class GameScene<SceneName extends string> {
     }
 
     var spritePosition: XY = { x: 0, y: 0 }
-    const updatePositionForNextSprite = (): void => {
+
+    // обновляет позицию, в которой будет находиться следующий тайл
+    const updatePositionForNextTile = (): void => {
       const tileWidth = this.map.scheme.tileheight
       const tileHeight = this.map.scheme.tileheight
 
@@ -146,7 +149,7 @@ export class GameScene<SceneName extends string> {
               sourceSpritePosition.column,
             )
             this.screen.drawSprite(currentSprite, spritePosition)
-            updatePositionForNextSprite()
+            updatePositionForNextTile()
           })
         }
       }
