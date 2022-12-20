@@ -29,15 +29,15 @@ export class PlayerCharacter extends Character<
   PlayerCharacterMovementTypeName,
   PlayerCharacterMovementRegulatorName
 > {
-  name: string
   private settings: GameSettings
 
   movement: PlayerCharacterMovement
 
   constructor(config: PlayerCharacterConfig) {
-    const { screen, name, settings } = config
+    const { name, screen, settings } = config
 
     super({
+      name,
       is: 'player',
       imageContainerConfig: {
         imageSrcs: {
@@ -64,7 +64,6 @@ export class PlayerCharacter extends Character<
       initialMovementType: playerCharacterInitialMovementType,
     })
 
-    this.name = name
     this.settings = settings
 
     //! движение

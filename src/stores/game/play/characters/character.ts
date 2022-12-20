@@ -16,6 +16,7 @@ export type CharacterConfig<
   MovementTypeName extends string,
   MovementRegulatorName extends string,
 > = BodyConfig & {
+  name: string
   imageContainerConfig: {
     imageSrcs: ImageSrcs
     options?: ImageContainerOptions
@@ -35,6 +36,7 @@ export class Character<
   MovementTypeName extends string,
   MovementRegulatorName extends string,
 > extends Body {
+  name: string
   imageContainer: ImageContainer<ImageSrcs>
   spriteSheet: SpriteSheet
   screen: GameScreen
@@ -47,6 +49,7 @@ export class Character<
   ) {
     const {
       is,
+      name,
       screen,
       imageContainerConfig,
       spriteSheetConfig,
@@ -59,6 +62,7 @@ export class Character<
 
     super({ is: is })
 
+    this.name = name
     this.screen = screen
 
     this.imageContainer = new ImageContainer(
