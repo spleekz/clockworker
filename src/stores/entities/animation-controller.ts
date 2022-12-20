@@ -11,41 +11,57 @@ export enum ViewDirections {
 
 export type AnimationConfigNoNameNoSpriteSheet = Omit<AnimationConfig, 'name' | 'spriteSheet'>
 
-export type AnimationList<AnimationName extends string> = Record<
+export type AnimationConfigs<AnimationName extends string> = Record<
   AnimationName,
   AnimationConfigNoNameNoSpriteSheet
 >
 
+type AnimationList<AnimationName extends string> = Record<AnimationName, Animation>
+
 export type AnimationControllerConfig<AnimationName extends string> = {
   spriteSheet: SpriteSheet
-  animationList: AnimationList<AnimationName>
+  configs: AnimationConfigs<AnimationName>
   initialValue: AnimationName
 }
 
 export class AnimationController<AnimationName extends string> {
   private spriteSheet: SpriteSheet
-  private list: AnimationList<AnimationName>
+  private configs: AnimationConfigs<AnimationName>
+  private list: AnimationList<AnimationName> = {} as AnimationList<AnimationName>
 
   current: Animation
 
   constructor(config: AnimationControllerConfig<AnimationName>) {
-    const { spriteSheet, animationList, initialValue } = config
+    const { spriteSheet, configs, initialValue } = config
 
     this.spriteSheet = spriteSheet
-    this.list = animationList
-    this.current = this.getAnimation(initialValue)
+    this.configs = configs
+
+    this.createAnimations()
+
+    this.current = this.list[initialValue]
   }
 
-  getAnimation = (animationName: AnimationName): Animation => {
-    return new Animation({
-      name: animationName,
-      spriteSheet: this.spriteSheet,
-      ...this.list[animationName],
+  private createAnimations = (): void => {
+    Object.entries<AnimationConfigNoNameNoSpriteSheet>(this.configs).forEach(
+      ([animationName, animationConfig]) => {
+        this.list[animationName as AnimationName] = new Animation({
+          name: animationName,
+          spriteSheet: this.spriteSheet,
+          ...animationConfig,
+        })
+      },
+    )
+  }
+
+  setScale = (scale: number): void => {
+    Object.values<Animation>(this.list).forEach((animation) => {
+      animation.setScale(scale)
     })
   }
 
   setAnimation = (animationName: AnimationName): void => {
-    this.current = this.getAnimation(animationName)
+    this.current = this.list[animationName]
   }
 
   start = (options?: RunAnimationOptions): void => {

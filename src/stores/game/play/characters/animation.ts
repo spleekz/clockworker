@@ -1,7 +1,7 @@
 import { AnimationSequence } from 'stores/entities/animation'
 import {
   AnimationConfigNoNameNoSpriteSheet,
-  AnimationList,
+  AnimationConfigs,
   ViewDirections,
 } from 'stores/entities/animation-controller'
 import { getRowSequence } from 'stores/game/lib/animation'
@@ -28,9 +28,9 @@ const getCharacterMovementAnimationConfig = (
 }
 
 // возвращает список с анимациями движения, одинаковыми для всех персонажей
-export const getCharacterMovementAnimationList = (
+export const getCharacterMovementAnimationConfigs = (
   config: GetCharacterMovementAnimationConfig,
-): AnimationList<CharacterMovementAnimationName> => {
+): AnimationConfigs<CharacterMovementAnimationName> => {
   return {
     walkDown: getCharacterMovementAnimationConfig(ViewDirections.DOWN, config),
     walkRight: getCharacterMovementAnimationConfig(ViewDirections.RIGHT, config),

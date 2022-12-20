@@ -18,7 +18,7 @@ export type AnimationConfig = {
   spriteSheet: SpriteSheet
   sequence: AnimationSequence
   framesPerSprite: number
-  scale: number
+  initialScale: number
   startFrom?: number
 }
 
@@ -33,17 +33,21 @@ export class Animation {
   currentSpriteIndex: number
 
   constructor(config: AnimationConfig) {
-    const { name, spriteSheet, sequence, framesPerSprite, scale, startFrom } = config
+    const { name, spriteSheet, sequence, framesPerSprite, initialScale, startFrom } = config
 
     this.name = name
     this.spriteSheet = spriteSheet
     this.sequence = sequence
     this.framesPerSprite = framesPerSprite
-    this.scale = scale
+    this.setScale(initialScale)
 
     this.startFrom = startFrom ?? 0
 
     this.currentSpriteIndex = this.startFrom
+  }
+
+  setScale = (scale: number): void => {
+    this.scale = scale
   }
 
   setCurrentSpriteIndex = (value: number): void => {

@@ -1,9 +1,9 @@
-import { AnimationList } from 'stores/entities/animation-controller'
+import { AnimationConfigs } from 'stores/entities/animation-controller'
 
 import {
   CharacterMovementAnimationName,
   GetCharacterMovementAnimationConfig,
-  getCharacterMovementAnimationList,
+  getCharacterMovementAnimationConfigs,
 } from '../animation'
 
 export type PlayerCharacterAnimationName = CharacterMovementAnimationName
@@ -17,8 +17,8 @@ const playerCharacterMovementAnimationConfig: Pick<
   framesPerSprite: playerCharacterWalkFramesPerSprite,
 }
 
-export const getPlayerCharacterAnimationList = (
+export const getPlayerCharacterAnimationConfigs = (
   config: Omit<GetCharacterMovementAnimationConfig, 'framesPerSprite'>,
-): AnimationList<PlayerCharacterAnimationName> => {
-  return getCharacterMovementAnimationList({ ...config, ...playerCharacterMovementAnimationConfig })
+): AnimationConfigs<PlayerCharacterAnimationName> => {
+  return getCharacterMovementAnimationConfigs({ ...config, ...playerCharacterMovementAnimationConfig })
 }

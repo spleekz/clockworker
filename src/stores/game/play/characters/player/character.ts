@@ -2,7 +2,7 @@ import playerCharacterSpriteSheetSrc from 'content/sprites/characters/Player.png
 
 import { GameSettings } from '../../settings/settings'
 import { AnyCharacterConfig, Character } from '../character'
-import { PlayerCharacterAnimationName, getPlayerCharacterAnimationList } from './animation'
+import { PlayerCharacterAnimationName, getPlayerCharacterAnimationConfigs } from './animation'
 import {
   PlayerCharacterMovement,
   PlayerCharacterMovementRegulatorName,
@@ -55,7 +55,7 @@ export class PlayerCharacter extends Character<
       },
       initialSpriteScale,
       screen,
-      animationList: getPlayerCharacterAnimationList({ scale: initialSpriteScale }),
+      animationConfigs: getPlayerCharacterAnimationConfigs({ initialScale: initialSpriteScale }),
       movementTypes: playerCharacterMovementTypes,
       regulators: playerCharacterMovementRegulators,
       initialMovementType: playerCharacterInitialMovementType,
@@ -72,10 +72,5 @@ export class PlayerCharacter extends Character<
       regulators: playerCharacterMovementRegulators,
       initialMovementType: playerCharacterInitialMovementType,
     })
-
-    this.size = {
-      width: this.currentSprite.width * this.currentSprite.scale,
-      height: this.currentSprite.height * this.currentSprite.scale,
-    }
   }
 }

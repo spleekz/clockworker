@@ -1,4 +1,4 @@
-import { AnimationController, AnimationList } from 'stores/entities/animation-controller'
+import { AnimationConfigs, AnimationController } from 'stores/entities/animation-controller'
 import { ImageContainer, ImageContainerOptions, ImageSrcs } from 'stores/entities/image-container'
 import { Sprite } from 'stores/entities/sprite'
 import { SpriteSheet, SpriteSheetConfig } from 'stores/entities/sprite-sheet'
@@ -22,7 +22,7 @@ type ConfigForCharacter<ImageSrcs extends CharacterImageSrcs, AnimationName exte
   initialSpriteScale: number
   spriteSheetConfig: Omit<SpriteSheetConfig, 'image'>
   screen: GameScreen
-  animationList: AnimationList<AnimationName>
+  animationConfigs: AnimationConfigs<AnimationName>
 }
 
 type ConfigForMovement<MovementTypeName extends string, MovementRegulatorName extends string> = Omit<
@@ -63,7 +63,7 @@ export class Character<
       imageContainerConfig,
       spriteSheetConfig,
       initialSpriteScale,
-      animationList,
+      animationConfigs,
       movementTypes,
       regulators,
       initialMovementType,
@@ -84,15 +84,13 @@ export class Character<
       image: this.imageContainer.list.spriteSheet.imageElement,
     })
 
-    if (initialSpriteScale) {
-      this.setSpriteScale(initialSpriteScale)
-    }
-
     this.animationController = new AnimationController({
       spriteSheet: this.spriteSheet,
-      animationList: animationList,
+      configs: animationConfigs,
       initialValue: 'walkDown' as AnimationName,
     })
+
+    this.setSpriteScale(initialSpriteScale ?? 1)
 
     this.movement = new CharacterMovement({
       position: this.position,
@@ -103,14 +101,9 @@ export class Character<
     })
   }
 
-  spriteScale = 1
   setSpriteScale = (scale: number): void => {
-    this.spriteScale = scale
-    // обновление размеров body в соответствии с новым масштабом спрайта
-    this.setSize({
-      width: this.spriteSheet.spriteWidth * scale,
-      height: this.spriteSheet.spriteHeight * scale,
-    })
+    this.animationController.setScale(scale)
+    this.setSize({ width: this.currentSprite.scaledWidth, height: this.currentSprite.scaledHeight })
   }
 
   get currentSprite(): Sprite {
