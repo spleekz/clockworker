@@ -7,6 +7,8 @@ import { doubleBorderStyle } from 'shared-styles'
 
 import { useStore } from 'stores/root-store/context'
 
+import { colors } from 'lib/theme'
+
 import { PortalToBody } from 'components/utility/portal-to-body'
 
 import { CrossIcon } from 'assets/icons/cross'
@@ -97,7 +99,7 @@ const Block = styled.div<{ width: string; height: string; color?: string }>`
   height: ${(props) => props.height};
   position: relative;
   padding: 20px;
-  box-shadow: 0px 0px 25px 8px rgba(34, 60, 80, 0.2);
+  box-shadow: 0px 0px 25px 8px ${colors.shadow};
   ${doubleBorderStyle}
 `
 const Heading = styled.div`

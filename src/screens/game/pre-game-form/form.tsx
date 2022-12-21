@@ -103,7 +103,7 @@ const FormBlock = styled.div`
   height: 700px;
   padding: 15px 22px;
   background: ${colors.mainLight};
-  box-shadow: 0px 0px 25px 7px #223c5033;
+  box-shadow: 0px 0px 25px 7px ${colors.shadow};
   ${doubleBorderStyle}
 `
 const Form = styled.form`
