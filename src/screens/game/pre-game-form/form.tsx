@@ -103,11 +103,12 @@ const FormBlock = styled.div`
   height: 700px;
   padding: 15px 22px;
   background: ${colors.mainLight};
+  box-shadow: 0px 0px 25px 7px #223c5033;
   ${doubleBorderStyle}
 `
 const Form = styled.form`
-  height: 100%;
   position: relative;
+  height: 100%;
 `
 const InputContainer = styled.div`
   position: relative;
