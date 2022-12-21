@@ -30,6 +30,8 @@ export const areEquivalent = (value1: any, value2: any): boolean => {
       return areEquivalentObjects(value1, value2)
     } else if (Array.isArray(value1) && Array.isArray(value2)) {
       return areEquivalentArrays(value1, value2)
+    } else if (isNaN(value1) && isNaN(value2)) {
+      return true
     } else {
       return value1 === value2
     }
