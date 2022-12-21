@@ -82,10 +82,10 @@ export const Popup: FC<PopupTemplateProps> = observer(
 
 const Container = styled.div`
   position: fixed;
+  bottom: 0;
+  right: 0;
   top: 0;
   left: 0;
-  right: 0;
-  bottom: 0;
   z-index: 9999;
   display: flex;
   justify-content: center;
@@ -113,8 +113,8 @@ const Title = styled.h2`
 `
 const CloseButton = styled.button`
   position: absolute;
-  top: 0;
   right: 0;
+  top: 0;
   background-color: transparent;
 `
 const Body = styled.div`

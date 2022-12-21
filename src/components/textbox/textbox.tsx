@@ -116,8 +116,8 @@ const Container = styled.div<{ isOpened: boolean; isOpeningAnimationSkipped: boo
   width: 100%;
   position: absolute;
   z-index: 999;
-  left: 0;
   right: 0;
+  left: 0;
   display: flex;
   justify-content: center;
   margin: 0 auto;
@@ -133,8 +133,8 @@ const CloseButton = styled(PixelatedButton).attrs({
   backgroundColor: colors.mainMedium,
 })`
   position: absolute;
-  top: 15.5px;
   right: 18px;
+  top: 15.5px;
   display: flex;
   justify-content: center;
   align-items: center;

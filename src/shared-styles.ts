@@ -9,10 +9,10 @@ export const doubleBorderStyle = css`
     content: '';
     position: absolute;
     z-index: -1;
+    bottom: -13px;
+    right: -13px;
     top: -13px;
     left: -13px;
-    right: -13px;
-    bottom: -13px;
     background-color: ${colors.mainMedium};
     border-radius: ${theme.borderRadius}px;
   }

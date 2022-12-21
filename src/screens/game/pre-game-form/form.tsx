@@ -130,8 +130,8 @@ const ExclamationMarkContainer = styled(PixelatedDiv).attrs({
   backgroundColor: colors.error,
 })`
   position: absolute;
-  top: 3px;
   right: 0;
+  top: 3px;
   width: 24px;
   height: 38px;
   font-size: 30px;
