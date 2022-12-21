@@ -25,7 +25,12 @@ export const App: FC = observer(() => {
       </Container>
 
       {updateStore && updateStore.isUpdateAvailable && (
-        <UpdateNotification updateStore={updateStore} />
+        <UpdateNotification
+          version={updateStore.version}
+          releaseNotes={updateStore.releaseNotes}
+          currentPercentage={updateStore.currentPercentage}
+          updateGame={updateStore.updateGame}
+        />
       )}
     </>
   )
