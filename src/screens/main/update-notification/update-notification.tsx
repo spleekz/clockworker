@@ -7,8 +7,8 @@ import { DownloadProgress } from './download-progress'
 import { UpdateAvailable } from './update-available'
 
 type Props = {
-  version: string | null
-  releaseNotes: string | null
+  version: string
+  releaseNotes: string
   currentPercentage: number | null
   updateGame: Callback
 }
@@ -17,13 +17,11 @@ export const UpdateNotification: FC<Props> = observer(
   ({ version, releaseNotes, currentPercentage, updateGame }) => {
     return (
       <>
-        {version !== null &&
-          releaseNotes !== null &&
-          (currentPercentage !== null ? (
-            <DownloadProgress percentage={currentPercentage} />
-          ) : (
-            <UpdateAvailable version={version} releaseNotes={releaseNotes} updateGame={updateGame} />
-          ))}
+        {currentPercentage !== null ? (
+          <DownloadProgress percentage={currentPercentage} />
+        ) : (
+          <UpdateAvailable version={version} releaseNotes={releaseNotes} updateGame={updateGame} />
+        )}
       </>
     )
   },

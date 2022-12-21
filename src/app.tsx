@@ -8,12 +8,11 @@ import { useStore } from 'stores/root-store/context'
 
 import { colors } from 'lib/theme'
 
-import { UpdateNotification } from 'components/update-notification/update-notification'
 import { GameScreen } from 'screens/game/screen'
 import { MainScreen } from 'screens/main/screen'
 
 export const App: FC = observer(() => {
-  const { appStore, updateStore } = useStore()
+  const { appStore } = useStore()
 
   return (
     <>
@@ -23,15 +22,6 @@ export const App: FC = observer(() => {
         {appStore.screen === 'main' && <MainScreen />}
         {appStore.screen === 'game' && <GameScreen />}
       </Container>
-
-      {updateStore && updateStore.isUpdateAvailable && (
-        <UpdateNotification
-          version={updateStore.version}
-          releaseNotes={updateStore.releaseNotes}
-          currentPercentage={updateStore.currentPercentage}
-          updateGame={updateStore.updateGame}
-        />
-      )}
     </>
   )
 })
