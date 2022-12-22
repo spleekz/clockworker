@@ -9,9 +9,8 @@ import { useStore } from 'stores/root-store/context'
 
 import { colors } from 'lib/theme'
 
+import { ButtonWithCross } from 'components/buttons/button-with-cross'
 import { PortalToBody } from 'components/utility/portal-to-body'
-
-import { CrossIcon } from 'assets/icons/cross'
 
 export type PopupTemplateProps = {
   width: string
@@ -65,11 +64,7 @@ export const Popup: FC<PopupTemplateProps> = observer(
             {(withCloseButton || title) && (
               <Heading>
                 {title && <Title style={titleStyles}>{title}</Title>}
-                {withCloseButton && (
-                  <CloseButton onClick={fnForClosing}>
-                    <CrossIcon size={32} />
-                  </CloseButton>
-                )}
+                {withCloseButton && <CloseButton onClick={fnForClosing} />}
               </Heading>
             )}
             <Body>{children}</Body>
@@ -111,11 +106,10 @@ const Title = styled.h2`
   font-size: 36px;
   text-align: center;
 `
-const CloseButton = styled.button`
+const CloseButton = styled(ButtonWithCross)`
   position: absolute;
   right: 0;
   top: 0;
-  background-color: transparent;
 `
 const Body = styled.div`
   flex: 1 0 auto;

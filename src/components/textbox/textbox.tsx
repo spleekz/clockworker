@@ -10,10 +10,8 @@ import { useWindowClick } from 'hooks/use-window-click'
 import { colors } from 'lib/theme'
 
 import { AutoPrintedText } from 'components/auto-printed-text/auto-printed-text'
-import { PixelatedButton } from 'components/pixelated/pixelated-components'
+import { ButtonWithCross } from 'components/buttons/button-with-cross'
 import { useGamePlayStore } from 'screens/game/screen'
-
-import { CrossIcon } from 'assets/icons/cross'
 
 type AutoprintStatus = 'none' | 'inProgress' | 'end'
 
@@ -87,11 +85,7 @@ export const Textbox: FC<Props> = observer(({ isOpened, text }) => {
             ) : (
               <InvisibleText>{text}</InvisibleText>
             )}
-            {autoprintStatus === 'end' && (
-              <CloseButton onClick={close}>
-                <CrossIcon size={17.5} />
-              </CloseButton>
-            )}
+            {autoprintStatus === 'end' && <CloseButton onClick={close}></CloseButton>}
           </Box>
         )}
       </Container>
@@ -128,18 +122,10 @@ const Container = styled.div<{ isOpened: boolean; isOpeningAnimationSkipped: boo
       ${textboxOpening} ${props.isOpeningAnimationSkipped ? 0 : 230}ms forwards
     `};
 `
-const CloseButton = styled(PixelatedButton).attrs({
-  pixelsSize: 'small',
-  backgroundColor: colors.mainMedium,
-})`
+const CloseButton = styled(ButtonWithCross)`
   position: absolute;
   right: 18px;
   top: 15.5px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 21px;
-  height: 33px;
 `
 const Box = styled.div`
   position: relative;
