@@ -15,7 +15,9 @@ export type RequiredBy<T, K extends keyof T> = Omit<T, K> &
     [P in K]: NotUndefinded<T[P]>
   }>
 
-export type NonNullableProperties<T> = { [P in keyof T]: NonNullable<T[P]> }
+export type NonNullableProperties<T, K extends keyof T = keyof T> = {
+  [P in keyof T]: P extends K ? NonNullable<T[P]> : T[P]
+}
 
 export type Merge<A, B> = A | B extends AnyObject
   ? Omit<A, keyof B> & Omit<B, keyof A> & { [K in keyof (A | B)]: Merge<A[K], B[K]> }
