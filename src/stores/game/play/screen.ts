@@ -1,4 +1,5 @@
-import { Canvas, Ctx, XY } from 'project-utility-types'
+import { XY } from 'project-utility-types/plane'
+import { Canvas, Ctx } from 'project-utility-types/screen'
 
 import { Sprite } from 'stores/entities/sprite'
 

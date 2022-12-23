@@ -1,5 +1,7 @@
 import { nanoid } from 'nanoid'
-import { PointPair, SheetPosition, Size, XY } from 'project-utility-types'
+import { Size } from 'project-utility-types/abstract'
+import { PointPair, XY } from 'project-utility-types/plane'
+import { SheetPosition } from 'project-utility-types/sheet'
 import { TiledMap } from 'tiled-types'
 
 import { ImageContainer } from 'stores/entities/image-container'

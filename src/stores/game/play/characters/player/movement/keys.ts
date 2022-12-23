@@ -1,4 +1,4 @@
-import { PrimitiveDirection } from 'project-utility-types'
+import { PrimitiveDirection } from 'project-utility-types/plane'
 
 import { ProhibitorsController } from 'stores/entities/prohibitors-controller'
 import {

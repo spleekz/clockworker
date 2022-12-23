@@ -1,4 +1,4 @@
-import { XY } from 'project-utility-types'
+import { XY } from 'project-utility-types/plane'
 
 export class Position {
   x = 0

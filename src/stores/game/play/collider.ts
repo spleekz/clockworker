@@ -1,4 +1,4 @@
-import { ExpandedDirection, PointPair, Side, XY } from 'project-utility-types'
+import { ExpandedDirection, PointPair, Side, XY } from 'project-utility-types/plane'
 
 import { areEquivalent } from 'lib/are-equivalent'
 import { checkIntersection, getDistanceBetweenPoints } from 'lib/coords'

@@ -1,5 +1,5 @@
 import { Callback } from 'basic-utility-types'
-import { Indexes } from 'project-utility-types'
+import { Indexes } from 'project-utility-types/abstract'
 
 import { Sprite } from 'stores/entities/sprite'
 import { SpriteSheet } from 'stores/entities/sprite-sheet'

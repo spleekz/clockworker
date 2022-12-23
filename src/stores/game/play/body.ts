@@ -1,5 +1,6 @@
 import { nanoid } from 'nanoid'
-import { PointPair, Size } from 'project-utility-types'
+import { Size } from 'project-utility-types/abstract'
+import { PointPair } from 'project-utility-types/plane'
 
 import { Position } from 'stores/entities/position'
 

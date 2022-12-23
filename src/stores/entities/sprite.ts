@@ -1,4 +1,5 @@
-import { Ctx, XY } from 'project-utility-types'
+import { XY } from 'project-utility-types/plane'
+import { Ctx } from 'project-utility-types/screen'
 
 import { drawImage } from 'stores/game/lib/draw-image'
 

@@ -1,4 +1,4 @@
-import { ExpandedDirection, PrimitiveDirection, XY } from 'project-utility-types'
+import { ExpandedDirection, PrimitiveDirection, XY } from 'project-utility-types/plane'
 
 import { ViewDirections } from 'stores/entities/animation-controller'
 

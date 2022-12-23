@@ -1,4 +1,4 @@
-import { PointPair, XY } from 'project-utility-types'
+import { PointPair, XY } from 'project-utility-types/plane'
 
 import { isBetween } from './numbers'
 

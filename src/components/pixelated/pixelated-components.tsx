@@ -1,7 +1,7 @@
 import React, { ButtonHTMLAttributes, CSSProperties, InputHTMLAttributes, useState } from 'react'
 import styled from 'styled-components'
 
-import { Side } from 'project-utility-types'
+import { Side } from 'project-utility-types/plane'
 
 import { colors } from 'lib/theme'
 

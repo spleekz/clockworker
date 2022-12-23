@@ -1,4 +1,4 @@
-import { XY } from 'project-utility-types'
+import { XY } from 'project-utility-types/plane'
 
 export type DrawImageConfig = {
   width: number

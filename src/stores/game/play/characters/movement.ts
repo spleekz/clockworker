@@ -1,4 +1,4 @@
-import { ExpandedDirection, XY } from 'project-utility-types'
+import { ExpandedDirection, XY } from 'project-utility-types/plane'
 
 import { AnimationController } from 'stores/entities/animation-controller'
 import { Position } from 'stores/entities/position'

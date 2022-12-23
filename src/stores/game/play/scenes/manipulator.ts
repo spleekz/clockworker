@@ -1,4 +1,5 @@
-import { Size, XY } from 'project-utility-types'
+import { Size } from 'project-utility-types/abstract'
+import { XY } from 'project-utility-types/plane'
 
 import { CharacterList, CharacterName } from '../characters/controller'
 
