@@ -1,6 +1,6 @@
 import { PrimitiveDirection } from 'project-utility-types/plane'
 
-import { ProhibitorsController } from 'stores/entities/prohibitors-controller'
+import { ProhibitorsController } from 'stores/game/play/entities/prohibitors-controller'
 import {
   GameSettings,
   GameSettingsMovementControls,

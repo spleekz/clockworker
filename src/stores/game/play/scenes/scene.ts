@@ -5,11 +5,11 @@ import { SheetPosition } from 'project-utility-types/sheet'
 import { TiledMap } from 'tiled-types'
 
 import { ImageContainer } from 'stores/entities/image-container'
-import { Sprite } from 'stores/entities/sprite'
-import { SpriteSheet } from 'stores/entities/sprite-sheet'
 
 import { CharacterList } from '../characters/controller'
 import { HitboxWithId } from '../collider'
+import { Sprite } from '../entities/sprite'
+import { SpriteSheet } from '../entities/sprite-sheet'
 import { GameScreen } from '../screen'
 import { SceneCharactersManipulator } from './manipulator'
 

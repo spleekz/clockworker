@@ -1,9 +1,9 @@
-import { AnimationConfigs, AnimationController } from 'stores/entities/animation-controller'
 import { ImageContainer, ImageContainerOptions, ImageSrcs } from 'stores/entities/image-container'
-import { Sprite } from 'stores/entities/sprite'
-import { SpriteSheet, SpriteSheetConfig } from 'stores/entities/sprite-sheet'
 
 import { Body, BodyConfig } from '../body'
+import { AnimationConfigs, AnimationController } from '../entities/animation-controller'
+import { Sprite } from '../entities/sprite'
+import { SpriteSheet, SpriteSheetConfig } from '../entities/sprite-sheet'
 import { GameScreen } from '../screen'
 import { CharacterMovementAnimationName } from './animation'
 import { CharacterMovement, CharacterMovementConfig } from './movement'

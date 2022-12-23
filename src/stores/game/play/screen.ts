@@ -1,7 +1,7 @@
 import { XY } from 'project-utility-types/plane'
 import { Canvas, Ctx } from 'project-utility-types/screen'
 
-import { Sprite } from 'stores/entities/sprite'
+import { Sprite } from './entities/sprite'
 
 type GameScreenConfig = {
   width: number

@@ -1,5 +1,4 @@
-import { AnimationConfigs } from 'stores/entities/animation-controller'
-
+import { AnimationConfigs } from '../../entities/animation-controller'
 import {
   CharacterMovementAnimationName,
   GetCharacterMovementAnimationConfig,

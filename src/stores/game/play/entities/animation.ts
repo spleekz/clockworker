@@ -1,8 +1,8 @@
 import { Callback } from 'basic-utility-types'
 import { Indexes } from 'project-utility-types/abstract'
 
-import { Sprite } from 'stores/entities/sprite'
-import { SpriteSheet } from 'stores/entities/sprite-sheet'
+import { Sprite } from 'stores/game/play/entities/sprite'
+import { SpriteSheet } from 'stores/game/play/entities/sprite-sheet'
 
 export type AnimationSequence = Array<Indexes>
 
