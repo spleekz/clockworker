@@ -1,14 +1,13 @@
 import { makeAutoObservable } from 'mobx'
 
 import { AnyObject, DeepPartial } from 'basic-utility-types'
+import { SettingValue } from 'project-utility-types/settings'
 
 import { isObject, merge } from 'lib/objects'
 
 import { EditableGameSetting } from './editable/setting'
 import { EditableGameSettings } from './editable/settings'
 import { InternalGameSettings } from './internal/settings'
-
-export type GameSettingValue<T> = { value: T }
 
 export type MovementControllersKeys = {
   down: string
@@ -20,15 +19,15 @@ export type MovementRegulatorsKeys = {
   sprint: string
 }
 export type GameSettingsMovementControls = {
-  controllers: GameSettingValue<MovementControllersKeys>
-  regulators: GameSettingValue<MovementRegulatorsKeys>
+  controllers: SettingValue<MovementControllersKeys>
+  regulators: SettingValue<MovementRegulatorsKeys>
 }
 type GameSettingsControls = {
   movement: GameSettingsMovementControls
 }
 
 export type DeepPartialExcludeValue<T> = T extends AnyObject
-  ? T extends GameSettingValue<unknown>
+  ? T extends SettingValue<unknown>
     ? T
     : { [K in keyof T]?: DeepPartialExcludeValue<T[K]> }
   : T

@@ -1,13 +1,11 @@
 import { makeAutoObservable } from 'mobx'
 
-import { EditableGameSettingVariant } from './settings'
-
-type EditableGameSettingVariants<T> = Array<EditableGameSettingVariant<T>>
+import { EditableSettingVariants } from 'project-utility-types/settings'
 
 export class EditableGameSetting<Value> {
-  variants: EditableGameSettingVariants<Value>
+  variants: EditableSettingVariants<Value>
 
-  constructor(variants: EditableGameSettingVariants<Value>) {
+  constructor(variants: EditableSettingVariants<Value>) {
     this.variants = variants
     makeAutoObservable(this)
   }

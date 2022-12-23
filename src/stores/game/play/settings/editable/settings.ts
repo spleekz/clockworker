@@ -1,18 +1,12 @@
 import { AnyObject } from 'basic-utility-types'
+import { SettingValue } from 'project-utility-types/settings'
 
-import { GameSettingValue, GameSettingsValues, PartialGameSettingsValues } from '../settings'
+import { GameSettingsValues, PartialGameSettingsValues } from '../settings'
 import { EditableGameSettingsControlsSection } from './sections/controls'
 import { EditableGameSetting } from './setting'
 
-export type EditableGameSettingVariant<T> = {
-  id: string
-  label: string
-  value: T
-  isSelected: boolean
-}
-
 type DeepMakeEditableIfSettingValue<T> = T extends AnyObject
-  ? T extends GameSettingValue<infer SV>
+  ? T extends SettingValue<infer SV>
     ? EditableGameSetting<SV>
     : { [K in keyof T]: DeepMakeEditableIfSettingValue<T[K]> }
   : T
