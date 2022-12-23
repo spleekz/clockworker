@@ -1,7 +1,7 @@
 import { ExpandedDirection, PointPair, Side, XY } from 'project-utility-types/plane'
 
 import { areEquivalent } from 'lib/are-equivalent'
-import { checkIntersection, getDistanceBetweenPoints } from 'lib/coords'
+import { checkIntersection, getDistanceBetweenPoints } from 'lib/plane'
 
 import { getMovementDirection } from '../lib/movement'
 import { Body } from './body'
