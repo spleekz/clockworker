@@ -25,8 +25,9 @@ export class UpdateStore {
     this.releaseNotes = updateInfo.releaseNotes
   }
 
-  get isUpdateAvailable(): boolean {
-    return this.version !== null && this.releaseNotes !== null
+  isNotificationOpened = false
+  setIsNotificationOpened = (value: boolean): void => {
+    this.isNotificationOpened = value
   }
 
   updateGame = (): void => {
