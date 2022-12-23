@@ -1,7 +1,10 @@
-import { getRowSequence } from 'stores/game/lib/animation'
-
 import { AnimationSequence } from '../entities/animation'
-import { AnimationConfigNoNameNoSpriteSheet, AnimationConfigs, ViewDirections } from '../entities/animation-controller'
+import {
+  AnimationConfigNoNameNoSpriteSheet,
+  AnimationConfigs,
+  ViewDirections,
+} from '../entities/animation-controller'
+import { getRowSequence } from '../lib/animation'
 
 export type CharacterMovementAnimationName = 'walkDown' | 'walkRight' | 'walkUp' | 'walkLeft'
 

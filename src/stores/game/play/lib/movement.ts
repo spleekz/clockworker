@@ -1,6 +1,6 @@
 import { ExpandedDirection, PrimitiveDirection, XY } from 'project-utility-types/plane'
 
-import { ViewDirections } from '../play/entities/animation-controller'
+import { ViewDirections } from '../entities/animation-controller'
 
 export const getMovementDirection = (start: XY, end: XY): ExpandedDirection => {
   var direction: ExpandedDirection = '' as ExpandedDirection

@@ -1,4 +1,4 @@
-import { getSingleMovementDirection } from 'stores/game/lib/movement'
+import { getSingleMovementDirection } from 'stores/game/play/lib/movement'
 import { GameSettings } from 'stores/game/play/settings/settings'
 import { KeyboardStore } from 'stores/keyboard.store'
 

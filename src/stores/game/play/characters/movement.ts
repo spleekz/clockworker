@@ -1,16 +1,12 @@
 import { ExpandedDirection, XY } from 'project-utility-types/plane'
 
-import {
-  convertExpandedDirectionToPrimitiveDirection,
-  getMovementDirection,
-} from 'stores/game/lib/movement'
-
 import { areEquivalent } from 'lib/are-equivalent'
 import { capitalizeFirstSymbol } from 'lib/strings'
 
 import { AnimationController } from '../entities/animation-controller'
 import { Position } from '../entities/position'
 import { ProhibitorsController } from '../entities/prohibitors-controller'
+import { convertExpandedDirectionToPrimitiveDirection, getMovementDirection } from '../lib/movement'
 import { CharacterMovementAnimationName } from './animation'
 
 type MovementConfig = {

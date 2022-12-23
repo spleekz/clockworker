@@ -1,7 +1,7 @@
 import { XY } from 'project-utility-types/plane'
 import { Ctx } from 'project-utility-types/screen'
 
-import { drawImage } from 'stores/game/lib/draw-image'
+import { drawImage } from '../lib/draw-image'
 
 type SpriteConfig = {
   image: HTMLImageElement

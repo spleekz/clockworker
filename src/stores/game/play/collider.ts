@@ -3,10 +3,10 @@ import { ExpandedDirection, PointPair, Side, XY } from 'project-utility-types/pl
 import { areEquivalent } from 'lib/are-equivalent'
 import { checkIntersection, getDistanceBetweenPoints } from 'lib/plane'
 
-import { getMovementDirection } from '../lib/movement'
 import { Body } from './body'
 import { AnyCharacter } from './characters/character'
 import { PlayerCharacter } from './characters/player/character'
+import { getMovementDirection } from './lib/movement'
 import { GameScreen } from './screen'
 
 type ColliderBody = Body | AnyCharacter | PlayerCharacter
