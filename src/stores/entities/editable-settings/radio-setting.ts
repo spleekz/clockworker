@@ -1,18 +1,21 @@
 import { makeAutoObservable } from 'mobx'
 
-import { EditableSettingVariants } from 'project-utility-types/settings'
+import { EditableSettingVariants } from './types'
 
-export class EditableGameSetting<Value> {
+// можно выбрать только один вариант
+export class RadioSetting<Value> {
+  id: string
   variants: EditableSettingVariants<Value>
 
-  constructor(variants: EditableSettingVariants<Value>) {
+  constructor(id: string, variants: EditableSettingVariants<Value>) {
+    this.id = id
     this.variants = variants
+
     makeAutoObservable(this)
   }
 
   get value(): Value {
-    const currentSettingVariant = this.variants.find(({ isSelected }) => isSelected)
-    return currentSettingVariant!.value
+    return this.variants.find((v) => v.isSelected)!.value
   }
 
   selectVariant = (variantId: string): void => {

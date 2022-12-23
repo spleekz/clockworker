@@ -1,16 +1,10 @@
+import { RadioSetting } from 'stores/entities/editable-settings/radio-setting'
+
 import { MovementControllersKeys } from '../../settings'
-import { EditableGameSetting } from '../setting'
-import { DeepPartialExcludeEditableGameSetting, EditableGameSettingsValues } from '../settings'
-
-type EditableSettingsControlsSection = DeepPartialExcludeEditableGameSetting<
-  EditableGameSettingsValues['controls']
->
-
-type EditableMovementControls = EditableSettingsControlsSection['movement']
 
 export class EditableGameSettingsControlsSection {
-  movement: EditableMovementControls = {
-    controllers: new EditableGameSetting<MovementControllersKeys>([
+  movement = {
+    controllers: new RadioSetting<MovementControllersKeys>('movementControllers', [
       {
         id: 'wasd',
         label: 'WASD',

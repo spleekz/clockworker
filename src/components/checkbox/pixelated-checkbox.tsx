@@ -8,20 +8,28 @@ import { PixelatedDiv } from 'components/pixelated/pixelated-components'
 
 import { CheckMarkIcon } from 'assets/icons/check-mark'
 
-type Props = {
+export type PixelatedCheckboxProps = {
   checked?: boolean
-  disabled?: boolean
-  onChange?: Callback
+  onSelect?: Callback
+  onUnselect?: Callback
   backgroundColor: string
   checkedBackgroundColor: string
 }
 
-export const PixelatedCheckbox: FC<Props> = observer(
-  ({ checked, onChange, backgroundColor, checkedBackgroundColor }) => {
+export const PixelatedCheckbox: FC<PixelatedCheckboxProps> = observer(
+  ({ checked, onSelect, onUnselect, backgroundColor, checkedBackgroundColor }) => {
+    const onClick = (): void => {
+      if (!checked) {
+        onSelect?.()
+      } else {
+        onUnselect?.()
+      }
+    }
+
     const background = checked ? checkedBackgroundColor : backgroundColor
 
     return (
-      <StyledPixelatedCheckbox onClick={onChange} backgroundColor={background}>
+      <StyledPixelatedCheckbox onClick={onClick} backgroundColor={background}>
         {checked && (
           <CheckMarkContainer>
             <CheckMarkIcon size={42} />

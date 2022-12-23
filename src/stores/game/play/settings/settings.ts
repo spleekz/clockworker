@@ -3,9 +3,10 @@ import { makeAutoObservable } from 'mobx'
 import { AnyObject, DeepPartial } from 'basic-utility-types'
 import { SettingValue } from 'project-utility-types/settings'
 
+import { AnyEditableSetting } from 'stores/entities/editable-settings/types'
+
 import { isObject, merge } from 'lib/objects'
 
-import { EditableGameSetting } from './editable/setting'
 import { EditableGameSettings } from './editable/settings'
 import { InternalGameSettings } from './internal/settings'
 
@@ -48,10 +49,9 @@ export class GameSettings {
   private get convertedEditableSettings(): DeepPartial<GameSettingsValues> {
     const convertedEditableSettings = {} as DeepPartial<GameSettingsValues>
 
-    const isEditableSetting = (obj: AnyObject): obj is EditableGameSetting<unknown> => {
+    const isEditableSetting = (obj: AnyObject): obj is AnyEditableSetting => {
       return (
-        (obj as EditableGameSetting<unknown>).variants !== undefined &&
-        (obj as EditableGameSetting<unknown>).value !== undefined
+        (obj as AnyEditableSetting).id !== undefined && (obj as AnyEditableSetting).value !== undefined
       )
     }
 

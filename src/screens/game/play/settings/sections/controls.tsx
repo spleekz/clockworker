@@ -4,9 +4,7 @@ import styled from 'styled-components'
 
 import { FC } from 'basic-utility-types'
 
-import { colors } from 'lib/theme'
-
-import { PixelatedCheckbox } from 'components/checkbox/pixelated-checkbox'
+import { SettingVariants } from 'components/settings/setting-variants'
 import { useGamePlayStore } from 'screens/game/screen'
 
 export const ControlsSettingsSection: FC = observer(() => {
@@ -19,21 +17,7 @@ export const ControlsSettingsSection: FC = observer(() => {
       <Title>Управление</Title>
       <Setting>
         <SettingTitle>Движение :</SettingTitle>
-        <MovementControlsVariants>
-          {movementControllers?.variants.map((controllersVariant) => {
-            return (
-              <MovementControlsVariant key={controllersVariant.id}>
-                <MovementControlsVariantLabel>{controllersVariant.label}</MovementControlsVariantLabel>
-                <PixelatedCheckbox
-                  checked={controllersVariant.isSelected}
-                  onChange={() => movementControllers.selectVariant(controllersVariant.id)}
-                  backgroundColor={colors.mainMedium}
-                  checkedBackgroundColor={colors.mainMediumWell}
-                />
-              </MovementControlsVariant>
-            )
-          })}
-        </MovementControlsVariants>
+        <SettingVariants setting={movementControllers} />
       </Setting>
     </Container>
   )
@@ -53,17 +37,4 @@ const SettingTitle = styled.div`
   position: relative;
   top: 10px;
   font-size: 24px;
-`
-const MovementControlsVariants = styled.div`
-  flex: 1 0 auto;
-  display: flex;
-  justify-content: space-around;
-`
-const MovementControlsVariant = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-`
-const MovementControlsVariantLabel = styled.div`
-  margin-bottom: 8px;
 `
