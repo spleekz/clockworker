@@ -6,7 +6,7 @@ import { Callback, FC, RequiredBy } from 'basic-utility-types'
 
 import { PixelatedButton } from 'components/pixelated/pixelated-components'
 
-import { Popup, PopupTemplateProps } from './popup-template'
+import { Popup, PopupProps } from './popup-template'
 
 type ConfirmPopupProps = {
   question: string
@@ -18,7 +18,7 @@ type ConfirmPopupProps = {
   buttonsStyles: RequiredBy<CSSProperties, 'backgroundColor'>
 }
 
-type Props = Omit<PopupTemplateProps, 'withCloseButton'> & ConfirmPopupProps
+type Props = Omit<PopupProps, 'withCloseButton'> & ConfirmPopupProps
 
 export const ConfirmPopup: FC<Props> = observer(
   ({
@@ -27,7 +27,6 @@ export const ConfirmPopup: FC<Props> = observer(
     styles,
     title,
     isOpened,
-    fnForClosing,
     question,
     questionStyles,
     acceptText,
@@ -46,7 +45,6 @@ export const ConfirmPopup: FC<Props> = observer(
         title={title}
         withCloseButton={false}
         isOpened={isOpened}
-        fnForClosing={fnForClosing}
       >
         <Container>
           <Question style={questionStyles}>{question}</Question>

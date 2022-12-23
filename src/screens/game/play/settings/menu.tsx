@@ -13,11 +13,10 @@ import { ControlsSettingsSection } from './sections/controls'
 
 type Props = {
   isOpened: boolean
-  fnForClosing: Callback
   onClose?: Callback
 }
 
-export const GameSettingsMenu: FC<Props> = observer(({ isOpened, fnForClosing, onClose }) => {
+export const GameSettingsMenu: FC<Props> = observer(({ isOpened, onClose }) => {
   return (
     <Popup
       width={'600px'}
@@ -28,7 +27,6 @@ export const GameSettingsMenu: FC<Props> = observer(({ isOpened, fnForClosing, o
       title={'Настройки'}
       withCloseButton={false}
       isOpened={isOpened}
-      fnForClosing={fnForClosing}
       onClose={onClose}
     >
       <Container>
