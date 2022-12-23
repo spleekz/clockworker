@@ -58,6 +58,10 @@ const GlobalStyles = createGlobalStyle`
     outline: 0;
   }
 
+  img {
+    pointer-events: none;
+  }
+
   ::-webkit-scrollbar {
     width: 12.5px;
   }
