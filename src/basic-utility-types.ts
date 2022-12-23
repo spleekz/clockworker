@@ -28,3 +28,11 @@ export type DeepPartial<T> = T extends AnyObject ? { [K in keyof T]?: DeepPartia
 export type Properties<T> = T[keyof T]
 
 export type OverwriteProperties<T, P> = Record<keyof T, P>
+
+export type NeverProperties<T> = { [P in keyof T]?: never }
+
+export type Without<A, B> = Omit<A, keyof B>
+
+export type XOR<A, B> = A | B extends AnyObject
+  ? (B & NeverProperties<Without<A, B>>) | (A & NeverProperties<Without<B, A>>)
+  : A | B
