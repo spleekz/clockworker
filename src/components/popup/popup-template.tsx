@@ -21,7 +21,7 @@ export type PopupTemplateProps = {
   withCloseButton: boolean
   isOpened: boolean
   fnForClosing?: Callback
-  afterClose?: Callback
+  onClose?: Callback
 }
 
 export const Popup: FC<PopupTemplateProps> = observer(
@@ -34,7 +34,7 @@ export const Popup: FC<PopupTemplateProps> = observer(
     withCloseButton,
     isOpened,
     fnForClosing,
-    afterClose,
+    onClose,
     children,
   }) => {
     const { appStore } = useStore()
@@ -47,7 +47,7 @@ export const Popup: FC<PopupTemplateProps> = observer(
       return () => {
         // закрытие попапа
         if (isOpened === true) {
-          afterClose?.()
+          onClose?.()
           appStore.decreaseOpenedPopupsCount()
         }
       }
