@@ -15,8 +15,13 @@ type Props = {
 export const AppSettingsMenu: FC<Props> = observer(({ onClose }) => {
   const { appStore } = useStore()
 
+  const close = (): void => {
+    appStore.settingsMenu.close()
+    onClose?.()
+  }
+
   return (
-    <SettingsMenuTemplate isOpened={appStore.settingsMenu.isOpened} onClose={onClose}>
+    <SettingsMenuTemplate isOpened={appStore.settingsMenu.isOpened} onClose={close}>
       <GeneralAppSettings />
     </SettingsMenuTemplate>
   )
