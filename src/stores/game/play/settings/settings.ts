@@ -3,9 +3,9 @@ import { makeAutoObservable } from 'mobx'
 import { AnyObject, DeepPartial } from 'basic-utility-types'
 import { SettingValue } from 'project-utility-types/settings'
 
-import { AnyEditableSetting } from 'stores/entities/editable-settings/types'
+import { getConvertedEditableSettings } from 'stores/lib/settings'
 
-import { isObject, merge } from 'lib/objects'
+import { merge } from 'lib/objects'
 
 import { EditableGameSettings } from './editable/settings'
 import { InternalGameSettings } from './internal/settings'
@@ -47,29 +47,7 @@ export class GameSettings {
   editable = new EditableGameSettings()
 
   private get convertedEditableSettings(): DeepPartial<GameSettingsValues> {
-    const convertedEditableSettings = {} as DeepPartial<GameSettingsValues>
-
-    const isEditableSetting = (obj: AnyObject): obj is AnyEditableSetting => {
-      return (
-        (obj as AnyEditableSetting).id !== undefined && (obj as AnyEditableSetting).value !== undefined
-      )
-    }
-
-    const checkObjectValuesForEditableSetting = (obj: AnyObject, target: AnyObject): void => {
-      Object.keys(obj).forEach((key) => {
-        if (isEditableSetting(obj[key])) {
-          target[key] = { value: { ...obj[key].value } }
-        } else {
-          target[key] = { ...obj[key] }
-          if (isObject(obj[key])) {
-            checkObjectValuesForEditableSetting(obj[key], target[key])
-          }
-        }
-      })
-    }
-
-    checkObjectValuesForEditableSetting(this.editable, convertedEditableSettings)
-    return convertedEditableSettings
+    return getConvertedEditableSettings(this.editable)
   }
 
   get current(): GameSettingsValues {
