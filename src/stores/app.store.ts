@@ -23,15 +23,4 @@ export class AppStore {
   quitInMainMenuConfirm = new Popup()
 
   settingsMenu = new Popup()
-
-  openedPopupsCount = 0
-  increaseOpenedPopupsCount = (): void => {
-    this.openedPopupsCount += 1
-  }
-  decreaseOpenedPopupsCount = (): void => {
-    this.openedPopupsCount -= 1
-  }
-  get isAnyPopupOpened(): boolean {
-    return this.openedPopupsCount > 0
-  }
 }

@@ -5,8 +5,6 @@ import styled from 'styled-components'
 import { Callback, FC, RequiredBy, XOR } from 'basic-utility-types'
 import { doubleBorderStyle } from 'shared-styles'
 
-import { useStore } from 'stores/root-store/context'
-
 import { colors } from 'lib/theme'
 
 import { ButtonWithCross } from 'components/buttons/button-with-cross'
@@ -48,18 +46,11 @@ export const Popup: FC<PopupProps> = observer(
     onClose,
     children,
   }) => {
-    const { appStore } = useStore()
-
     useEffect(() => {
-      if (isOpened) {
-        appStore.increaseOpenedPopupsCount()
-      }
-
       return () => {
         // закрытие попапа
         if (isOpened === true) {
           onClose?.()
-          appStore.decreaseOpenedPopupsCount()
         }
       }
     }, [isOpened])
