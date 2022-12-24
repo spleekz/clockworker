@@ -17,7 +17,7 @@ export const GeneralAppSettings = observer(() => {
     <Container>
       <Setting>
         <SettingTitle>Уведомления о новых версиях игры</SettingTitle>
-        <FlagSetting setting={isGetUpdateNotifications} />
+        <FlagSetting setting={isGetUpdateNotifications} checkboxSize={31} />
       </Setting>
     </Container>
   )
@@ -29,5 +29,7 @@ const Setting = styled.div`
   justify-content: space-between;
 `
 const SettingTitle = styled.div`
-  font-size: 22px;
+  display: flex;
+  align-items: center;
+  font-size: 23px;
 `

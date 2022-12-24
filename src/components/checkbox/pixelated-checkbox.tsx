@@ -9,6 +9,7 @@ import { PixelatedDiv } from 'components/pixelated/pixelated-components'
 import { CheckMarkIcon } from 'assets/icons/check-mark'
 
 export type PixelatedCheckboxProps = {
+  size: number
   checked?: boolean
   onSelect?: Callback
   onUnselect?: Callback
@@ -17,7 +18,7 @@ export type PixelatedCheckboxProps = {
 }
 
 export const PixelatedCheckbox: FC<PixelatedCheckboxProps> = observer(
-  ({ checked, onSelect, onUnselect, backgroundColor, checkedBackgroundColor }) => {
+  ({ size, checked, onSelect, onUnselect, backgroundColor, checkedBackgroundColor }) => {
     const onClick = (): void => {
       if (!checked) {
         onSelect?.()
@@ -28,11 +29,13 @@ export const PixelatedCheckbox: FC<PixelatedCheckboxProps> = observer(
 
     const background = checked ? checkedBackgroundColor : backgroundColor
 
+    const checkMarkSize = size + 4
+
     return (
-      <StyledPixelatedCheckbox onClick={onClick} backgroundColor={background}>
+      <StyledPixelatedCheckbox size={size} onClick={onClick} backgroundColor={background}>
         {checked && (
           <CheckMarkContainer>
-            <CheckMarkIcon size={42} />
+            <CheckMarkIcon size={checkMarkSize} />
           </CheckMarkContainer>
         )}
       </StyledPixelatedCheckbox>
@@ -42,9 +45,9 @@ export const PixelatedCheckbox: FC<PixelatedCheckboxProps> = observer(
 
 export const StyledPixelatedCheckbox = styled(PixelatedDiv).attrs({
   pixelsSize: 'small',
-})`
-  width: 38px;
-  height: 38px;
+})<{ size: number }>`
+  width: ${(props) => props.size}px;
+  height: ${(props) => props.size}px;
   display: flex;
   justify-content: center;
   align-items: center;

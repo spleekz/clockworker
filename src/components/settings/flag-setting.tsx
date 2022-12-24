@@ -11,9 +11,10 @@ import { PixelatedCheckbox } from 'components/checkbox/pixelated-checkbox'
 
 type Props = {
   setting: SingleValueSetting<boolean>
+  checkboxSize: number
 }
 
-export const FlagSetting: FC<Props> = observer(({ setting }) => {
+export const FlagSetting: FC<Props> = observer(({ setting, checkboxSize }) => {
   const onSelect = (): void => {
     setting.set(true)
   }
@@ -24,6 +25,7 @@ export const FlagSetting: FC<Props> = observer(({ setting }) => {
 
   return (
     <PixelatedCheckbox
+      size={checkboxSize}
       checked={setting.value}
       onSelect={onSelect}
       onUnselect={onUnselect}

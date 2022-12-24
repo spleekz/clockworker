@@ -13,9 +13,10 @@ import { PixelatedCheckbox } from 'components/checkbox/pixelated-checkbox'
 
 type Props = {
   setting: CheckboxSetting<unknown> | RadioSetting<unknown>
+  checkboxSize: number
 }
 
-export const SettingVariants: FC<Props> = observer(({ setting }) => {
+export const SettingVariants: FC<Props> = observer(({ setting, checkboxSize }) => {
   const onSelect = (variantId: string): void => {
     setting.selectVariant(variantId)
   }
@@ -33,6 +34,7 @@ export const SettingVariants: FC<Props> = observer(({ setting }) => {
           <Variant key={variant.id}>
             <Label>{variant.label}</Label>
             <PixelatedCheckbox
+              size={checkboxSize}
               checked={variant.isSelected}
               onSelect={() => onSelect(variant.id)}
               onUnselect={() => onUnselect(variant.id)}

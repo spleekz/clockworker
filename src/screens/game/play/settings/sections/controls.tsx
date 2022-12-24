@@ -17,7 +17,7 @@ export const ControlsSettingsSection: FC = observer(() => {
       <Title>Управление</Title>
       <Setting>
         <SettingTitle>Движение :</SettingTitle>
-        <SettingVariants setting={movementControllers} />
+        <SettingVariants setting={movementControllers} checkboxSize={38} />
       </Setting>
     </Container>
   )
