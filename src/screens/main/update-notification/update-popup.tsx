@@ -14,17 +14,19 @@ type Props = {
 
 export const UpdatePopup: FC<Props> = observer(({ updateStore }) => {
   const {
+    isShowingNotificationAllowed,
     version,
     releaseNotes,
     currentPercentage,
     isNotificationOpened,
     updateGame,
-    setIsNotificationOpened,
+    openNotification,
+    closeNotification,
   } = updateStore
 
   useEffect(() => {
-    if (version !== null && releaseNotes !== null) {
-      setIsNotificationOpened(true)
+    if (isShowingNotificationAllowed && version !== null && releaseNotes !== null) {
+      openNotification()
     }
   }, [version, releaseNotes])
 
@@ -38,7 +40,7 @@ export const UpdatePopup: FC<Props> = observer(({ updateStore }) => {
             version={version}
             releaseNotes={releaseNotes}
             updateGame={updateGame}
-            fnForClosing={() => setIsNotificationOpened(false)}
+            fnForClosing={closeNotification}
           />
         ) : (
           <DownloadProgress percentage={currentPercentage} />

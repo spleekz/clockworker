@@ -3,8 +3,20 @@ import { makeAutoObservable } from 'mobx'
 import { DownloadProgressInfo, UpdateInfo } from 'desktop-web-shared-types/index'
 import isElectron from 'is-electron'
 
+import { AppSettingsValues } from './settings/settings.store'
+
+type Config = {
+  appSettings: AppSettingsValues
+}
+
 export class UpdateStore {
-  constructor() {
+  private appSettings: AppSettingsValues
+
+  constructor(config: Config) {
+    const { appSettings } = config
+
+    this.appSettings = appSettings
+
     if (isElectron()) {
       window.ipcRenderer.on<UpdateInfo>('updateAvailable', (_, updateInfo) => {
         this.setUpdateInfo(updateInfo)
@@ -17,6 +29,10 @@ export class UpdateStore {
     makeAutoObservable(this)
   }
 
+  get isShowingNotificationAllowed(): boolean {
+    return this.appSettings.general.isGetUpdateNotifications.value
+  }
+
   version: string | null = null
   releaseNotes: string | null = null
 
@@ -26,8 +42,11 @@ export class UpdateStore {
   }
 
   isNotificationOpened = false
-  setIsNotificationOpened = (value: boolean): void => {
-    this.isNotificationOpened = value
+  openNotification = (): void => {
+    this.isNotificationOpened = true
+  }
+  closeNotification = (): void => {
+    this.isNotificationOpened = false
   }
 
   updateGame = (): void => {

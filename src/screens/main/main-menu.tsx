@@ -9,6 +9,7 @@ import { useStore } from 'stores/root-store/context'
 import { colors } from 'lib/theme'
 
 import { PixelatedButton } from 'components/pixelated/pixelated-components'
+import { AppSettingsMenu } from 'components/settings/app-settings/menu'
 
 export const MainMenu: FC = observer(() => {
   const { appStore } = useStore()
@@ -17,9 +18,16 @@ export const MainMenu: FC = observer(() => {
     appStore.setScreen('game')
   }
 
+  const openAppSettings = (): void => {
+    appStore.openSettingsMenu()
+  }
+
   return (
     <MainMenuButtons>
+      <AppSettingsMenu />
+
       <Button onClick={createNewGame}>Новая игра</Button>
+      <Button onClick={openAppSettings}>Настройки</Button>
     </MainMenuButtons>
   )
 })

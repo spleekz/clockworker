@@ -59,4 +59,12 @@ export class AppStore {
   get isAnyPopupOpened(): boolean {
     return this.openedPopupsCount > 0
   }
+
+  isSettingsMenuOpened = false
+  openSettingsMenu = (): void => {
+    this.isSettingsMenuOpened = true
+  }
+  closeSettingsMenu = (): void => {
+    this.isSettingsMenuOpened = false
+  }
 }
