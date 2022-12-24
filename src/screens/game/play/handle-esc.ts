@@ -13,10 +13,10 @@ export const handleGamePlayScreenEsc = (): void => {
     fn: () => {
       if (!gamePlayStore.opening.isOpened) {
         if (!gamePlayStore.textboxesController.isTextboxOpened) {
-          if (appStore.isQuitGameConfirmOpened) {
-            appStore.closeQuitGameConfirm()
-          } else if (appStore.isQuitInMainMenuConfirmOpened) {
-            appStore.closeQuitInMainMenuConfirm()
+          if (appStore.quitGameConfirm.isOpened) {
+            appStore.quitGameConfirm.close()
+          } else if (appStore.quitInMainMenuConfirm.isOpened) {
+            appStore.quitInMainMenuConfirm.close()
           } else if (gamePlayStore.menusController.isSettingsMenuOpened) {
             gamePlayStore.menusController.closeCurrentMenu()
             gamePlayStore.menusController.openMenu('pause')

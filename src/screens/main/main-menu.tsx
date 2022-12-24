@@ -19,7 +19,7 @@ export const MainMenu: FC = observer(() => {
   }
 
   const openAppSettings = (): void => {
-    appStore.openSettingsMenu()
+    appStore.settingsMenu.open()
   }
 
   return (

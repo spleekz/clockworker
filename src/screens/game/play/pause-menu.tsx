@@ -49,8 +49,8 @@ export const PauseMenu: FC<Props> = observer(({ isOpened }) => {
             <MenuItem onClick={openSettings}>Настройки</MenuItem>
           </Section>
           <Section>
-            <MenuItem onClick={appStore.openQuitInMainMenuConfirm}>Выйти в главное меню</MenuItem>
-            <MenuItem onClick={appStore.openQuitGameConfirm}>Выйти из игры</MenuItem>
+            <MenuItem onClick={appStore.quitInMainMenuConfirm.open}>Выйти в главное меню</MenuItem>
+            <MenuItem onClick={appStore.quitGameConfirm.open}>Выйти из игры</MenuItem>
           </Section>
         </Sections>
       </MenuList>

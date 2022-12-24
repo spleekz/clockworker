@@ -16,7 +16,7 @@ export const AppSettingsMenu: FC<Props> = observer(({ onClose }) => {
   const { appStore } = useStore()
 
   return (
-    <SettingsMenuTemplate isOpened={appStore.isSettingsMenuOpened} onClose={onClose}>
+    <SettingsMenuTemplate isOpened={appStore.settingsMenu.isOpened} onClose={onClose}>
       <GeneralAppSettings />
     </SettingsMenuTemplate>
   )

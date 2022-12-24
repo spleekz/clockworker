@@ -1,5 +1,7 @@
 import { makeAutoObservable } from 'mobx'
 
+import { Popup } from './entities/popup'
+
 type AppScreen = 'main' | 'game'
 
 export class AppStore {
@@ -7,48 +9,21 @@ export class AppStore {
     makeAutoObservable(this)
   }
 
-  //! экран
   screen: AppScreen = 'main'
   setScreen = (screen: AppScreen): void => {
     this.screen = screen
   }
 
-  //! выход из игры
   quitGame = (): void => {
     window.close()
   }
-  isQuitGameConfirmOpened = false
-  openQuitGameConfirm = (): void => {
-    this.isQuitGameConfirmOpened = true
-  }
-  closeQuitGameConfirm = (): void => {
-    this.isQuitGameConfirmOpened = false
-  }
-  toggleQuitGameConfirm = (): void => {
-    if (this.isQuitGameConfirmOpened) {
-      this.closeQuitGameConfirm()
-    } else {
-      this.openQuitGameConfirm()
-    }
-  }
 
-  //! выход в главное меню
-  isQuitInMainMenuConfirmOpened = false
-  openQuitInMainMenuConfirm = (): void => {
-    this.isQuitInMainMenuConfirmOpened = true
-  }
-  closeQuitInMainMenuConfirm = (): void => {
-    this.isQuitInMainMenuConfirmOpened = false
-  }
-  toggleQuitInMainMenuConfirm = (): void => {
-    if (this.isQuitInMainMenuConfirmOpened) {
-      this.closeQuitInMainMenuConfirm()
-    } else {
-      this.openQuitInMainMenuConfirm()
-    }
-  }
+  quitGameConfirm = new Popup()
 
-  //! открытые попапы
+  quitInMainMenuConfirm = new Popup()
+
+  settingsMenu = new Popup()
+
   openedPopupsCount = 0
   increaseOpenedPopupsCount = (): void => {
     this.openedPopupsCount += 1
@@ -58,13 +33,5 @@ export class AppStore {
   }
   get isAnyPopupOpened(): boolean {
     return this.openedPopupsCount > 0
-  }
-
-  isSettingsMenuOpened = false
-  openSettingsMenu = (): void => {
-    this.isSettingsMenuOpened = true
-  }
-  closeSettingsMenu = (): void => {
-    this.isSettingsMenuOpened = false
   }
 }
