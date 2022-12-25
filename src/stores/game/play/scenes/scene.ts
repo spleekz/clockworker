@@ -6,7 +6,7 @@ import { TiledMap } from 'tiled-types'
 
 import { ImageContainer } from 'stores/entities/image-container'
 
-import { CharacterList } from '../characters/controller'
+import { Characters } from '../characters/controller'
 import { HitboxWithId } from '../collider'
 import { Sprite } from '../entities/sprite'
 import { SpriteSheet } from '../entities/sprite-sheet'
@@ -29,12 +29,12 @@ type GameSceneConfig<Name extends string> = {
   name: Name
   map: GameMapConfig
   screen: GameScreen
-  characterList: CharacterList
+  characterList: Characters
 }
 
 export class GameScene<SceneName extends string> {
   private screen: GameScreen
-  private characterList: CharacterList
+  private characterList: Characters
 
   name: SceneName
   private mapConfig: GameMapConfig

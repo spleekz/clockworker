@@ -85,11 +85,11 @@ export class GamePlayStore {
   charactersController = new CharactersController()
   addActiveCharacter = (characterName: CharacterName): void => {
     this.charactersController.addActiveCharacter(characterName)
-    const character = this.charactersController.list[characterName]
+    const character = this.charactersController.characters[characterName]
     this.collider.addBody(character)
   }
   removeActiveCharacter = (characterName: CharacterName): void => {
-    const character = this.charactersController.list[characterName]
+    const character = this.charactersController.characters[characterName]
     this.collider.removeBody(character.id)
     this.charactersController.removeActiveCharacter(characterName)
   }
@@ -103,7 +103,7 @@ export class GamePlayStore {
   //! контроллер сцен
   sceneController = new GameScenesController({
     screen: this.screen,
-    characterList: this.charactersController.list,
+    characterList: this.charactersController.characters,
   })
   setScene = (sceneName: SceneName): Promise<void> => {
     return this.sceneController.setScene(sceneName).then(() => {

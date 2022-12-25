@@ -10,6 +10,6 @@ export class Player {
   character: PlayerCharacter | null = null
   createCharacter = async (config: CreatePlayerCharacterConfig): Promise<void> => {
     await config.characterController.createCharacter('player', config.characterConfig)
-    this.character = config.characterController.list.player
+    this.character = config.characterController.characters.player
   }
 }

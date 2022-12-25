@@ -8,12 +8,12 @@ type This = InstanceType<typeof CharactersController>
 
 export type CharacterName = keyof This['refList']
 type Character = InstanceType<Properties<This['refList']>>
-export type CharacterList = Record<CharacterName, Character>
+export type Characters = Record<CharacterName, Character>
 
 export class CharactersController {
   constructor() {
     makeObservable(this, {
-      list: observable,
+      characters: observable,
       activeCharactersNames: observable,
       isAllActiveCharactersImagesLoaded: computed,
     })
@@ -23,7 +23,7 @@ export class CharactersController {
   private refList = { player: PlayerCharacter }
 
   // список созданных персонажей
-  list: CharacterList = {} as CharacterList
+  characters: Characters = {} as Characters
 
   createCharacter = async <
     T extends CharacterName,
@@ -33,8 +33,8 @@ export class CharactersController {
     ...args: CharacterConfig extends never ? [undefined] : [CharacterConfig]
   ): Promise<void> => {
     const characterConfig = args[0]
-    this.list[name] = new this.refList[name](characterConfig)
-    await this.list[name].imageContainer.loadAll()
+    this.characters[name] = new this.refList[name](characterConfig)
+    await this.characters[name].imageContainer.loadAll()
   }
 
   // список персонажей, активных в текущий момент
@@ -64,12 +64,12 @@ export class CharactersController {
 
   get activeCharacters(): Array<Character> {
     return this.activeCharactersNames.map((characterName) => {
-      return this.list[characterName]
+      return this.characters[characterName]
     })
   }
 
   get isAllActiveCharactersImagesLoaded(): boolean {
-    return Object.values(this.list).every(
+    return Object.values(this.characters).every(
       (activeCharacter) => activeCharacter.imageContainer.isAllImagesLoaded,
     )
   }

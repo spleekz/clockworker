@@ -4,7 +4,7 @@ import { Properties } from 'basic-utility-types'
 
 import { resolvedPromise } from 'lib/async'
 
-import { CharacterList } from '../characters/controller'
+import { Characters } from '../characters/controller'
 import { GameScreen } from '../screen'
 import { MarketMainScene } from './list/market'
 
@@ -12,16 +12,16 @@ type This = InstanceType<typeof GameScenesController>
 
 type Scene = InstanceType<Properties<This['refList']>>
 export type SceneName = keyof This['refList']
-type List = Record<SceneName, Scene>
+type Scenes = Record<SceneName, Scene>
 
 type GameScenesControllerConfig = {
   screen: GameScreen
-  characterList: CharacterList
+  characterList: Characters
 }
 
 export class GameScenesController {
   private screen: GameScreen
-  private characterList: CharacterList
+  private characterList: Characters
 
   constructor(config: GameScenesControllerConfig) {
     const { screen, characterList } = config
@@ -30,7 +30,7 @@ export class GameScenesController {
     this.characterList = characterList
 
     makeObservable(this, {
-      list: observable,
+      scenes: observable,
       currentScene: observable,
       isAllCurrentSceneImagesLoaded: computed,
     })
@@ -40,23 +40,23 @@ export class GameScenesController {
   private refList = { marketMain: MarketMainScene }
 
   // список созданных сцен
-  list: List = {} as List
+  scenes: Scenes = {} as Scenes
 
   currentScene: Scene = {} as Scene
 
   createScene = (sceneName: SceneName): void => {
-    this.list[sceneName] = new this.refList[sceneName]({
+    this.scenes[sceneName] = new this.refList[sceneName]({
       screen: this.screen,
       characterList: this.characterList,
     })
   }
 
   setScene = (sceneName: SceneName): Promise<void> => {
-    if (!this.list[sceneName]) {
+    if (!this.scenes[sceneName]) {
       this.createScene(sceneName)
     }
 
-    this.currentScene = this.list[sceneName]
+    this.currentScene = this.scenes[sceneName]
 
     const createAndDrawMap = (): void => {
       this.currentScene.createMap()

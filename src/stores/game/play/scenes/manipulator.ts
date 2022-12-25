@@ -1,7 +1,7 @@
 import { Size } from 'project-utility-types/abstract'
 import { XY } from 'project-utility-types/plane'
 
-import { CharacterList, CharacterName } from '../characters/controller'
+import { CharacterName, Characters } from '../characters/controller'
 
 type PositionOnScene = { x: 'right' | 'left' | 'center'; y: 'down' | 'top' | 'center' }
 
@@ -12,12 +12,12 @@ const isPositionOnScene = (position: CharacterPositionOnMap): position is Partia
 
 type SceneCharactersManipulatorConfig = {
   mapSize: Size
-  characterList: CharacterList
+  characterList: Characters
 }
 
 export class SceneCharactersManipulator {
   private mapSize: Size
-  private characterList: CharacterList
+  private characterList: Characters
 
   constructor(config: SceneCharactersManipulatorConfig) {
     const { mapSize, characterList } = config

@@ -11,7 +11,7 @@ type This = InstanceType<typeof TextboxesController>
 
 type TextboxInController = InstanceType<Properties<This['refList']>>
 type TextboxName = keyof This['refList']
-type List = Record<TextboxName, TextboxInController>
+type Textboxes = Record<TextboxName, TextboxInController>
 
 type SetTextboxConfig = {
   name: TextboxName
@@ -40,27 +40,31 @@ export class TextboxesController {
     this.internalOnOpen = () => this.pauseController.onPause({ prohibitorName: 'textbox' })
     this.internalOnClose = () => this.pauseController.onResume({ prohibitorName: 'textbox' })
 
-    makeObservable(this, { list: observable, currentTextbox: observable, isTextboxOpened: computed })
+    makeObservable(this, {
+      textboxes: observable,
+      currentTextbox: observable,
+      isTextboxOpened: computed,
+    })
   }
 
   // список текстбоксов, использующихся в контроллере
   private refList = { welcome: WelcomeTextbox }
 
   // список созданных текстбоксов
-  list: List = {} as List
+  textboxes: Textboxes = {} as Textboxes
 
   createTextbox = (name: TextboxName): void => {
-    this.list[name] = new this.refList[name]({ gameScript: this.gameScript })
+    this.textboxes[name] = new this.refList[name]({ gameScript: this.gameScript })
   }
 
   currentTextbox: TextboxInController | null = null
 
   setCurrentTextbox = ({ name, onOpen, onClose }: SetTextboxConfig): void => {
-    if (!this.list[name]) {
+    if (!this.textboxes[name]) {
       this.createTextbox(name)
     }
 
-    this.currentTextbox = this.list[name]
+    this.currentTextbox = this.textboxes[name]
     this.internalOnOpen()
     this.currentTextbox.setCallbacks({ onOpen, onClose })
     this.currentTextbox.onOpen?.()
