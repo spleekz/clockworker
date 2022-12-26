@@ -10,22 +10,27 @@ export const handleGamePlayScreenEsc = (): void => {
 
   useKey({
     key: 'Escape',
-    fn: () => {
-      if (!gamePlayStore.opening.isOpened) {
-        if (!gamePlayStore.textboxesController.isTextboxOpened) {
-          if (appStore.quitGameConfirm.isOpened) {
-            appStore.quitGameConfirm.close()
-          } else if (appStore.quitInMainMenuConfirm.isOpened) {
-            appStore.quitInMainMenuConfirm.close()
-          } else if (gamePlayStore.menusController.isSettingsMenuOpened) {
-            gamePlayStore.menusController.closeCurrentMenu()
-            gamePlayStore.menusController.openMenu('pause')
-          } else {
-            gamePlayStore.pauseController.toggleGamePause()
-            gamePlayStore.menusController.toggle('pause')
-          }
-        }
-      }
+    defaultFn: () => {
+      gamePlayStore.pauseController.toggleGamePause()
+      gamePlayStore.menusController.toggle('pause')
     },
+    variants: [
+      {
+        when: appStore.quitGameConfirm.isOpened,
+        fn: appStore.quitGameConfirm.close,
+      },
+      {
+        when: appStore.quitInMainMenuConfirm.isOpened,
+        fn: appStore.quitInMainMenuConfirm.close,
+      },
+      {
+        when: gamePlayStore.menusController.isSettingsMenuOpened,
+        fn: () => {
+          gamePlayStore.menusController.closeCurrentMenu()
+          gamePlayStore.menusController.openMenu('pause')
+        },
+      },
+    ],
+    ignoreWhen: [gamePlayStore.opening.isOpened, gamePlayStore.textboxesController.isTextboxOpened],
   })
 }

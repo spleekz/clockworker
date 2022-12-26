@@ -6,13 +6,44 @@ const isWindow = (element: unknown): element is Window => {
   return element === window
 }
 
-type UseKeyConfig = {
-  element?: HTMLElement | Window | null
-  key: string
+type IgnoreWhenValue = boolean | null | undefined
+
+type Variant = {
+  when: boolean
   fn: Callback
 }
 
-export const useKey = ({ element = window, key, fn }: UseKeyConfig, deps?: Array<any>): void => {
+type UseKeyConfig = {
+  element?: HTMLElement | Window | null
+  key: string
+  defaultFn: Callback
+  variants?: Array<Variant>
+  ignoreWhen?: IgnoreWhenValue | Array<IgnoreWhenValue>
+}
+
+export const useKey = (
+  { element = window, key, defaultFn, variants, ignoreWhen }: UseKeyConfig,
+  deps?: Array<any>,
+): void => {
+  const fn: Callback = () => {
+    const isIgnore = Array.isArray(ignoreWhen) ? ignoreWhen.some(Boolean) : Boolean(ignoreWhen)
+
+    if (!isIgnore) {
+      var isVariantTriggered = false
+
+      variants?.forEach((variant) => {
+        if (variant.when) {
+          variant.fn()
+          isVariantTriggered = true
+        }
+      })
+
+      if (!isVariantTriggered) {
+        defaultFn()
+      }
+    }
+  }
+
   useEffect(() => {
     const onKeyDown = (e: Event): void => {
       const { code } = e as KeyboardEvent

@@ -11,11 +11,8 @@ export const handlePreGameFormScreenEsc = (config: Config): void => {
   useKey(
     {
       key: 'Escape',
-      fn: () => {
-        if (!gamePlayStore?.opening.isOpened) {
-          appStore.quitInMainMenuConfirm.toggle()
-        }
-      },
+      defaultFn: appStore.quitInMainMenuConfirm.toggle,
+      ignoreWhen: gamePlayStore?.opening.isOpened,
     },
     [gamePlayStore],
   )
