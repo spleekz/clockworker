@@ -1,6 +1,7 @@
 import { makeAutoObservable } from 'mobx'
 
 import { Popup } from './entities/popup'
+import { PopupsController } from './entities/popups-controller'
 
 type AppScreen = 'main' | 'game'
 
@@ -23,4 +24,10 @@ export class AppStore {
   quitInMainMenuConfirm = new Popup()
 
   settingsMenu = new Popup()
+
+  popupsController = new PopupsController({
+    quitGameConfirm: this.quitGameConfirm,
+    quitInMainMenuConfirm: this.quitInMainMenuConfirm,
+    settingsMenu: this.settingsMenu,
+  })
 }

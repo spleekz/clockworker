@@ -23,7 +23,7 @@ export const QuitGameConfirm: FC<Props> = observer(({ onAccept }) => {
       styles={{
         backgroundColor: colors.mainLight,
       }}
-      isOpened={appStore.quitGameConfirm.isOpened}
+      isOpened={appStore.popupsController.isOpened('quitGameConfirm')}
       question={'Выйти из игры?'}
       acceptText={'Да'}
       onAccept={() => {
@@ -31,7 +31,7 @@ export const QuitGameConfirm: FC<Props> = observer(({ onAccept }) => {
         appStore.quitGame()
       }}
       rejectText={'Нет'}
-      onReject={appStore.quitGameConfirm.close}
+      onReject={() => appStore.popupsController.close('quitGameConfirm')}
       buttonsStyles={{
         width: '140px',
         padding: '10px',

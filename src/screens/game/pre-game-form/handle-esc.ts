@@ -4,6 +4,7 @@ import { useStore } from 'stores/root-store/context'
 import { useKey } from 'hooks/use-key'
 
 type Config = { gamePlayStore: GamePlayStore | null }
+
 export const handlePreGameFormScreenEsc = (config: Config): void => {
   const { appStore } = useStore()
   const { gamePlayStore } = config
@@ -11,7 +12,7 @@ export const handlePreGameFormScreenEsc = (config: Config): void => {
   useKey(
     {
       key: 'Escape',
-      defaultFn: appStore.quitInMainMenuConfirm.toggle,
+      defaultFn: () => appStore.popupsController.toggle('quitInMainMenuConfirm'),
       ignoreWhen: gamePlayStore?.opening.isOpened,
     },
     [gamePlayStore],

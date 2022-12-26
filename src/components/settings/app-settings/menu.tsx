@@ -16,12 +16,15 @@ export const AppSettingsMenu: FC<Props> = observer(({ onClose }) => {
   const { appStore } = useStore()
 
   const close = (): void => {
-    appStore.settingsMenu.close()
+    appStore.popupsController.close('settingsMenu')
     onClose?.()
   }
 
   return (
-    <SettingsMenuTemplate isOpened={appStore.settingsMenu.isOpened} onClose={close}>
+    <SettingsMenuTemplate
+      isOpened={appStore.popupsController.isOpened('settingsMenu')}
+      onClose={close}
+    >
       <GeneralAppSettings />
     </SettingsMenuTemplate>
   )

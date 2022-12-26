@@ -16,12 +16,8 @@ export const handleGamePlayScreenEsc = (): void => {
     },
     variants: [
       {
-        when: appStore.quitGameConfirm.isOpened,
-        fn: appStore.quitGameConfirm.close,
-      },
-      {
-        when: appStore.quitInMainMenuConfirm.isOpened,
-        fn: appStore.quitInMainMenuConfirm.close,
+        when: appStore.popupsController.isAnyOpened,
+        fn: appStore.popupsController.closeLastOpened,
       },
       {
         when: gamePlayStore.menusController.isSettingsMenuOpened,

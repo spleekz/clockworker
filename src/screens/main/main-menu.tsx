@@ -19,7 +19,7 @@ export const MainMenu: FC = observer(() => {
   }
 
   const openAppSettings = (): void => {
-    appStore.settingsMenu.open()
+    appStore.popupsController.open('settingsMenu')
   }
 
   return (

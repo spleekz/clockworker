@@ -24,7 +24,7 @@ export const QuitInMainMenuConfirm: FC<Props> = observer(({ question, onAccept }
       styles={{
         backgroundColor: colors.mainLight,
       }}
-      isOpened={appStore.quitInMainMenuConfirm.isOpened}
+      isOpened={appStore.popupsController.isOpened('quitInMainMenuConfirm')}
       question={question ?? 'Выйти в главное меню?'}
       questionStyles={{
         fontSize: '30px',
@@ -33,10 +33,10 @@ export const QuitInMainMenuConfirm: FC<Props> = observer(({ question, onAccept }
       onAccept={() => {
         onAccept?.()
         appStore.setScreen('main')
-        appStore.quitInMainMenuConfirm.close()
+        appStore.popupsController.close('quitInMainMenuConfirm')
       }}
       rejectText={'Нет'}
-      onReject={appStore.quitInMainMenuConfirm.close}
+      onReject={() => appStore.popupsController.close('quitInMainMenuConfirm')}
       buttonsStyles={{
         width: '140px',
         padding: '10px',

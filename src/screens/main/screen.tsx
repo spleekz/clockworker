@@ -31,7 +31,9 @@ export const MainScreen: FC = observer(() => {
         <Body>
           <MainMenu />
         </Body>
-        <QuitGameButton onClick={appStore.quitGameConfirm.open}>Выйти из игры</QuitGameButton>
+        <QuitGameButton onClick={() => appStore.popupsController.open('quitGameConfirm')}>
+          Выйти из игры
+        </QuitGameButton>
         <GameVersion>v{version}</GameVersion>
       </Container>
     </>
