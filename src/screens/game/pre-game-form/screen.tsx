@@ -13,14 +13,14 @@ import { QuitInMainMenuConfirm } from 'components/popup/game-popups/quit-in-main
 
 import { useGameStore } from '../screen'
 import { PreGameForm } from './form'
-import { handlePreGameFormScreenEsc } from './handle-esc'
+import { usePreGameFormScreenEsc } from './use-esc'
 
 export const PreGameFormScreen: FC = observer(() => {
   const { appStore } = useStore()
   const gameStore = useGameStore()
   const gamePlayStore = gameStore.playStore
 
-  handlePreGameFormScreenEsc({ gamePlayStore })
+  usePreGameFormScreenEsc({ gamePlayStore })
 
   const goBack = (): void => {
     appStore.setScreen('main')

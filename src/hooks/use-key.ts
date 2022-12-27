@@ -8,16 +8,16 @@ const isWindow = (element: unknown): element is Window => {
 
 type IgnoreWhenValue = boolean | null | undefined
 
-type Variant = {
+export type UseKeyVariant = {
   when: boolean
   fn: Callback
 }
 
-type UseKeyConfig = {
+export type UseKeyConfig = {
   element?: HTMLElement | Window | null
   key: string
   defaultFn: Callback
-  variants?: Array<Variant>
+  variants?: Array<UseKeyVariant>
   ignoreWhen?: IgnoreWhenValue | Array<IgnoreWhenValue>
 }
 

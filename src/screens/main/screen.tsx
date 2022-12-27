@@ -12,14 +12,14 @@ import { PixelatedButton } from 'components/pixelated/pixelated-components'
 import { QuitGameConfirm } from 'components/popup/game-popups/quit-game-confirm'
 
 import { version } from '../../../package.json'
-import { handleMainScreenEsc } from './handle-esc'
 import { MainMenu } from './main-menu'
 import { UpdateChecker } from './update-notification/update-checker'
+import { useMainScreenEsc } from './use-esc'
 
 export const MainScreen: FC = observer(() => {
   const { appStore } = useStore()
 
-  handleMainScreenEsc()
+  useMainScreenEsc()
 
   return (
     <>

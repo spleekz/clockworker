@@ -8,16 +8,16 @@ import { QuitInMainMenuConfirm } from 'components/popup/game-popups/quit-in-main
 
 import { GameOpening } from '../opening'
 import { useGamePlayStore, useGameStore } from '../screen'
-import { handleGamePlayScreenEsc } from './handle-esc'
 import { PauseMenu } from './pause-menu'
 import { PlayCanvas } from './play-canvas/canvas'
 import { GameSettingsMenu } from './settings/menu'
+import { useGamePlayScreenEsc } from './use-esc'
 
 export const GamePlayScreen: FC = observer(() => {
   const gameStore = useGameStore()
   const gamePlayStore = useGamePlayStore()
 
-  handleGamePlayScreenEsc()
+  useGamePlayScreenEsc()
 
   return (
     <>
