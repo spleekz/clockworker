@@ -2,17 +2,17 @@ import { useStore } from 'stores/root-store/context'
 
 import { UseKeyConfig, UseKeyVariant, useKey } from './use-key'
 
-type UseEscConfig = Omit<UseKeyConfig, 'key'>
+export type UseAppEscConfig = Omit<UseKeyConfig, 'key'>
 
-export const useEsc = (
-  { defaultFn, variants, ignoreWhen, element }: UseEscConfig,
+export const useAppEsc = (
+  { defaultFn, variants, ignoreWhen, element }: UseAppEscConfig,
   deps?: Array<any>,
 ): void => {
   const { appStore } = useStore()
 
-  const popupOpenedVariant: UseKeyVariant = {
+  const appPopupOpenedVariant: UseKeyVariant = {
     when: appStore.popupsController.isAnyOpened,
-    fn: appStore.popupsController.closeLastOpened,
+    fn: appStore.popupsController.closeAllOpened,
   }
 
   useKey(
@@ -20,7 +20,7 @@ export const useEsc = (
       element,
       key: 'Escape',
       defaultFn,
-      variants: [popupOpenedVariant, ...(variants ?? [])],
+      variants: [appPopupOpenedVariant, ...(variants ?? [])],
       ignoreWhen,
     },
     deps,

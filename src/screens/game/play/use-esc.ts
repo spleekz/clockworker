@@ -1,24 +1,15 @@
-import { useEsc } from 'hooks/use-esc'
+import { useGameEsc } from 'hooks/use-game-esc'
 
 import { useGamePlayStore } from '../screen'
 
 export const useGamePlayScreenEsc = (): void => {
   const gamePlayStore = useGamePlayStore()
 
-  useEsc({
+  useGameEsc({
     defaultFn: () => {
       gamePlayStore.pauseController.toggleGamePause()
-      gamePlayStore.menusController.toggle('pause')
+      gamePlayStore.popups.controller.toggle('pauseMenu')
     },
-    variants: [
-      {
-        when: gamePlayStore.menusController.isSettingsMenuOpened,
-        fn: () => {
-          gamePlayStore.menusController.closeCurrentMenu()
-          gamePlayStore.menusController.openMenu('pause')
-        },
-      },
-    ],
     ignoreWhen: [gamePlayStore.opening.isOpened, gamePlayStore.textboxesController.isTextboxOpened],
   })
 }

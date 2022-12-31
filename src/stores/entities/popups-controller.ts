@@ -1,7 +1,5 @@
 import { makeAutoObservable } from 'mobx'
 
-import { last } from 'lib/arrays'
-
 import { Popup } from './popup'
 
 type PopupList = Record<string, Popup>
@@ -17,32 +15,25 @@ export class PopupsController<Popups extends PopupList> {
     makeAutoObservable(this)
   }
 
-  // не использую геттер, так как нужно знать,
-  // в каком порядке открывались попапы
-  openedNames: Array<PopupName<Popups>> = []
-  addOpened = (name: PopupName<Popups>): void => {
-    this.openedNames.push(name)
+  get openedNames(): Array<PopupName<Popups>> {
+    return Object.entries(this.popups).reduce((acc, [name, popup]) => {
+      if (popup.isOpened) {
+        acc.push(name)
+      }
+      return acc
+    }, [] as Array<PopupName<Popups>>)
   }
-  removeOpened = (name: PopupName<Popups>): void => {
-    this.openedNames = this.openedNames.filter((n) => n !== name)
-  }
+
   get openedPopups(): Array<Popup> {
     return this.openedNames.map((name) => this.popups[name])
   }
 
   open = (popupName: PopupName<Popups>): void => {
     this.popups[popupName].open()
-    this.addOpened(popupName)
   }
 
   close = (popupName: PopupName<Popups>): void => {
     this.popups[popupName].close()
-    this.removeOpened(popupName)
-  }
-
-  closeLastOpened = (): void => {
-    const lastOpenedName = last(this.openedNames)
-    this.close(lastOpenedName)
   }
 
   closeAllOpened = (): void => {

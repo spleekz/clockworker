@@ -9,9 +9,9 @@ import { CharacterName, CharactersController } from './characters/controller'
 import { PlayerCharacterConfig } from './characters/player/character'
 import { Collider } from './collider'
 import { Market } from './market'
-import { GameMenusController } from './menus-controller'
 import { GamePauseController } from './pause-controller'
 import { Player } from './player'
+import { GamePopups } from './popups'
 import { GameScenesController, SceneName } from './scenes/controller'
 import { GameScreen } from './screen'
 import { GameSettings } from './settings/settings'
@@ -119,8 +119,8 @@ export class GamePlayStore {
     sharedMethods: this.sharedMethods,
   })
 
-  //! контроллер меню
-  menusController = new GameMenusController()
+  //! попапы
+  popups = new GamePopups()
 
   //! коллайдер
   collider = new Collider({ screen: this.screen })
