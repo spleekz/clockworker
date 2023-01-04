@@ -48,7 +48,7 @@ export const closePopup = ({ popup, config, history }: ClosePopupConfig): void =
   popup.close(fn, callbackConfig)
 
   const lastNoteAboutPopup = history.notes.findLast((note) => {
-    return note.event === 'open' && note.popup === popup
+    return note.event === 'open' && note.popup.name === popup.name
   })
 
   if (lastNoteAboutPopup.event === 'open' && lastNoteAboutPopup.forwardedFrom !== null) {
@@ -63,11 +63,11 @@ export const getLastUnclosedPopup = (history: PopupHistory): Popup | null => {
     history.notes.findLast((note) => {
       const openedCount = countOf(
         history.notes,
-        ({ event, popup }) => popup === note.popup && event === 'open',
+        ({ event, popup }) => popup.name === note.popup.name && event === 'open',
       )
       const closedCount = countOf(
         history.notes,
-        ({ event, popup }) => popup === note.popup && event === 'close',
+        ({ event, popup }) => popup.name === note.popup.name && event === 'close',
       )
       return openedCount > closedCount
     }).popup ?? null
@@ -85,11 +85,11 @@ export const getUnclosedPopups = (history: PopupHistory): Array<Popup> => {
   return history.notes.reduce((acc, note) => {
     const openedCount = countOf(
       history.notes,
-      ({ event, popup }) => popup === note.popup && event === 'open',
+      ({ event, popup }) => popup.name === note.popup.name && event === 'open',
     )
     const closedCount = countOf(
       history.notes,
-      ({ event, popup }) => popup === note.popup && event === 'close',
+      ({ event, popup }) => popup.name === note.popup.name && event === 'close',
     )
     if (openedCount > closedCount) {
       acc.push(note.popup)

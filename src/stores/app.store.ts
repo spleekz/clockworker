@@ -20,11 +20,11 @@ export class AppStore {
     window.close()
   }
 
-  quitGameConfirm = new Popup()
+  quitGameConfirm = new Popup({ name: 'app_quitGameConfirm' })
 
-  quitInMainMenuConfirm = new Popup()
+  quitInMainMenuConfirm = new Popup({ name: 'app_quitInMainMenuConfirm' })
 
-  settingsMenu = new Popup()
+  settingsMenu = new Popup({ name: 'app_settingsMenu' })
 
   popupHistory = new PopupHistory()
 

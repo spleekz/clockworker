@@ -16,16 +16,20 @@ export type PopupCallbackConfig = {
 }
 
 type Config = {
+  name: string
   onOpen?: Callback
   onClose?: Callback
 }
 
 export class Popup {
+  name: string
   onOpen: Callback | null
   onClose: Callback | null
 
-  constructor(config?: Config) {
-    const { onOpen, onClose } = config ?? {}
+  constructor(config: Config) {
+    const { name, onOpen, onClose } = config ?? {}
+
+    this.name = name
     this.setOnOpen(onOpen ?? null)
     this.setOnClose(onClose ?? null)
 

@@ -34,8 +34,9 @@ export class GamePopups {
   }
 
   pauseMenu = new Popup({
+    name: 'game_pauseMenu',
     onOpen: () => this.pauseController.pauseGame(),
     onClose: () => this.pauseController.resumeGame(),
   })
-  settingsMenu = new Popup()
+  settingsMenu = new Popup({ name: 'game_settingsMenu' })
 }
