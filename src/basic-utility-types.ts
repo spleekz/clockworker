@@ -10,6 +10,10 @@ export type FC<T = unknown> = React.FC<PropsWithChildren<T>>
 
 export type NotUndefinded<T> = T extends undefined ? never : T
 
+export type PartialBy<T, K extends keyof T> = Omit<T, K> & {
+  [P in K]?: T[P]
+}
+
 export type RequiredBy<T, K extends keyof T> = Omit<T, K> &
   Required<{
     [P in K]: NotUndefinded<T[P]>
@@ -36,3 +40,7 @@ export type Without<A, B> = Omit<A, keyof B>
 export type XOR<A, B> = A | B extends AnyObject
   ? (B & NeverProperties<Without<A, B>>) | (A & NeverProperties<Without<B, A>>)
   : A | B
+
+export type Entries<T> = Array<[keyof T, Properties<T>]>
+
+export type Rename<T, OK extends keyof T, NK extends string> = Omit<T, OK> & { [P in NK]: T[OK] }

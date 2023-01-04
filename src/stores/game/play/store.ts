@@ -1,5 +1,6 @@
 import { makeAutoObservable } from 'mobx'
 
+import { AppStore } from 'stores/app.store'
 import { KeyboardStore } from 'stores/keyboard.store'
 
 import { GameScript, getParsedGameScript } from 'content/text/get-parsed-game-script'
@@ -22,21 +23,25 @@ import { TransitionScreen } from './transition-screen'
 export type DataFromPreGameForm = Pick<PreGameForm, 'playerCharacterName' | 'marketName'>
 
 export type GamePlayStoreConfig = {
+  appStore: AppStore
   keyboard: KeyboardStore
   dataFromPreGameForm: DataFromPreGameForm
 }
 
 export class GamePlayStore {
+  private appStore: AppStore
   private keyboard: KeyboardStore
   dataFromPreGameForm: DataFromPreGameForm
 
   script: GameScript
   market: Market
   textboxesController: TextboxesController
+  popups: GamePopups
 
   constructor(config: GamePlayStoreConfig) {
-    const { keyboard, dataFromPreGameForm } = config
+    const { appStore, keyboard, dataFromPreGameForm } = config
 
+    this.appStore = appStore
     this.keyboard = keyboard
     this.dataFromPreGameForm = dataFromPreGameForm
 
@@ -52,6 +57,12 @@ export class GamePlayStore {
     //! контроллер текстбоксов
     this.textboxesController = new TextboxesController({
       gameScript: this.script,
+      pauseController: this.pauseController,
+    })
+
+    //! попапы
+    this.popups = new GamePopups({
+      popupHistory: this.appStore.popupHistory,
       pauseController: this.pauseController,
     })
 
@@ -118,9 +129,6 @@ export class GamePlayStore {
     characterController: this.charactersController,
     sharedMethods: this.sharedMethods,
   })
-
-  //! попапы
-  popups = new GamePopups()
 
   //! коллайдер
   collider = new Collider({ screen: this.screen })

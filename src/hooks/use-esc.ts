@@ -1,25 +1,28 @@
+import { Rename } from 'basic-utility-types'
+
+import { closeLastUnclosedPopup } from 'stores/lib/popups'
 import { useStore } from 'stores/root-store/context'
 
 import { UseKeyConfig, UseKeyVariant, useKey } from './use-key'
 
-export type UseAppEscConfig = Omit<UseKeyConfig, 'key'>
+export type UseEscConfig = Rename<Omit<UseKeyConfig, 'key'>, 'defaultFn', 'fn'>
 
-export const useAppEsc = (
-  { defaultFn, variants, ignoreWhen, element }: UseAppEscConfig,
+export const useEsc = (
+  { fn, variants, ignoreWhen, element }: UseEscConfig,
   deps?: Array<any>,
 ): void => {
   const { appStore } = useStore()
 
   const appPopupOpenedVariant: UseKeyVariant = {
-    when: appStore.popupsController.isAnyOpened,
-    fn: appStore.popupsController.closeAllOpened,
+    when: appStore.popupHistory.isOpenedPopups,
+    fn: () => closeLastUnclosedPopup(appStore.popupHistory),
   }
 
   useKey(
     {
       element,
       key: 'Escape',
-      defaultFn,
+      defaultFn: fn,
       variants: [appPopupOpenedVariant, ...(variants ?? [])],
       ignoreWhen,
     },

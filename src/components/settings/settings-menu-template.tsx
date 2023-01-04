@@ -2,40 +2,41 @@ import { observer } from 'mobx-react-lite'
 import React from 'react'
 import styled from 'styled-components'
 
-import { Callback, FC } from 'basic-utility-types'
+import { FC } from 'basic-utility-types'
 
 import { colors } from 'lib/theme'
 
 import { PixelatedButton } from 'components/pixelated/pixelated-components'
-import { Popup } from 'components/popup/popup-template'
+import { Popup, PopupProps } from 'components/popup/popup-template'
 
-type Props = {
-  isOpened: boolean
-  onClose?: Callback
-}
+export type SettingsMenuTemplateProps = Omit<
+  PopupProps,
+  'width' | 'height' | 'styles' | 'title' | 'titleStyles' | 'withCloseButton' | 'fnForClosing'
+>
 
-export const SettingsMenuTemplate: FC<Props> = observer(({ isOpened, onClose, children }) => {
-  return (
-    <Popup
-      width={'600px'}
-      height={'550px'}
-      styles={{
-        backgroundColor: colors.mainLight,
-      }}
-      title={'Настройки'}
-      withCloseButton={false}
-      isOpened={isOpened}
-      onClose={onClose}
-    >
-      <Container>
-        <List>{children}</List>
-        <OKButtonContainer>
-          <OKButton onClick={onClose}>ОК</OKButton>
-        </OKButtonContainer>
-      </Container>
-    </Popup>
-  )
-})
+export const SettingsMenuTemplate: FC<SettingsMenuTemplateProps> = observer(
+  ({ isOpened, onClose, children }) => {
+    return (
+      <Popup
+        width={'600px'}
+        height={'550px'}
+        styles={{
+          backgroundColor: colors.mainLight,
+        }}
+        title={'Настройки'}
+        withCloseButton={false}
+        isOpened={isOpened}
+      >
+        <Container>
+          <List>{children}</List>
+          <OKButtonContainer>
+            <OKButton onClick={onClose}>ОК</OKButton>
+          </OKButtonContainer>
+        </Container>
+      </Popup>
+    )
+  },
+)
 
 const Container = styled.div`
   flex: 1 0 auto;

@@ -15,6 +15,7 @@ export class RootStore {
   keyboardStore = new KeyboardStore()
   createGameStore = (): GameStore => {
     return new GameStore({
+      appStore: this.appStore,
       keyboard: this.keyboardStore,
     })
   }

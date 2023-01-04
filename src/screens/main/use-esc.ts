@@ -1,11 +1,11 @@
 import { useStore } from 'stores/root-store/context'
 
-import { useAppEsc } from 'hooks/use-app-esc'
+import { useEsc } from 'hooks/use-esc'
 
 export const useMainScreenEsc = (): void => {
   const { appStore } = useStore()
 
-  useAppEsc({
-    defaultFn: () => appStore.popupsController.toggle('quitGameConfirm'),
+  useEsc({
+    fn: () => appStore.popupsController.toggle('quitGameConfirm'),
   })
 }

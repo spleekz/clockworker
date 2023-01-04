@@ -1,5 +1,6 @@
 import { makeAutoObservable } from 'mobx'
 
+import { AppStore } from 'stores/app.store'
 import { KeyboardStore } from 'stores/keyboard.store'
 
 import { DataFromPreGameForm, GamePlayStore } from './play/store'
@@ -8,15 +9,18 @@ import { PreGameForm } from './pre-game-form'
 type GameScreen = 'preGameForm' | 'play'
 
 type GameStoreConfig = {
+  appStore: AppStore
   keyboard: KeyboardStore
 }
 
 export class GameStore {
+  private appStore: AppStore
   protected keyboard: KeyboardStore
 
   constructor(config: GameStoreConfig) {
-    const { keyboard } = config
+    const { appStore, keyboard } = config
 
+    this.appStore = appStore
     this.keyboard = keyboard
 
     makeAutoObservable(this)
@@ -41,6 +45,7 @@ export class GameStore {
     }
 
     const gamePlayStore = new GamePlayStore({
+      appStore: this.appStore,
       keyboard: this.keyboard,
       dataFromPreGameForm,
     })

@@ -26,10 +26,7 @@ export const GamePlayScreen: FC = observer(() => {
 
       <GameOpening />
       <PauseMenu isOpened={gamePlayStore.popups.controller.isOpened('pauseMenu')} />
-      <GameSettingsMenu
-        isOpened={gamePlayStore.popups.controller.isOpened('settingsMenu')}
-        onClose={() => gamePlayStore.popups.controller.open('pauseMenu')}
-      />
+      <GameSettingsMenu />
       <PlayCanvas />
     </>
   )
