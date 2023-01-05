@@ -7,9 +7,9 @@ import { Textbox } from './textbox'
 
 export const GameTextbox = observer(() => {
   const gamePlayStore = useGamePlayStore()
-  const { textboxesController } = gamePlayStore
+  const { textboxController } = gamePlayStore
 
-  const text = textboxesController.currentTextbox?.text ?? ''
+  const text = textboxController.currentTextbox?.text ?? ''
 
-  return <Textbox isOpened={textboxesController.isTextboxOpened} text={text} />
+  return <Textbox isOpened={textboxController.isTextboxOpened} text={text} />
 })

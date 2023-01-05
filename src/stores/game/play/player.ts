@@ -1,8 +1,8 @@
-import { CharactersController } from './characters/controller'
+import { CharacterController } from './characters/controller'
 import { PlayerCharacter, PlayerCharacterConfig } from './characters/player/character'
 
 type CreatePlayerCharacterConfig = {
-  characterController: CharactersController
+  characterController: CharacterController
   characterConfig: PlayerCharacterConfig
 }
 

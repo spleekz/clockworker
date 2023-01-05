@@ -8,22 +8,22 @@ import { Characters } from '../characters/controller'
 import { GameScreen } from '../screen'
 import { MarketMainScene } from './list/market'
 
-type This = InstanceType<typeof GameScenesController>
+type This = InstanceType<typeof GameSceneController>
 
 type Scene = InstanceType<Properties<This['refList']>>
 export type SceneName = keyof This['refList']
 type Scenes = Record<SceneName, Scene>
 
-type GameScenesControllerConfig = {
+type GameSceneControllerConfig = {
   screen: GameScreen
   characterList: Characters
 }
 
-export class GameScenesController {
+export class GameSceneController {
   private screen: GameScreen
   private characterList: Characters
 
-  constructor(config: GameScenesControllerConfig) {
+  constructor(config: GameSceneControllerConfig) {
     const { screen, characterList } = config
 
     this.screen = screen

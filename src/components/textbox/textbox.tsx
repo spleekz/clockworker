@@ -44,7 +44,7 @@ export const Textbox: FC<Props> = observer(({ isOpened, text }) => {
   }
 
   const close = (): void => {
-    gamePlayStore.textboxesController.closeCurrentTextbox()
+    gamePlayStore.textboxController.closeCurrentTextbox()
   }
 
   useWindowClick(() => {

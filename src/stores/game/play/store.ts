@@ -6,18 +6,18 @@ import { PopupHistory } from 'stores/popup-history'
 import { GameScript, getParsedGameScript } from 'content/text/get-parsed-game-script'
 
 import { PreGameForm } from '../pre-game-form'
-import { CharacterName, CharactersController } from './characters/controller'
+import { CharacterController, CharacterName } from './characters/controller'
 import { PlayerCharacterConfig } from './characters/player/character'
 import { Collider } from './collider'
 import { Market } from './market'
 import { GamePauseController } from './pause-controller'
 import { Player } from './player'
 import { GamePopups } from './popups'
-import { GameScenesController, SceneName } from './scenes/controller'
+import { GameSceneController, SceneName } from './scenes/controller'
 import { GameScreen } from './screen'
 import { GameSettings } from './settings/settings'
 import { SharedPlayMethods } from './shared-methods/shared-methods'
-import { TextboxesController } from './textbox/controller'
+import { TextboxController } from './textbox/controller'
 import { TransitionScreen } from './transition-screen'
 
 export type DataFromPreGameForm = Pick<PreGameForm, 'playerCharacterName' | 'marketName'>
@@ -35,7 +35,7 @@ export class GamePlayStore {
 
   script: GameScript
   market: Market
-  textboxesController: TextboxesController
+  textboxController: TextboxController
   popups: GamePopups
 
   constructor(config: GamePlayStoreConfig) {
@@ -55,7 +55,7 @@ export class GamePlayStore {
     this.market = new Market({ name: this.dataFromPreGameForm.marketName })
 
     //! контроллер текстбоксов
-    this.textboxesController = new TextboxesController({
+    this.textboxController = new TextboxController({
       gameScript: this.script,
       pauseController: this.pauseController,
     })
@@ -84,7 +84,7 @@ export class GamePlayStore {
     }
 
     return this.player.createCharacter({
-      characterController: this.charactersController,
+      characterController: this.characterController,
       characterConfig: playerCharacterConfig,
     })
   }
@@ -93,16 +93,16 @@ export class GamePlayStore {
   sharedMethods = new SharedPlayMethods()
 
   //! контроллер персонажей
-  charactersController = new CharactersController()
+  characterController = new CharacterController()
   addActiveCharacter = (characterName: CharacterName): void => {
-    this.charactersController.addActiveCharacter(characterName)
-    const character = this.charactersController.characters[characterName]
+    this.characterController.addActiveCharacter(characterName)
+    const character = this.characterController.characters[characterName]
     this.collider.addBody(character)
   }
   removeActiveCharacter = (characterName: CharacterName): void => {
-    const character = this.charactersController.characters[characterName]
+    const character = this.characterController.characters[characterName]
     this.collider.removeBody(character.id)
-    this.charactersController.removeActiveCharacter(characterName)
+    this.characterController.removeActiveCharacter(characterName)
   }
 
   //! настройки
@@ -112,13 +112,13 @@ export class GamePlayStore {
   screen = new GameScreen({ width: screen.width, height: screen.height })
 
   //! контроллер сцен
-  sceneController = new GameScenesController({
+  sceneController = new GameSceneController({
     screen: this.screen,
-    characterList: this.charactersController.characters,
+    characterList: this.characterController.characters,
   })
   setScene = (sceneName: SceneName): Promise<void> => {
     return this.sceneController.setScene(sceneName).then(() => {
-      this.charactersController.clearActiveCharacters()
+      this.characterController.clearActiveCharacters()
       this.collider.clear()
       this.collider.addStaticObstacles(this.sceneController.currentScene.map.hitboxes)
     })
@@ -126,7 +126,7 @@ export class GamePlayStore {
 
   //! контроллер паузы
   pauseController = new GamePauseController({
-    characterController: this.charactersController,
+    characterController: this.characterController,
     sharedMethods: this.sharedMethods,
   })
 
@@ -169,7 +169,7 @@ export class GamePlayStore {
   }
 
   updateActiveCharacters = (): void => {
-    this.charactersController.activeCharacters.forEach((character) => {
+    this.characterController.activeCharacters.forEach((character) => {
       character.update()
     })
   }
@@ -199,7 +199,7 @@ export class GamePlayStore {
     this.initializeGame().then(() => {
       this.mainLoop()
       this.opening.run().then(() => {
-        this.textboxesController.setCurrentTextbox({ name: 'welcome' })
+        this.textboxController.setCurrentTextbox({ name: 'welcome' })
       })
     })
   }
