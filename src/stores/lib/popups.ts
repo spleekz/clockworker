@@ -91,7 +91,7 @@ export const getUnclosedPopups = (history: PopupHistory): Array<Popup> => {
       history.notes,
       ({ event, popup }) => popup.name === note.popup.name && event === 'close',
     )
-    if (openedCount > closedCount) {
+    if (acc.every((p) => p.name !== note.popup.name) && openedCount > closedCount) {
       acc.push(note.popup)
     }
     return acc
