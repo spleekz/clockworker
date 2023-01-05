@@ -2,7 +2,7 @@ import { makeAutoObservable } from 'mobx'
 
 import { Callback } from 'basic-utility-types'
 
-import { OpenHistoryNote, PopupHistory } from './popup-history'
+import { OpenHistoryNote, PopupHistory } from '../popup-history'
 
 export type PopupCallbackOptions = {
   overwrite?: boolean

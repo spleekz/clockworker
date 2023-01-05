@@ -11,11 +11,11 @@ export const useEsc = (
   { fn, variants, ignoreWhen, element }: UseEscConfig,
   deps?: Array<any>,
 ): void => {
-  const { appStore } = useStore()
+  const { popupHistory } = useStore()
 
   const appPopupOpenedVariant: UseKeyVariant = {
-    when: appStore.popupHistory.isOpenedPopups,
-    fn: () => closeLastUnclosedPopup(appStore.popupHistory),
+    when: popupHistory.isOpenedPopups,
+    fn: () => closeLastUnclosedPopup(popupHistory),
   }
 
   useKey(

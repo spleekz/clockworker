@@ -1,7 +1,7 @@
 import { makeAutoObservable } from 'mobx'
 
-import { AppStore } from 'stores/app.store'
 import { KeyboardStore } from 'stores/keyboard.store'
+import { PopupHistory } from 'stores/popup-history'
 
 import { GameScript, getParsedGameScript } from 'content/text/get-parsed-game-script'
 
@@ -23,13 +23,13 @@ import { TransitionScreen } from './transition-screen'
 export type DataFromPreGameForm = Pick<PreGameForm, 'playerCharacterName' | 'marketName'>
 
 export type GamePlayStoreConfig = {
-  appStore: AppStore
+  popupHistory: PopupHistory
   keyboard: KeyboardStore
   dataFromPreGameForm: DataFromPreGameForm
 }
 
 export class GamePlayStore {
-  private appStore: AppStore
+  private popupHistory: PopupHistory
   private keyboard: KeyboardStore
   dataFromPreGameForm: DataFromPreGameForm
 
@@ -39,9 +39,9 @@ export class GamePlayStore {
   popups: GamePopups
 
   constructor(config: GamePlayStoreConfig) {
-    const { appStore, keyboard, dataFromPreGameForm } = config
+    const { popupHistory, keyboard, dataFromPreGameForm } = config
 
-    this.appStore = appStore
+    this.popupHistory = popupHistory
     this.keyboard = keyboard
     this.dataFromPreGameForm = dataFromPreGameForm
 
@@ -62,7 +62,7 @@ export class GamePlayStore {
 
     //! попапы
     this.popups = new GamePopups({
-      popupHistory: this.appStore.popupHistory,
+      popupHistory: this.popupHistory,
       pauseController: this.pauseController,
     })
 

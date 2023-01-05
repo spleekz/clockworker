@@ -2,7 +2,7 @@ import { makeAutoObservable } from 'mobx'
 
 import { countOf } from 'lib/arrays'
 
-import { Popup } from './popup'
+import { Popup } from './entities/popup'
 
 export type OpenHistoryNote = {
   popup: Popup

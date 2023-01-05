@@ -1,4 +1,4 @@
-import { PopupHistory } from 'stores/entities/popup-history'
+import { PopupHistory } from 'stores/popup-history'
 
 export const closeLastUnclosedPopup = (history: PopupHistory): void => {
   const lastUnclosedPopup = history.getLastUnclosedPopup()

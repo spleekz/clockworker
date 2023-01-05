@@ -1,8 +1,8 @@
 import { makeAutoObservable } from 'mobx'
 
-import { AppStore } from 'stores/app.store'
 import { KeyboardStore } from 'stores/keyboard.store'
 import { closeAllUnclosedPopups } from 'stores/lib/popups'
+import { PopupHistory } from 'stores/popup-history'
 
 import { DataFromPreGameForm, GamePlayStore } from './play/store'
 import { PreGameForm } from './pre-game-form'
@@ -10,18 +10,18 @@ import { PreGameForm } from './pre-game-form'
 type GameScreen = 'preGameForm' | 'play'
 
 type GameStoreConfig = {
-  appStore: AppStore
+  popupHistory: PopupHistory
   keyboard: KeyboardStore
 }
 
 export class GameStore {
-  private appStore: AppStore
+  private popupHistory: PopupHistory
   protected keyboard: KeyboardStore
 
   constructor(config: GameStoreConfig) {
-    const { appStore, keyboard } = config
+    const { popupHistory, keyboard } = config
 
-    this.appStore = appStore
+    this.popupHistory = popupHistory
     this.keyboard = keyboard
 
     makeAutoObservable(this)
@@ -46,7 +46,7 @@ export class GameStore {
     }
 
     const gamePlayStore = new GamePlayStore({
-      appStore: this.appStore,
+      popupHistory: this.popupHistory,
       keyboard: this.keyboard,
       dataFromPreGameForm,
     })
@@ -63,7 +63,7 @@ export class GameStore {
   }
 
   endGame = (): void => {
-    closeAllUnclosedPopups(this.appStore.popupHistory)
+    closeAllUnclosedPopups(this.popupHistory)
     this.playStore?.setIsPlay(false)
     this.playStore = null
   }
