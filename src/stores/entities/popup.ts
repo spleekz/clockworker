@@ -4,12 +4,14 @@ import { Callback } from 'basic-utility-types'
 
 import { OpenHistoryNote, PopupHistory } from '../popup-history'
 
+type PopupCallback = Callback | null
+
 export type PopupCallbackOptions = {
   overwrite?: boolean
 }
 
 type PopupCallbackInfo = {
-  fn: Callback | null
+  fn: PopupCallback
   options?: PopupCallbackOptions
 }
 
@@ -41,8 +43,8 @@ type Config = {
 
 export class Popup {
   name: string
-  onOpen: Callback | null
-  onClose: Callback | null
+  onOpen: PopupCallback
+  onClose: PopupCallback
   private history: PopupHistory
 
   constructor(config: Config) {
@@ -56,16 +58,16 @@ export class Popup {
     makeAutoObservable(this)
   }
 
-  setOnOpen = (onOpen: Callback | null): void => {
+  setOnOpen = (onOpen: PopupCallback): void => {
     this.onOpen = onOpen
   }
-  setOnClose = (onClose: Callback | null): void => {
+  setOnClose = (onClose: PopupCallback): void => {
     this.onClose = onClose
   }
 
   isOpened = false
 
-  private openDirectly = (onOpen?: Callback | null, options?: PopupCallbackOptions): void => {
+  private openDirectly = (onOpen?: PopupCallback, options?: PopupCallbackOptions): void => {
     this.isOpened = true
 
     const { overwrite = true } = options ?? {}
@@ -103,7 +105,7 @@ export class Popup {
     this.history.createOpenNote({ popup: this, forwardedFrom: forwardedFrom?.popup ?? null })
   }
 
-  private closeDirectly = (onClose?: Callback | null, options?: PopupCallbackOptions): void => {
+  private closeDirectly = (onClose?: PopupCallback, options?: PopupCallbackOptions): void => {
     this.isOpened = false
 
     const { overwrite = true } = options ?? {}
@@ -123,7 +125,7 @@ export class Popup {
     }
   }
 
-  close = (onClose?: Callback | null, options?: PopupCallbackOptions): void => {
+  close = (onClose?: PopupCallback, options?: PopupCallbackOptions): void => {
     this.closeDirectly(onClose, options)
 
     const lastNoteAboutPopupOpen: OpenHistoryNote = this.history.notes.findLast((note) => {
