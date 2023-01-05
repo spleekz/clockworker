@@ -3,6 +3,7 @@ import { makeAutoObservable } from 'mobx'
 import { Popup } from './entities/popup'
 import { PopupHistory } from './entities/popup-history'
 import { PopupsController } from './entities/popups-controller'
+import { closeAllUnclosedPopups } from './lib/popups'
 
 type AppScreen = 'main' | 'game'
 
@@ -13,10 +14,12 @@ export class AppStore {
 
   screen: AppScreen = 'main'
   setScreen = (screen: AppScreen): void => {
+    closeAllUnclosedPopups(this.popupHistory)
     this.screen = screen
   }
 
   quitGame = (): void => {
+    closeAllUnclosedPopups(this.popupHistory)
     window.close()
   }
 

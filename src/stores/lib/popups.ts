@@ -98,7 +98,7 @@ export const getUnclosedPopups = (history: PopupHistory): Array<Popup> => {
   }, [] as Array<Popup>)
 }
 
-export const closeAllPopups = (history: PopupHistory): void => {
+export const closeAllUnclosedPopups = (history: PopupHistory): void => {
   const unclosedPopups = getUnclosedPopups(history)
   unclosedPopups.forEach((popup) => closePopup({ popup, history }))
 }

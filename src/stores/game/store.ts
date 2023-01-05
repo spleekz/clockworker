@@ -2,6 +2,7 @@ import { makeAutoObservable } from 'mobx'
 
 import { AppStore } from 'stores/app.store'
 import { KeyboardStore } from 'stores/keyboard.store'
+import { closeAllUnclosedPopups } from 'stores/lib/popups'
 
 import { DataFromPreGameForm, GamePlayStore } from './play/store'
 import { PreGameForm } from './pre-game-form'
@@ -62,6 +63,7 @@ export class GameStore {
   }
 
   endGame = (): void => {
+    closeAllUnclosedPopups(this.appStore.popupHistory)
     this.playStore?.setIsPlay(false)
     this.playStore = null
   }
