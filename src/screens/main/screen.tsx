@@ -9,7 +9,7 @@ import { useStore } from 'stores/root-store/context'
 import { colors } from 'lib/theme'
 
 import { PixelatedButton } from 'components/pixelated/pixelated-components'
-import { QuitGameConfirm } from 'components/popup/game-popups/quit-game-confirm'
+import { QuitGameConfirm } from 'components/popup/game-popups/confirms/quit-game-confirm'
 
 import { version } from '../../../package.json'
 import { MainMenu } from './main-menu'

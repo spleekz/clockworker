@@ -8,7 +8,7 @@ import { PopupHistory } from 'stores/entities/popup-history'
 import { closePopup } from 'stores/lib/popups'
 import { useStore } from 'stores/root-store/context'
 
-import { Popup, PopupProps } from './popup-template'
+import { Popup, PopupProps } from '../popup-template'
 
 type CloseGamePopupConfig = { popup: PopupStore; history: PopupHistory }
 export const closeGamePopup = ({ popup, history }: CloseGamePopupConfig): void => {
