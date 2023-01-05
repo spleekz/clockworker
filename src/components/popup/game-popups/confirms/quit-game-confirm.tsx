@@ -16,7 +16,7 @@ type Props = {
 export const QuitGameConfirm: FC<Props> = observer(({ onAccept }) => {
   const { appStore } = useStore()
 
-  const { quitGameConfirm } = appStore
+  const { quitGameConfirm } = appStore.popups
 
   return (
     <GameConfirmPopup

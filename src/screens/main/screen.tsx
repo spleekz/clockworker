@@ -17,12 +17,12 @@ import { UpdateChecker } from './update-notification/update-checker'
 import { useMainScreenEsc } from './use-esc'
 
 export const MainScreen: FC = observer(() => {
-  const { appStore } = useStore()
+  const { quitGameConfirm } = useStore().appStore.popups
 
   useMainScreenEsc()
 
   const openQuitGameConfirm = (): void => {
-    appStore.quitGameConfirm.open()
+    quitGameConfirm.open()
   }
 
   return (

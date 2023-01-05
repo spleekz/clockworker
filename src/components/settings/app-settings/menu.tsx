@@ -9,9 +9,7 @@ import { SettingsMenuTemplate } from '../settings-menu-template'
 import { GeneralAppSettings } from './general'
 
 export const AppSettingsMenu: FC = observer(() => {
-  const { appStore } = useStore()
-
-  const { settingsMenu } = appStore
+  const { settingsMenu } = useStore().appStore.popups
 
   return (
     <SettingsMenuTemplate popup={settingsMenu}>

@@ -1,6 +1,6 @@
 import isElectron from 'is-electron'
 
-import { AppStore } from 'stores/app.store'
+import { AppStore } from 'stores/app-store/app.store'
 import { GameStore } from 'stores/game/store'
 import { KeyboardStore } from 'stores/keyboard.store'
 import { PopupHistory } from 'stores/popup-history'

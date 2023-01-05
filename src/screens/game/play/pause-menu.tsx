@@ -18,7 +18,7 @@ export const PauseMenu: FC = observer(() => {
   const gamePlayStore = useGamePlayStore()
 
   const { pauseMenu, settingsMenu } = gamePlayStore.popups
-  const { quitInMainMenuConfirm, quitGameConfirm } = appStore
+  const { quitInMainMenuConfirm, quitGameConfirm } = appStore.popups
 
   const resumeGame = (): void => {
     pauseMenu.close()

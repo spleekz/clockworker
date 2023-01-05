@@ -16,8 +16,7 @@ type Props = {
 
 export const QuitInMainMenuConfirm: FC<Props> = observer(({ question, onAccept }) => {
   const { appStore } = useStore()
-
-  const { quitInMainMenuConfirm } = appStore
+  const { quitInMainMenuConfirm } = appStore.popups
 
   return (
     <GameConfirmPopup

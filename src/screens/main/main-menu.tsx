@@ -13,13 +13,14 @@ import { AppSettingsMenu } from 'components/settings/app-settings/menu'
 
 export const MainMenu: FC = observer(() => {
   const { appStore } = useStore()
+  const { settingsMenu } = appStore.popups
 
   const createNewGame = (): void => {
     appStore.setScreen('game')
   }
 
   const openAppSettings = (): void => {
-    appStore.settingsMenu.open()
+    settingsMenu.open()
   }
 
   return (

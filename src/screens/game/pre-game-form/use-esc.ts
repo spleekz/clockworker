@@ -6,12 +6,12 @@ import { useEsc } from 'hooks/use-esc'
 type Config = { gamePlayStore: GamePlayStore | null }
 
 export const usePreGameFormScreenEsc = (config: Config): void => {
-  const { appStore } = useStore()
+  const { quitInMainMenuConfirm } = useStore().appStore.popups
   const { gamePlayStore } = config
 
   useEsc(
     {
-      fn: appStore.quitInMainMenuConfirm.toggle,
+      fn: quitInMainMenuConfirm.toggle,
       ignoreWhen: gamePlayStore?.opening.isOpened,
     },
     [gamePlayStore],
