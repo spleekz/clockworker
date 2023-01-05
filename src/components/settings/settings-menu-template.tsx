@@ -4,20 +4,30 @@ import styled from 'styled-components'
 
 import { FC } from 'basic-utility-types'
 
+import { useStore } from 'stores/root-store/context'
+
 import { colors } from 'lib/theme'
 
 import { PixelatedButton } from 'components/pixelated/pixelated-components'
-import { Popup, PopupProps } from 'components/popup/popup-template'
+import { GamePopup, GamePopupProps, closeGamePopup } from 'components/popup/game-popup-template'
 
 export type SettingsMenuTemplateProps = Omit<
-  PopupProps,
-  'width' | 'height' | 'styles' | 'title' | 'titleStyles' | 'withCloseButton' | 'fnForClosing'
->
+  GamePopupProps,
+  'width' | 'height' | 'styles' | 'title' | 'titleStyles' | 'withCloseButton'
+> &
+  Pick<GamePopupProps, 'onClose'>
 
 export const SettingsMenuTemplate: FC<SettingsMenuTemplateProps> = observer(
-  ({ isOpened, onClose, children }) => {
+  ({ popup, onClose, children }) => {
+    const history = useStore().appStore.popupHistory
+
+    const close = (): void => {
+      closeGamePopup({ popup, history })
+    }
+
     return (
-      <Popup
+      <GamePopup
+        popup={popup}
         width={'600px'}
         height={'550px'}
         styles={{
@@ -25,15 +35,15 @@ export const SettingsMenuTemplate: FC<SettingsMenuTemplateProps> = observer(
         }}
         title={'Настройки'}
         withCloseButton={false}
-        isOpened={isOpened}
+        onClose={onClose}
       >
         <Container>
           <List>{children}</List>
           <OKButtonContainer>
-            <OKButton onClick={onClose}>ОК</OKButton>
+            <OKButton onClick={close}>ОК</OKButton>
           </OKButtonContainer>
         </Container>
-      </Popup>
+      </GamePopup>
     )
   },
 )

@@ -11,11 +11,10 @@ import { GeneralAppSettings } from './general'
 export const AppSettingsMenu: FC = observer(() => {
   const { appStore } = useStore()
 
+  const { settingsMenu } = appStore
+
   return (
-    <SettingsMenuTemplate
-      isOpened={appStore.popupsController.isOpened('settingsMenu')}
-      onClose={() => appStore.popupsController.close('settingsMenu')}
-    >
+    <SettingsMenuTemplate popup={settingsMenu}>
       <GeneralAppSettings />
     </SettingsMenuTemplate>
   )

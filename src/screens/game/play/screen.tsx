@@ -7,7 +7,7 @@ import { QuitGameConfirm } from 'components/popup/game-popups/quit-game-confirm'
 import { QuitInMainMenuConfirm } from 'components/popup/game-popups/quit-in-main-menu-confirm'
 
 import { GameOpening } from '../opening'
-import { useGamePlayStore, useGameStore } from '../screen'
+import { useGameStore } from '../screen'
 import { PauseMenu } from './pause-menu'
 import { PlayCanvas } from './play-canvas/canvas'
 import { GameSettingsMenu } from './settings/menu'
@@ -15,7 +15,6 @@ import { useGamePlayScreenEsc } from './use-esc'
 
 export const GamePlayScreen: FC = observer(() => {
   const gameStore = useGameStore()
-  const gamePlayStore = useGamePlayStore()
 
   useGamePlayScreenEsc()
 
@@ -25,7 +24,7 @@ export const GamePlayScreen: FC = observer(() => {
       <QuitInMainMenuConfirm onAccept={gameStore.endGame} />
 
       <GameOpening />
-      <PauseMenu isOpened={gamePlayStore.popups.controller.isOpened('pauseMenu')} />
+      <PauseMenu />
       <GameSettingsMenu />
       <PlayCanvas />
     </>

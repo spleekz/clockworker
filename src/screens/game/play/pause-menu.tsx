@@ -9,31 +9,30 @@ import { useStore } from 'stores/root-store/context'
 import { colors } from 'lib/theme'
 
 import { PixelatedButton } from 'components/pixelated/pixelated-components'
-import { Popup } from 'components/popup/popup-template'
+import { GamePopup } from 'components/popup/game-popup-template'
 
 import { useGamePlayStore } from '../screen'
 
-type Props = {
-  isOpened: boolean
-}
-
-export const PauseMenu: FC<Props> = observer(({ isOpened }) => {
+export const PauseMenu: FC = observer(() => {
   const { appStore } = useStore()
   const gamePlayStore = useGamePlayStore()
 
+  const { controller, pauseMenu } = gamePlayStore.popups
+
   const openSettings = (): void => {
     gamePlayStore.popups.controller.open('settingsMenu', {
-      forwardedFrom: gamePlayStore.popups.pauseMenu,
+      forwardedFrom: pauseMenu,
       onForwarderClose: null,
     })
   }
 
   const resumeGame = (): void => {
-    gamePlayStore.popups.controller.close('pauseMenu')
+    controller.close('pauseMenu')
   }
 
   return (
-    <Popup
+    <GamePopup
+      popup={pauseMenu}
       width={'600px'}
       height={'550px'}
       styles={{
@@ -41,7 +40,6 @@ export const PauseMenu: FC<Props> = observer(({ isOpened }) => {
       }}
       withCloseButton={false}
       title={'Пауза'}
-      isOpened={isOpened}
     >
       <MenuList>
         <Sections>
@@ -59,7 +57,7 @@ export const PauseMenu: FC<Props> = observer(({ isOpened }) => {
           </Section>
         </Sections>
       </MenuList>
-    </Popup>
+    </GamePopup>
   )
 })
 

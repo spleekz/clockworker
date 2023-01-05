@@ -12,10 +12,7 @@ export const GameSettingsMenu: FC = observer(() => {
   const gamePlayStore = useGamePlayStore()
 
   return (
-    <SettingsMenuTemplate
-      isOpened={gamePlayStore.popups.controller.isOpened('settingsMenu')}
-      onClose={() => gamePlayStore.popups.controller.close('settingsMenu')}
-    >
+    <SettingsMenuTemplate popup={gamePlayStore.popups.settingsMenu}>
       <ControlsSettingsSection />
     </SettingsMenuTemplate>
   )

@@ -2,7 +2,7 @@ import { observer } from 'mobx-react-lite'
 import React, { CSSProperties, useEffect } from 'react'
 import styled from 'styled-components'
 
-import { Callback, FC, RequiredBy, XOR } from 'basic-utility-types'
+import { Callback, FC, RequiredBy } from 'basic-utility-types'
 import { doubleBorderStyle } from 'shared-styles'
 
 import { colors } from 'lib/theme'
@@ -10,28 +10,17 @@ import { colors } from 'lib/theme'
 import { ButtonWithCross } from 'components/buttons/button-with-cross'
 import { PortalToBody } from 'components/utility/portal-to-body'
 
-type PopupBaseProps = {
+export type PopupProps = {
   width: string
   height: string
   styles: RequiredBy<CSSProperties, 'backgroundColor'>
   title?: string
   titleStyles?: CSSProperties
   isOpened: boolean
+  withCloseButton?: boolean
+  fnForClosing?: Callback
   onClose?: Callback
 }
-
-type WithCloseButton = {
-  withCloseButton: true
-  fnForClosing: Callback
-}
-type WithoutCloseButton = {
-  withCloseButton?: false
-}
-
-type PopupWithCloseButtonProps = PopupBaseProps & WithCloseButton
-type PopupWithoutCloseButtonProps = PopupBaseProps & WithoutCloseButton
-
-export type PopupProps = XOR<PopupWithCloseButtonProps, PopupWithoutCloseButtonProps>
 
 export const Popup: FC<PopupProps> = observer(
   ({

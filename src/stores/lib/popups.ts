@@ -47,12 +47,12 @@ export const closePopup = ({ popup, config, history }: ClosePopupConfig): void =
 
   popup.close(fn, callbackConfig)
 
-  const lastNoteAboutPopup = history.notes.findLast((note) => {
+  const lastNoteAboutPopupOpen = history.notes.findLast((note) => {
     return note.event === 'open' && note.popup.name === popup.name
   })
 
-  if (lastNoteAboutPopup.event === 'open' && lastNoteAboutPopup.forwardedFrom !== null) {
-    openPopup({ popup: lastNoteAboutPopup.forwardedFrom, history })
+  if (lastNoteAboutPopupOpen.event === 'open' && lastNoteAboutPopupOpen.forwardedFrom !== null) {
+    openPopup({ popup: lastNoteAboutPopupOpen.forwardedFrom, history })
   }
 
   history.createCloseNote({ popup })

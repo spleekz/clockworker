@@ -4,29 +4,32 @@ import styled from 'styled-components'
 
 import { Callback, FC, RequiredBy } from 'basic-utility-types'
 
+import { useStore } from 'stores/root-store/context'
+
 import { PixelatedButton } from 'components/pixelated/pixelated-components'
 
-import { Popup, PopupProps } from './popup-template'
+import { GamePopup, GamePopupProps, closeGamePopup } from './game-popup-template'
 
-type ConfirmPopupProps = {
+type ExtraProps = {
   question: string
   questionStyles?: CSSProperties
   acceptText: string
-  onAccept: Callback
+  onAccept: Callback | null
   rejectText: string
-  onReject: Callback
+  onReject: Callback | null
   buttonsStyles: RequiredBy<CSSProperties, 'backgroundColor'>
 }
 
-type Props = Omit<PopupProps, 'withCloseButton'> & ConfirmPopupProps
+export type GameConfirmPopupProps = Omit<GamePopupProps, 'withCloseButton'> & ExtraProps
 
-export const ConfirmPopup: FC<Props> = observer(
+export const GameConfirmPopup: FC<GameConfirmPopupProps> = observer(
   ({
+    popup,
     width,
     height,
     styles,
     title,
-    isOpened,
+    titleStyles,
     question,
     questionStyles,
     acceptText,
@@ -35,29 +38,46 @@ export const ConfirmPopup: FC<Props> = observer(
     onReject,
     buttonsStyles,
   }) => {
+    const history = useStore().appStore.popupHistory
+
     const { backgroundColor, ...buttonsStylesWithoutBackgroundColor } = buttonsStyles
 
+    const close = (): void => {
+      closeGamePopup({ popup, history })
+    }
+
+    const accept = (): void => {
+      close()
+      onAccept?.()
+    }
+
+    const reject = (): void => {
+      close()
+      onReject?.()
+    }
+
     return (
-      <Popup
+      <GamePopup
+        popup={popup}
         width={width}
         height={height}
         styles={styles}
         title={title}
+        titleStyles={titleStyles}
         withCloseButton={false}
-        isOpened={isOpened}
       >
         <Container>
           <Question style={questionStyles}>{question}</Question>
           <Buttons>
             <Button
-              onClick={onAccept}
+              onClick={accept}
               style={buttonsStylesWithoutBackgroundColor}
               backgroundColor={backgroundColor}
             >
               {acceptText}
             </Button>
             <Button
-              onClick={onReject}
+              onClick={reject}
               style={buttonsStylesWithoutBackgroundColor}
               backgroundColor={backgroundColor}
             >
@@ -65,7 +85,7 @@ export const ConfirmPopup: FC<Props> = observer(
             </Button>
           </Buttons>
         </Container>
-      </Popup>
+      </GamePopup>
     )
   },
 )

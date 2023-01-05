@@ -7,7 +7,7 @@ import { useStore } from 'stores/root-store/context'
 
 import { colors } from 'lib/theme'
 
-import { ConfirmPopup } from 'components/popup/confirm-popup'
+import { GameConfirmPopup } from '../game-confirm-popup'
 
 type Props = {
   question?: string
@@ -17,14 +17,16 @@ type Props = {
 export const QuitInMainMenuConfirm: FC<Props> = observer(({ question, onAccept }) => {
   const { appStore } = useStore()
 
+  const { quitInMainMenuConfirm } = appStore
+
   return (
-    <ConfirmPopup
+    <GameConfirmPopup
+      popup={quitInMainMenuConfirm}
       width={'550px'}
       height={'300px'}
       styles={{
         backgroundColor: colors.mainLight,
       }}
-      isOpened={appStore.popupsController.isOpened('quitInMainMenuConfirm')}
       question={question ?? 'Выйти в главное меню?'}
       questionStyles={{
         fontSize: '30px',
@@ -33,10 +35,9 @@ export const QuitInMainMenuConfirm: FC<Props> = observer(({ question, onAccept }
       onAccept={() => {
         onAccept?.()
         appStore.setScreen('main')
-        appStore.popupsController.close('quitInMainMenuConfirm')
       }}
       rejectText={'Нет'}
-      onReject={() => appStore.popupsController.close('quitInMainMenuConfirm')}
+      onReject={null}
       buttonsStyles={{
         width: '140px',
         padding: '10px',
