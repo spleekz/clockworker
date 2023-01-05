@@ -11,7 +11,7 @@ export const usePreGameFormScreenEsc = (config: Config): void => {
 
   useEsc(
     {
-      fn: () => appStore.popupsController.toggle('quitInMainMenuConfirm'),
+      fn: appStore.quitInMainMenuConfirm.toggle,
       ignoreWhen: gamePlayStore?.opening.isOpened,
     },
     [gamePlayStore],

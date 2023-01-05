@@ -17,17 +17,23 @@ export const PauseMenu: FC = observer(() => {
   const { appStore } = useStore()
   const gamePlayStore = useGamePlayStore()
 
-  const { controller, pauseMenu } = gamePlayStore.popups
-
-  const openSettings = (): void => {
-    gamePlayStore.popups.controller.open('settingsMenu', {
-      forwardedFrom: pauseMenu,
-      onForwarderClose: null,
-    })
-  }
+  const { pauseMenu, settingsMenu } = gamePlayStore.popups
+  const { quitInMainMenuConfirm, quitGameConfirm } = appStore
 
   const resumeGame = (): void => {
-    controller.close('pauseMenu')
+    pauseMenu.close()
+  }
+
+  const openSettings = (): void => {
+    settingsMenu.open({ config: { forwardedFrom: { popup: pauseMenu, onClose: { fn: null } } } })
+  }
+
+  const openQuitInMainMenuConfirm = (): void => {
+    quitInMainMenuConfirm.open()
+  }
+
+  const openQuitGameConfirm = (): void => {
+    quitGameConfirm.open()
   }
 
   return (
@@ -48,12 +54,8 @@ export const PauseMenu: FC = observer(() => {
             <MenuItem onClick={openSettings}>Настройки</MenuItem>
           </Section>
           <Section>
-            <MenuItem onClick={() => appStore.popupsController.open('quitInMainMenuConfirm')}>
-              Выйти в главное меню
-            </MenuItem>
-            <MenuItem onClick={() => appStore.popupsController.open('quitGameConfirm')}>
-              Выйти из игры
-            </MenuItem>
+            <MenuItem onClick={openQuitInMainMenuConfirm}>Выйти в главное меню</MenuItem>
+            <MenuItem onClick={openQuitGameConfirm}>Выйти из игры</MenuItem>
           </Section>
         </Sections>
       </MenuList>

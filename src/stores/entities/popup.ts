@@ -2,36 +2,56 @@ import { makeAutoObservable } from 'mobx'
 
 import { Callback } from 'basic-utility-types'
 
-export type PopupToggleConfig = {
-  onOpen?: {
-    fn: Callback | null
-  } & PopupCallbackConfig
-  onClose?: {
-    fn: Callback | null
-  } & PopupCallbackConfig
+import { OpenHistoryNote, PopupHistory } from './popup-history'
+
+export type PopupCallbackOptions = {
+  overwrite?: boolean
 }
 
-export type PopupCallbackConfig = {
-  overwrite?: boolean
+type PopupCallbackInfo = {
+  fn: Callback | null
+  options?: PopupCallbackOptions
+}
+
+type PopupOnOpenConfig = {
+  // попап, который закрылся и сразу открыл этот попап
+  // к нему нужно будет вернуться после закрытия этого попапа
+  forwardedFrom: {
+    popup: Popup
+    onClose: PopupCallbackInfo
+  }
+}
+
+type PopupOpenParams = {
+  onOpen?: PopupCallbackInfo
+  config?: PopupOnOpenConfig
+}
+
+export type PopupToggleConfig = {
+  onOpen?: PopupCallbackInfo
+  onClose?: PopupCallbackInfo
 }
 
 type Config = {
   name: string
   onOpen?: Callback
   onClose?: Callback
+  history: PopupHistory
 }
 
 export class Popup {
   name: string
   onOpen: Callback | null
   onClose: Callback | null
+  private history: PopupHistory
 
   constructor(config: Config) {
-    const { name, onOpen, onClose } = config ?? {}
+    const { name, onOpen, onClose, history } = config ?? {}
 
     this.name = name
     this.setOnOpen(onOpen ?? null)
     this.setOnClose(onClose ?? null)
+    this.history = history
 
     makeAutoObservable(this)
   }
@@ -45,12 +65,10 @@ export class Popup {
 
   isOpened = false
 
-  // если onOpen / onClose === null - значит пустая функция,
-  // а если undefined - значит будет использоваться функция по умолчанию
-  open = (onOpen?: Callback | null, config?: PopupCallbackConfig): void => {
+  private openDirectly = (onOpen?: Callback | null, options?: PopupCallbackOptions): void => {
     this.isOpened = true
 
-    const { overwrite = true } = config ?? {}
+    const { overwrite = true } = options ?? {}
 
     if (onOpen !== undefined) {
       if (overwrite) {
@@ -67,10 +85,28 @@ export class Popup {
     }
   }
 
-  close = (onClose?: Callback | null, config?: PopupCallbackConfig): void => {
+  // если onOpen / onClose === null - значит пустая функция,
+  // а если undefined - значит будет использоваться функция по умолчанию
+  open = (params?: PopupOpenParams): void => {
+    const { onOpen, config } = params ?? {}
+
+    const { forwardedFrom } = config ?? {}
+
+    if (forwardedFrom) {
+      const { fn, options } = forwardedFrom.onClose
+      forwardedFrom.popup.close(fn, options)
+    }
+
+    const { fn, options } = onOpen ?? {}
+    this.openDirectly(fn, options)
+
+    this.history.createOpenNote({ popup: this, forwardedFrom: forwardedFrom?.popup ?? null })
+  }
+
+  private closeDirectly = (onClose?: Callback | null, options?: PopupCallbackOptions): void => {
     this.isOpened = false
 
-    const { overwrite = true } = config ?? {}
+    const { overwrite = true } = options ?? {}
 
     if (onClose !== undefined) {
       if (overwrite) {
@@ -87,15 +123,29 @@ export class Popup {
     }
   }
 
+  close = (onClose?: Callback | null, options?: PopupCallbackOptions): void => {
+    this.closeDirectly(onClose, options)
+
+    const lastNoteAboutPopupOpen: OpenHistoryNote = this.history.notes.findLast((note) => {
+      return note.event === 'open' && note.popup.name === this.name
+    }) as OpenHistoryNote
+
+    const { event, forwardedFrom = null } = lastNoteAboutPopupOpen
+
+    if (event === 'open' && forwardedFrom !== null) {
+      forwardedFrom.open()
+    }
+
+    this.history.createCloseNote({ popup: this })
+  }
+
   toggle = (config?: PopupToggleConfig): void => {
     const { onOpen, onClose } = config ?? {}
 
     if (!this.isOpened) {
-      const { fn, ...onOpenConfig } = onOpen ?? {}
-      this.open(fn, onOpenConfig)
+      this.open({ onOpen })
     } else {
-      const { fn, ...onCloseConfig } = onClose ?? {}
-      this.close(fn, onCloseConfig)
+      this.close(onClose?.fn, onClose?.options)
     }
   }
 }

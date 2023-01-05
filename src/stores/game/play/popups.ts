@@ -2,7 +2,6 @@ import { makeAutoObservable } from 'mobx'
 
 import { Popup } from 'stores/entities/popup'
 import { PopupHistory } from 'stores/entities/popup-history'
-import { PopupsController } from 'stores/entities/popups-controller'
 
 import { GamePauseController } from './pause-controller'
 
@@ -12,31 +11,25 @@ type Config = {
 }
 
 export class GamePopups {
-  history: PopupHistory = {} as PopupHistory
+  history: PopupHistory
   private pauseController: GamePauseController
 
-  controller: PopupsController<'pauseMenu' | 'settingsMenu'>
+  pauseMenu: Popup
+  settingsMenu: Popup
 
   constructor(config: Config) {
     const { popupHistory, pauseController } = config
     this.history = popupHistory
     this.pauseController = pauseController
 
-    this.controller = new PopupsController(
-      {
-        pauseMenu: this.pauseMenu,
-        settingsMenu: this.settingsMenu,
-      },
-      this.history,
-    )
+    this.pauseMenu = new Popup({
+      name: 'game_pauseMenu',
+      onOpen: () => this.pauseController.pauseGame(),
+      onClose: () => this.pauseController.resumeGame(),
+      history: this.history,
+    })
+    this.settingsMenu = new Popup({ name: 'game_settingsMenu', history: this.history })
 
     makeAutoObservable(this)
   }
-
-  pauseMenu = new Popup({
-    name: 'game_pauseMenu',
-    onOpen: () => this.pauseController.pauseGame(),
-    onClose: () => this.pauseController.resumeGame(),
-  })
-  settingsMenu = new Popup({ name: 'game_settingsMenu' })
 }

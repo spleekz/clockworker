@@ -5,7 +5,5 @@ import { useEsc } from 'hooks/use-esc'
 export const useMainScreenEsc = (): void => {
   const { appStore } = useStore()
 
-  useEsc({
-    fn: () => appStore.popupsController.toggle('quitGameConfirm'),
-  })
+  useEsc({ fn: appStore.quitGameConfirm.toggle })
 }

@@ -4,8 +4,6 @@ import styled from 'styled-components'
 
 import { FC } from 'basic-utility-types'
 
-import { useStore } from 'stores/root-store/context'
-
 import { colors } from 'lib/theme'
 
 import { PixelatedButton } from 'components/pixelated/pixelated-components'
@@ -23,10 +21,8 @@ export type SettingsMenuTemplateProps = Omit<
 
 export const SettingsMenuTemplate: FC<SettingsMenuTemplateProps> = observer(
   ({ popup, onClose, children }) => {
-    const history = useStore().appStore.popupHistory
-
     const close = (): void => {
-      closeGamePopup({ popup, history })
+      closeGamePopup(popup)
     }
 
     return (

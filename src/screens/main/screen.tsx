@@ -21,6 +21,10 @@ export const MainScreen: FC = observer(() => {
 
   useMainScreenEsc()
 
+  const openQuitGameConfirm = (): void => {
+    appStore.quitGameConfirm.open()
+  }
+
   return (
     <>
       <UpdateChecker />
@@ -31,9 +35,7 @@ export const MainScreen: FC = observer(() => {
         <Body>
           <MainMenu />
         </Body>
-        <QuitGameButton onClick={() => appStore.popupsController.open('quitGameConfirm')}>
-          Выйти из игры
-        </QuitGameButton>
+        <QuitGameButton onClick={openQuitGameConfirm}>Выйти из игры</QuitGameButton>
         <GameVersion>v{version}</GameVersion>
       </Container>
     </>

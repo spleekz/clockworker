@@ -4,8 +4,6 @@ import styled from 'styled-components'
 
 import { Callback, FC, RequiredBy } from 'basic-utility-types'
 
-import { useStore } from 'stores/root-store/context'
-
 import { PixelatedButton } from 'components/pixelated/pixelated-components'
 
 import { GamePopup, GamePopupProps, closeGamePopup } from './game-popup-template'
@@ -38,12 +36,10 @@ export const GameConfirmPopup: FC<GameConfirmPopupProps> = observer(
     onReject,
     buttonsStyles,
   }) => {
-    const history = useStore().appStore.popupHistory
-
     const { backgroundColor, ...buttonsStylesWithoutBackgroundColor } = buttonsStyles
 
     const close = (): void => {
-      closeGamePopup({ popup, history })
+      closeGamePopup(popup)
     }
 
     const accept = (): void => {

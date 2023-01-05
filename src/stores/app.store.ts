@@ -2,7 +2,6 @@ import { makeAutoObservable } from 'mobx'
 
 import { Popup } from './entities/popup'
 import { PopupHistory } from './entities/popup-history'
-import { PopupsController } from './entities/popups-controller'
 import { closeAllUnclosedPopups } from './lib/popups'
 
 type AppScreen = 'main' | 'game'
@@ -23,20 +22,11 @@ export class AppStore {
     window.close()
   }
 
-  quitGameConfirm = new Popup({ name: 'app_quitGameConfirm' })
-
-  quitInMainMenuConfirm = new Popup({ name: 'app_quitInMainMenuConfirm' })
-
-  settingsMenu = new Popup({ name: 'app_settingsMenu' })
-
   popupHistory = new PopupHistory()
 
-  popupsController = new PopupsController(
-    {
-      quitGameConfirm: this.quitGameConfirm,
-      quitInMainMenuConfirm: this.quitInMainMenuConfirm,
-      settingsMenu: this.settingsMenu,
-    },
-    this.popupHistory,
-  )
+  quitGameConfirm = new Popup({ name: 'app_quitGameConfirm', history: this.popupHistory })
+
+  quitInMainMenuConfirm = new Popup({ name: 'app_quitInMainMenuConfirm', history: this.popupHistory })
+
+  settingsMenu = new Popup({ name: 'app_settingsMenu', history: this.popupHistory })
 }
