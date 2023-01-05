@@ -65,26 +65,35 @@ export class Popup {
     this.onClose = onClose
   }
 
+  private handleCallback = (
+    callbackType: 'open' | 'close',
+    callback?: PopupCallback,
+    options?: PopupCallbackOptions,
+  ): void => {
+    const { overwrite = true } = options ?? {}
+
+    const internalCallback = callbackType === 'open' ? this.onOpen : this.onClose
+
+    if (callback !== undefined) {
+      if (overwrite) {
+        callback?.()
+      } else {
+        const mergedCallback = (): void => {
+          internalCallback?.()
+          callback?.()
+        }
+        mergedCallback()
+      }
+    } else {
+      internalCallback?.()
+    }
+  }
+
   isOpened = false
 
   private openDirectly = (onOpen?: PopupCallback, options?: PopupCallbackOptions): void => {
     this.isOpened = true
-
-    const { overwrite = true } = options ?? {}
-
-    if (onOpen !== undefined) {
-      if (overwrite) {
-        onOpen?.()
-      } else {
-        const newOnOpen = (): void => {
-          this.onOpen?.()
-          onOpen?.()
-        }
-        newOnOpen()
-      }
-    } else {
-      this.onOpen?.()
-    }
+    this.handleCallback('open', onOpen, options)
   }
 
   // если onOpen / onClose === null - значит пустая функция,
@@ -107,22 +116,7 @@ export class Popup {
 
   private closeDirectly = (onClose?: PopupCallback, options?: PopupCallbackOptions): void => {
     this.isOpened = false
-
-    const { overwrite = true } = options ?? {}
-
-    if (onClose !== undefined) {
-      if (overwrite) {
-        onClose?.()
-      } else {
-        const newOnClose = (): void => {
-          this.onClose?.()
-          onClose?.()
-        }
-        newOnClose()
-      }
-    } else {
-      this.onClose?.()
-    }
+    this.handleCallback('close', onClose, options)
   }
 
   close = (onClose?: PopupCallback, options?: PopupCallbackOptions): void => {
