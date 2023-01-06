@@ -20,7 +20,7 @@ export class ImageContainer<Srcs extends ImageSrcs> {
     const { loadImmediately = false } = options ?? {}
 
     this.srcs = imageSrcs
-    this.configureImageList()
+    this.createImageList()
 
     if (loadImmediately) {
       this.loadAll()
@@ -29,7 +29,7 @@ export class ImageContainer<Srcs extends ImageSrcs> {
     makeAutoObservable(this)
   }
 
-  private configureImageList = (): void => {
+  private createImageList = (): void => {
     this.list = (Object.keys(this.srcs) as Array<keyof Srcs>).reduce((acc, imageName) => {
       acc[imageName] = { isLoaded: false, imageElement: new Image() }
       return acc
