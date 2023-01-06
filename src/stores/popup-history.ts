@@ -1,6 +1,6 @@
 import { makeAutoObservable } from 'mobx'
 
-import { countOf } from 'lib/arrays'
+import { countOf, last } from 'lib/arrays'
 
 import { Popup } from './entities/popup'
 
@@ -27,6 +27,17 @@ export class PopupHistory {
 
   notes: Array<HistoryNote> = []
 
+  clearNotes = (): void => {
+    this.notes = []
+  }
+
+  private notesForClear = 100
+  checkForClear = (): void => {
+    if (!this.unclosedPopups.length && this.notes.length >= this.notesForClear) {
+      this.clearNotes()
+    }
+  }
+
   createOpenNote = ({ popup, forwardedFrom }: CreateOpenNoteConfig): void => {
     this.notes.push({
       popup,
@@ -40,25 +51,10 @@ export class PopupHistory {
       popup,
       event: 'close',
     })
+    this.checkForClear()
   }
 
-  getLastUnclosedPopup = (): Popup | null => {
-    return (
-      this.notes.findLast((note) => {
-        const openedCount = countOf(
-          this.notes,
-          ({ event, popup }) => popup.name === note.popup.name && event === 'open',
-        )
-        const closedCount = countOf(
-          this.notes,
-          ({ event, popup }) => popup.name === note.popup.name && event === 'close',
-        )
-        return openedCount > closedCount
-      }).popup ?? null
-    )
-  }
-
-  getUnclosedPopups = (): Array<Popup> => {
+  get unclosedPopups(): Array<Popup> {
     return this.notes.reduce((acc, note) => {
       const openedCount = countOf(
         this.notes,
@@ -73,6 +69,10 @@ export class PopupHistory {
       }
       return acc
     }, [] as Array<Popup>)
+  }
+
+  get lastUnclosedPopup(): Popup | null {
+    return last(this.unclosedPopups) ?? null
   }
 
   get isOpenedPopups(): boolean {
