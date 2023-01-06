@@ -47,23 +47,23 @@ export const PauseMenu: FC = observer(() => {
       withCloseButton={false}
       title={'Пауза'}
     >
-      <MenuList>
+      <List>
         <Sections>
           <Section>
-            <MenuItem onClick={resumeGame}>Продолжить игру</MenuItem>
-            <MenuItem onClick={openSettings}>Настройки</MenuItem>
+            <Item onClick={resumeGame}>Продолжить игру</Item>
+            <Item onClick={openSettings}>Настройки</Item>
           </Section>
           <Section>
-            <MenuItem onClick={openQuitInMainMenuConfirm}>Выйти в главное меню</MenuItem>
-            <MenuItem onClick={openQuitGameConfirm}>Выйти из игры</MenuItem>
+            <Item onClick={openQuitInMainMenuConfirm}>Выйти в главное меню</Item>
+            <Item onClick={openQuitGameConfirm}>Выйти из игры</Item>
           </Section>
         </Sections>
-      </MenuList>
+      </List>
     </GamePopup>
   )
 })
 
-const MenuList = styled.menu`
+const List = styled.menu`
   flex: 1 0 auto;
   display: flex;
   flex-direction: column;
@@ -82,7 +82,7 @@ const Section = styled.div`
   flex-direction: column;
   justify-content: center;
 `
-const MenuItem = styled(PixelatedButton).attrs({
+const Item = styled(PixelatedButton).attrs({
   pixelsSize: 'medium',
   backgroundColor: colors.mainMedium,
 })`
