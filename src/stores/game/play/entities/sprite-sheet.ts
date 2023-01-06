@@ -1,6 +1,6 @@
 import { Sprite } from './sprite'
 
-type GetSpriteConfig = {
+type GetSpriteOptions = {
   scale?: number
 }
 
@@ -39,10 +39,10 @@ export class SpriteSheet {
     this.defaultScale = defaultScale
   }
 
-  getSprite = (row: number, column: number, config?: GetSpriteConfig): Sprite => {
+  getSprite = (row: number, column: number, options?: GetSpriteOptions): Sprite => {
     const spriteSourceX = this.firstSkipX + (this.spriteWidth + this.skipX) * column
     const spriteSourceY = this.firstSkipY + (this.spriteHeight + this.skipY) * row
-    const spriteScale = config?.scale ?? this.defaultScale ?? 1
+    const spriteScale = options?.scale ?? this.defaultScale ?? 1
 
     return new Sprite({
       image: this.image,
