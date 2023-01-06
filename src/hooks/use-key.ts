@@ -2,14 +2,14 @@ import { useEffect } from 'react'
 
 import { Callback } from 'basic-utility-types'
 
+import { predicate } from 'lib/boolean'
+
 const isWindow = (element: unknown): element is Window => {
   return element === window
 }
 
-type IgnoreWhenValue = boolean | null | undefined
-
 export type UseKeyVariant = {
-  when: boolean
+  when: unknown
   fn: Callback
 }
 
@@ -18,7 +18,7 @@ export type UseKeyConfig = {
   key: string
   defaultFn: Callback
   variants?: Array<UseKeyVariant>
-  ignoreWhen?: IgnoreWhenValue | Array<IgnoreWhenValue>
+  ignoreWhen?: unknown | Array<unknown>
 }
 
 export const useKey = (
@@ -26,13 +26,13 @@ export const useKey = (
   deps?: Array<any>,
 ): void => {
   const fn: Callback = () => {
-    const isIgnore = Array.isArray(ignoreWhen) ? ignoreWhen.some(Boolean) : Boolean(ignoreWhen)
+    const isIgnore = Array.isArray(ignoreWhen) ? ignoreWhen.some(predicate) : predicate(ignoreWhen)
 
     if (!isIgnore) {
       var isVariantTriggered = false
 
       variants?.forEach((variant) => {
-        if (variant.when) {
+        if (predicate(variant.when)) {
           variant.fn()
           isVariantTriggered = true
         }
