@@ -16,7 +16,7 @@ import { useGamePlayStore } from 'screens/game/screen'
 type AutoprintStatus = 'none' | 'inProgress' | 'end'
 
 type Props = {
-  text: string
+  text: string | undefined | null
   isOpened: boolean
 }
 export const Textbox: FC<Props> = observer(({ isOpened, text }) => {
@@ -78,7 +78,7 @@ export const Textbox: FC<Props> = observer(({ isOpened, text }) => {
           <Box>
             {autoprintStatus !== 'none' ? (
               <AutoPrintedText
-                text={text}
+                text={text ?? ''}
                 onPrintEnd={onAutoprintEnd}
                 isPrintSkipped={isAutoprintSkipped}
               />
