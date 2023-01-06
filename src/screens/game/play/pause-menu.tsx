@@ -13,7 +13,7 @@ import { GamePopup } from 'components/popup/game-popups/game-popup-template'
 
 import { useGamePlayStore } from '../screen'
 
-export const PauseMenu: FC = observer(() => {
+export const GamePauseMenu: FC = observer(() => {
   const { appStore } = useStore()
   const gamePlayStore = useGamePlayStore()
 

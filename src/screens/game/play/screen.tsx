@@ -8,7 +8,7 @@ import { QuitInMainMenuConfirm } from 'components/popup/game-popups/confirms/qui
 
 import { GameOpening } from '../opening'
 import { useGameStore } from '../screen'
-import { PauseMenu } from './pause-menu'
+import { GamePauseMenu } from './pause-menu'
 import { PlayCanvas } from './play-canvas/canvas'
 import { GameSettingsMenu } from './settings/menu'
 import { useGamePlayScreenEsc } from './use-esc'
@@ -24,7 +24,7 @@ export const GamePlayScreen: FC = observer(() => {
       <QuitInMainMenuConfirm onAccept={gameStore.endGame} />
 
       <GameOpening />
-      <PauseMenu />
+      <GamePauseMenu />
       <GameSettingsMenu />
       <PlayCanvas />
     </>
