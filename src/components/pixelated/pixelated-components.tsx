@@ -12,7 +12,7 @@ type PixelatedElementProps = {
   backgroundColor: string
 }
 
-const pixelsScales: { [P in PixelsSize]: number } = {
+const pixelsScales: { [_ in PixelsSize]: number } = {
   small: 0.8,
   medium: 1,
   large: 2.5,

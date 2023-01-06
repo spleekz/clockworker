@@ -15,7 +15,7 @@ export type FieldErrors = {
 }
 
 type GetFormErrorsReturn = {
-  [P in keyof PreGameFormFields]: FieldErrors
+  [_ in keyof PreGameFormFields]: FieldErrors
 }
 
 export const getFormErrors = (

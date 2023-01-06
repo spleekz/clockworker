@@ -33,7 +33,7 @@ export type Properties<T> = T[keyof T]
 
 export type OverwriteProperties<T, P> = Record<keyof T, P>
 
-export type NeverProperties<T> = { [P in keyof T]?: never }
+export type NeverProperties<T> = { [_ in keyof T]?: never }
 
 export type Without<A, B> = Omit<A, keyof B>
 
@@ -43,4 +43,4 @@ export type XOR<A, B> = A | B extends AnyObject
 
 export type Entries<T> = Array<[keyof T, Properties<T>]>
 
-export type Rename<T, OK extends keyof T, NK extends string> = Omit<T, OK> & { [P in NK]: T[OK] }
+export type Rename<T, OK extends keyof T, NK extends string> = Omit<T, OK> & { [_ in NK]: T[OK] }
