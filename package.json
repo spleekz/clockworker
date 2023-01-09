@@ -6,9 +6,9 @@
   "scripts": {
     "postinstall": "patch-package",
     "start:web": "vite",
-    "start:desktop": "electron ./dist/electron/electron.js",
+    "start:desktop": "electron ./dist/electron.js",
     "build": "tsc && vite build --base=./ && tsc -p ./electron/tsconfig.json",
-    "package": "npm run build && electron-builder build --win -c.extraMetadata.main=dist/electron/electron.js",
+    "package": "npm run build && electron-builder build --win -c.extraMetadata.main=dist/electron.js",
     "release": "npm run package -- -p always"
   },
   "build": {

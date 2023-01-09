@@ -13,13 +13,13 @@ const createWindow = (): void => {
       contextIsolation: false,
       preload: path.join(__dirname, 'preload.js'),
     },
-    icon: path.join(__dirname, '../assets/clockworker-icon.ico'),
+    icon: path.join(__dirname, 'assets/clockworker-icon.ico'),
   })
 
   mainWindow.setFullScreen(true)
   mainWindow.removeMenu()
 
-  mainWindow.loadFile(path.join(__dirname, '../index.html'))
+  mainWindow.loadFile(path.join(__dirname, 'index.html'))
 
   mainWindow.on('closed', () => {
     mainWindow = null
