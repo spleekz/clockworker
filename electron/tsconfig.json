@@ -5,9 +5,9 @@
     "baseUrl": ".",
     "paths": {
       "*": ["node_modules/*"],
-      "desktop-web-shared-types/*": ["../desktop-web-shared-types/*"]
+      "main-renderer-shared/*": ["../main-renderer-shared/*"]
     },
     "typeRoots": ["../@types"]
   },
-  "include": ["**/*", "../desktop-web-shared-types"]
+  "include": ["**/*", "../main-renderer-shared"]
 }

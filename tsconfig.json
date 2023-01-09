@@ -17,10 +17,10 @@
     "jsx": "react-jsx",
     "baseUrl": "src",
     "paths": {
-      "desktop-web-shared-types/*": ["../desktop-web-shared-types/*"]
+      "main-renderer-shared/*": ["../main-renderer-shared/*"]
     },
     "typeRoots": ["node_modules/@types", "@types"]
   },
-  "include": ["src", "desktop-web-shared-types"],
+  "include": ["src", "main-renderer-shared"],
   "references": [{ "path": "./tsconfig.node.json" }]
 }
