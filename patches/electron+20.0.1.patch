@@ -1,31 +1,73 @@
 diff --git a/node_modules/electron/electron.d.ts b/node_modules/electron/electron.d.ts
-index 8e2a580..74a1725 100644
+index 8e2a580..bdfb928 100644
 --- a/node_modules/electron/electron.d.ts
 +++ b/node_modules/electron/electron.d.ts
-@@ -5073,7 +5073,7 @@ declare namespace Electron {
+@@ -5,6 +5,8 @@
+ 
+ /// <reference types="node" />
+ 
++import { IPCEventName } from 'main-renderer-shared/types';
++
+ type GlobalEvent = Event & { returnValue: any };
+ 
+ declare namespace Electron {
+@@ -5063,7 +5065,7 @@ declare namespace Electron {
+      * are serialized and only the `message` property from the original error is
+      * provided to the renderer process. Please refer to #24427 for details.
+      */
+-    handle(channel: string, listener: (event: IpcMainInvokeEvent, ...args: any[]) => (Promise<void>) | (any)): void;
++    handle(channel: IPCEventName, listener: (event: IpcMainInvokeEvent, ...args: any[]) => (Promise<void>) | (any)): void;
+     /**
+      * Handles a single `invoke`able IPC message, then removes the listener. See
+      * `ipcMain.handle(channel, listener)`.
+@@ -5073,7 +5075,7 @@ declare namespace Electron {
       * Listens to `channel`, when a new message arrives `listener` would be called with
       * `listener(event, args...)`.
       */
 -    on(channel: string, listener: (event: IpcMainEvent, ...args: any[]) => void): this;
-+    on<T>(channel: string, listener: (event: IpcMainEvent, arg: T) => void): this;
++    on<T>(channel: IPCEventName, listener: (event: IpcMainEvent, arg: T) => void): this;
      /**
       * Adds a one time `listener` function for the event. This `listener` is invoked
       * only the next time a message is sent to `channel`, after which it is removed.
-@@ -5190,7 +5190,7 @@ declare namespace Electron {
+@@ -5185,12 +5187,12 @@ declare namespace Electron {
+      *
+      * If you do not need a response to the message, consider using `ipcRenderer.send`.
+      */
+-    invoke(channel: string, ...args: any[]): Promise<any>;
++    invoke(channel: IPCEventName, ...args: any[]): Promise<any>;
+     /**
       * Listens to `channel`, when a new message arrives `listener` would be called with
       * `listener(event, args...)`.
       */
 -    on(channel: string, listener: (event: IpcRendererEvent, ...args: any[]) => void): this;
-+    on<T>(channel: string, listener: (event: IpcRendererEvent, arg: T) => void): this;
++    on<T>(channel: IPCEventName, listener: (event: IpcRendererEvent, arg: T) => void): this;
      /**
       * Adds a one time `listener` function for the event. This `listener` is invoked
       * only the next time a message is sent to `channel`, after which it is removed.
-@@ -11361,7 +11361,7 @@ declare namespace Electron {
+@@ -5243,7 +5245,7 @@ declare namespace Electron {
+      * If you want to receive a single response from the main process, like the result
+      * of a method call, consider using `ipcRenderer.invoke`.
+      */
+-    send(channel: string, ...args: any[]): void;
++    send(channel: IPCEventName, ...args: any[]): void;
+     /**
+      * The value sent back by the `ipcMain` handler.
+      *
+@@ -5268,7 +5270,7 @@ declare namespace Electron {
+      * renderer process until the reply is received, so use this method only as a last
+      * resort. It's much better to use the asynchronous version, `invoke()`.
+      */
+-    sendSync(channel: string, ...args: any[]): any;
++    sendSync(channel: IPCEventName, ...args: any[]): any;
+     /**
+      * Sends a message to a window with `webContentsId` via `channel`.
+      */
+@@ -11361,7 +11363,7 @@ declare namespace Electron {
       *
       * An example of sending messages from the main process to the renderer process:
       */
 -    send(channel: string, ...args: any[]): void;
-+    send<T>(channel: string, arg: T): void;
++    send<T>(channel: IPCEventName, arg: T): void;
      /**
       * Sends an input `event` to the page. **Note:** The `BrowserWindow` containing the
       * contents needs to be focused for `sendInputEvent()` to work.

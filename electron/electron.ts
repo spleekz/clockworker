@@ -1,7 +1,7 @@
-import { BrowserWindow, app, ipcMain } from 'electron'
+import { BrowserWindow, Electron, app, ipcMain } from 'electron'
 import { autoUpdater } from 'electron-updater'
 import * as fs from 'fs'
-import { DownloadProgressInfo, UpdateInfo } from 'main-renderer-shared/index'
+import { DownloadProgressInfo, UpdateInfo } from 'main-renderer-shared/types'
 import * as path from 'path'
 
 var mainWindow: Electron.BrowserWindow | null
