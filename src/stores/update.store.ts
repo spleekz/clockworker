@@ -1,36 +1,33 @@
 import { makeAutoObservable } from 'mobx'
 
 import { DownloadProgressInfo, UpdateInfo } from 'desktop-web-shared-types/index'
-import isElectron from 'is-electron'
 
-import { AppSettingsValues } from './settings/settings.store'
+import { AppSettingsStore } from './settings/settings.store'
 
 type Config = {
-  appSettings: AppSettingsValues
+  appSettings: AppSettingsStore
 }
 
 export class UpdateStore {
-  private appSettings: AppSettingsValues
+  private appSettings: AppSettingsStore
 
   constructor(config: Config) {
     const { appSettings } = config
 
     this.appSettings = appSettings
 
-    if (isElectron()) {
-      window.ipcRenderer.on<UpdateInfo>('updateAvailable', (_, updateInfo) => {
-        this.setUpdateInfo(updateInfo)
-      })
-      window.ipcRenderer.on<DownloadProgressInfo>('downloadProgress', (_, downloadProgressInfo) => {
-        this.setCurrentPercentage(downloadProgressInfo.percentage)
-      })
-    }
+    window.ipcRenderer.on<UpdateInfo>('updateAvailable', (_, updateInfo) => {
+      this.setUpdateInfo(updateInfo)
+    })
+    window.ipcRenderer.on<DownloadProgressInfo>('downloadProgress', (_, downloadProgressInfo) => {
+      this.setCurrentPercentage(downloadProgressInfo.percentage)
+    })
 
     makeAutoObservable(this)
   }
 
   get isShowingNotificationAllowed(): boolean {
-    return this.appSettings.general.isGetUpdateNotifications.value
+    return this.appSettings.values.isGetUpdateNotifications
   }
 
   version: string | null = null

@@ -9,7 +9,7 @@ import { DownloadProgress } from './download-progress'
 import { UpdateNotification } from './update-notification'
 
 type Props = {
-  updateStore: NonNullable<UpdateStore>
+  updateStore: UpdateStore
 }
 
 export const UpdatePopup: FC<Props> = observer(({ updateStore }) => {

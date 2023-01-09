@@ -1,6 +1,7 @@
 import { DownloadProgressInfo, UpdateInfo } from 'desktop-web-shared-types/index'
 import { BrowserWindow, app, ipcMain } from 'electron'
 import { autoUpdater } from 'electron-updater'
+import * as fs from 'fs'
 import * as path from 'path'
 
 var mainWindow: Electron.BrowserWindow | null
@@ -64,4 +65,28 @@ autoUpdater.on('download-progress', ({ percent }) => {
 
 autoUpdater.on('update-downloaded', () => {
   autoUpdater.quitAndInstall()
+})
+
+const userData = app.getPath('userData')
+
+ipcMain.on('checkIfAppSettingsFileExists', (event) => {
+  const fileExists = fs.existsSync(`${userData}/app-settings.json`)
+  event.returnValue = fileExists
+})
+
+ipcMain.handle('setAppSettingsToFileAsync', async (_, settings: Record<any, string>) => {
+  return fs.promises.writeFile(`${userData}/app-settings.json`, JSON.stringify(settings), {
+    encoding: 'utf-8',
+  })
+})
+
+ipcMain.on('setAppSettingsToFileSync', (_, settings: Record<any, string>) => {
+  fs.writeFileSync(`${userData}/app-settings.json`, JSON.stringify(settings), {
+    encoding: 'utf-8',
+  })
+})
+
+ipcMain.on('getAppSettings', (event) => {
+  const content = fs.readFileSync(`${userData}/app-settings.json`, { encoding: 'utf-8' })
+  event.returnValue = JSON.parse(content)
 })

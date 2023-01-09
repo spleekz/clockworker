@@ -8,11 +8,11 @@ import { AppSettingsStore } from 'stores/settings/settings.store'
 import { UpdateStore } from 'stores/update.store'
 
 export class RootStore {
-  popupHistory = new PopupHistory()
-  appStore = new AppStore({ popupHistory: this.popupHistory })
   appSettingsStore = new AppSettingsStore()
+  popupHistory = new PopupHistory()
+  appStore = new AppStore({ appSettings: this.appSettingsStore, popupHistory: this.popupHistory })
   updateStore: UpdateStore | null = isElectron()
-    ? new UpdateStore({ appSettings: this.appSettingsStore.current })
+    ? new UpdateStore({ appSettings: this.appSettingsStore })
     : null
   keyboardStore = new KeyboardStore()
   createGameStore = (): GameStore => {

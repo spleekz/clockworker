@@ -3,7 +3,6 @@ import { PrimitiveDirection } from 'project-utility-types/plane'
 import { ProhibitorsController } from 'stores/game/play/entities/prohibitors-controller'
 import {
   GameSettings,
-  GameSettingsMovementControls,
   MovementControllersKeys,
   MovementRegulatorsKeys,
 } from 'stores/game/play/settings/settings'
@@ -29,13 +28,9 @@ export class PlayerCharacterMovementKeys {
     this.pressedKeys = keys
   }
 
-  get controls(): GameSettingsMovementControls {
-    return this.settings.current.controls.movement
-  }
-
   //! контроллеры
   get controllerKeys(): MovementControllersKeys {
-    return this.controls.controllers.value
+    return this.settings.current.movementControllers
   }
   isControllerKey = (key: string): boolean => {
     return Object.values(this.controllerKeys).some((controller) => key === controller)
@@ -74,7 +69,7 @@ export class PlayerCharacterMovementKeys {
 
   //! регуляторы
   get regulatorKeys(): MovementRegulatorsKeys {
-    return this.controls.regulators.value
+    return this.settings.current.movementRegulators
   }
   isRegulatorKey = (key: string): boolean => {
     return Object.values(this.regulatorKeys).some((regulator) => key === regulator)

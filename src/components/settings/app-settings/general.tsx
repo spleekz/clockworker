@@ -9,9 +9,7 @@ import { FlagSetting } from '../flag-setting'
 export const GeneralAppSettings = observer(() => {
   const { appSettingsStore } = useStore()
 
-  const { general } = appSettingsStore.editable
-
-  const { isGetUpdateNotifications } = general
+  const { isGetUpdateNotifications } = appSettingsStore.editable
 
   return (
     <Container>

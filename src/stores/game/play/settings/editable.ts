@@ -1,10 +1,15 @@
 import { RadioSetting } from 'stores/entities/editable-settings/radio-setting'
+import { EditableSettings } from 'stores/lib/settings'
 
-import { MovementControllersKeys } from '../../settings'
+import { GameSettingsValues, MovementControllersKeys } from './settings'
 
-export class EditableGameSettingsControlsSection {
-  movement = {
-    controllers: new RadioSetting<MovementControllersKeys>('movementControllers', [
+export type EditableGameSettingsType = Partial<EditableSettings<GameSettingsValues>>
+
+// настройки, которые могут изменяться пользователем
+export class EditableGameSettings implements EditableGameSettingsType {
+  movementControllers = new RadioSetting<MovementControllersKeys>({
+    id: 'movementControllers',
+    variants: [
       {
         id: 'wasd',
         label: 'WASD',
@@ -27,6 +32,6 @@ export class EditableGameSettingsControlsSection {
         },
         isSelected: false,
       },
-    ]),
-  }
+    ],
+  })
 }

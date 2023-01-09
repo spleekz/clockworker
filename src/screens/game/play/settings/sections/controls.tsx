@@ -8,16 +8,14 @@ import { SettingVariants } from 'components/settings/setting-variants'
 import { useGamePlayStore } from 'screens/game/screen'
 
 export const ControlsSettingsSection: FC = observer(() => {
-  const { settings } = useGamePlayStore()
-  const controlsSettings = settings.editable.controls
-  const movementControllers = controlsSettings.movement?.controllers
+  const settings = useGamePlayStore().settings.editable
 
   return (
     <Container>
       <Title>Управление</Title>
       <Setting>
         <SettingTitle>Движение :</SettingTitle>
-        <SettingVariants setting={movementControllers} checkboxSize={38} />
+        <SettingVariants setting={settings.movementControllers} checkboxSize={38} />
       </Setting>
     </Container>
   )

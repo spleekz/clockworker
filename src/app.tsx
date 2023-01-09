@@ -1,5 +1,5 @@
 import { observer } from 'mobx-react-lite'
-import React from 'react'
+import React, { useEffect } from 'react'
 import styled, { createGlobalStyle } from 'styled-components'
 
 import { FC } from 'basic-utility-types'
@@ -13,6 +13,14 @@ import { MainScreen } from 'screens/main/screen'
 
 export const App: FC = observer(() => {
   const { appStore } = useStore()
+
+  useEffect(() => {
+    window.addEventListener('beforeunload', () => {
+      if (!appStore.isQuit) {
+        appStore.quitGame()
+      }
+    })
+  }, [])
 
   return (
     <>

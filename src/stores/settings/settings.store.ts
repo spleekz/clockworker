@@ -1,31 +1,90 @@
 import { makeAutoObservable } from 'mobx'
 
-import { SettingValue } from 'project-utility-types/settings'
+import { Entries } from 'basic-utility-types'
+import isElectron from 'is-electron'
 
+import { CheckboxSetting } from 'stores/entities/editable-settings/checkbox-setting'
+import { RadioSetting } from 'stores/entities/editable-settings/radio-setting'
+import { SingleValueSetting } from 'stores/entities/editable-settings/single-value-setting'
 import { getConvertedEditableSettings } from 'stores/lib/settings'
 
-import { EditableAppSettings } from './editable/settings'
+import { areEquivalent } from 'lib/are-equivalent'
 
-type GeneralAppSettingsValues = {
-  isGetUpdateNotifications: SettingValue<boolean>
-}
+import { EditableAppSettings } from './editable'
+import initialSettingsJSON from './initial-settings.json'
 
 export type AppSettingsValues = {
-  general: GeneralAppSettingsValues
+  isGetUpdateNotifications: boolean
 }
 
 export class AppSettingsStore {
   constructor() {
+    this.initialize()
     makeAutoObservable(this)
   }
 
   editable = new EditableAppSettings()
 
-  get convertedSettings(): AppSettingsValues {
-    return getConvertedEditableSettings(this.editable)
+  private initialize = (): void => {
+    var settingsFromFile = initialSettingsJSON
+    if (isElectron()) {
+      const isSettingsFileExists = window.ipcRenderer.sendSync('checkIfAppSettingsFileExists')
+      if (!isSettingsFileExists) {
+        this.createSettingsFile()
+      }
+      settingsFromFile = this.getSettingsFromFile()
+    }
+    this.syncEditableWithFile(settingsFromFile)
   }
 
-  get current(): AppSettingsValues {
-    return this.convertedSettings
+  setSettingsToFileSync = (settings: AppSettingsValues): void => {
+    window.ipcRenderer.sendSync('setAppSettingsToFileSync', settings)
+  }
+  setSettingsToFileAsync = (settings: AppSettingsValues): Promise<void> => {
+    return window.ipcRenderer.invoke('setAppSettingsToFileAsync', settings)
+  }
+
+  private createSettingsFile = (): void => {
+    return this.setSettingsToFileSync(initialSettingsJSON)
+  }
+
+  private getSettingsFromFile = (): AppSettingsValues => {
+    return window.ipcRenderer.sendSync('getAppSettings') as AppSettingsValues
+  }
+
+  saveSettingsToFile = (): Promise<void> => {
+    return this.setSettingsToFileAsync(this.values)
+  }
+
+  private syncEditableWithFile = (values: AppSettingsValues): void => {
+    return (Object.entries(values) as Entries<AppSettingsValues>).forEach(([name, value]) => {
+      const thisEditableSetting = this.editable[name]
+
+      if (thisEditableSetting instanceof SingleValueSetting) {
+        thisEditableSetting.set(value)
+      }
+
+      if (thisEditableSetting instanceof CheckboxSetting) {
+        thisEditableSetting.variants.forEach((v) => {
+          if (areEquivalent(v, value)) {
+            thisEditableSetting.selectVariant(v.id)
+          } else {
+            thisEditableSetting.unselectVariant(v.id)
+          }
+        })
+      }
+
+      if (thisEditableSetting instanceof RadioSetting) {
+        thisEditableSetting.variants.forEach((v) => {
+          if (areEquivalent(v, value)) {
+            thisEditableSetting.selectVariant(v.id)
+          }
+        })
+      }
+    })
+  }
+
+  get values(): AppSettingsValues {
+    return getConvertedEditableSettings(this.editable)
   }
 }

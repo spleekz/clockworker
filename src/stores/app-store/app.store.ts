@@ -1,5 +1,9 @@
 import { makeAutoObservable } from 'mobx'
 
+import isElectron from 'is-electron'
+
+import { AppSettingsStore } from 'stores/settings/settings.store'
+
 import { closeAllUnclosedPopups } from '../lib/popups'
 import { PopupHistory } from '../popup-history'
 import { AppPopups } from './popups'
@@ -7,18 +11,21 @@ import { AppPopups } from './popups'
 type AppScreen = 'main' | 'game'
 
 type Config = {
+  appSettings: AppSettingsStore
   popupHistory: PopupHistory
 }
 
 export class AppStore {
+  private appSettings: AppSettingsStore
   private popupHistory: PopupHistory
 
   popups: AppPopups
 
   constructor(config: Config) {
-    const { popupHistory } = config
+    const { appSettings, popupHistory } = config
 
     this.popupHistory = popupHistory
+    this.appSettings = appSettings
 
     this.popups = new AppPopups(this.popupHistory)
 
@@ -31,7 +38,15 @@ export class AppStore {
     this.screen = screen
   }
 
-  quitGame = (): void => {
+  isQuit = false
+  setIsQuit = (value: boolean): void => {
+    this.isQuit = value
+  }
+  quitGame = async (): Promise<void> => {
+    this.setIsQuit(true)
+    if (isElectron()) {
+      await this.appSettings.saveSettingsToFile()
+    }
     closeAllUnclosedPopups(this.popupHistory)
     window.close()
   }
